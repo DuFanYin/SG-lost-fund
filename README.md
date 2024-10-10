@@ -8,7 +8,7 @@
 
 ## Project Setup
 ```sh
-cd g6-t2
+cd g6-t5
 ```
 
 ```sh
