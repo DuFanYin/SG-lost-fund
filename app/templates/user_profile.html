@@ -8,5 +8,61 @@
 <body>
     <h1>this is user profile page</h1>
     <a href="/">back to home</a>
+
+
+    <h1 id="name" type="text"></h1>
+
+
+
+
+
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyAUZYEkqQSsEVM7rMCLqaEKoibGPiP_YJI",
+          authDomain: "wad2project-db69b.firebaseapp.com",
+          projectId: "wad2project-db69b",
+          storageBucket: "wad2project-db69b.appspot.com",
+          messagingSenderId: "262163048895",
+          appId: "1:262163048895:web:5ab7dd89cf3bc6daaad90a",
+          measurementId: "G-PKT1RMGB01"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        import {getDatabase, set, get, update, remove, ref, child} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js"
+
+        const db = getDatabase()
+
+        var name = "brandon"
+
+        function InsertData(){
+            set(ref(db), "People/",{
+                Name: name
+            })
+        }
+
+        function FindData(){
+
+        }
+
+        function UpdateData(){
+
+        }
+
+        function RemoveData(){
+
+        }
+      </script>
 </body>
 </html>
