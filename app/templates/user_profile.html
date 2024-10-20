@@ -108,7 +108,6 @@
 
         /* Remove hover effect for side borders, if any */
         .nav-tabs .nav-link:hover {
-            border-bottom: 2px solid #000;
             /* Black bottom border on hover */
             color: #000;
             background-color: transparent;
@@ -123,13 +122,94 @@
             backdrop-filter: blur(5px);
             /* Apply the blur */
         }
+
+
+
+
+        .navbar-custom {
+            background-color: #fff; /* White background for navbar */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add some shadow */
+        }
+
+        .navbar-nav {
+            flex-grow: 1;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover; /* Ensure the image fits the circle */
+        }
+
+        .points {
+            margin-right: 10px;
+            color: orange;
+        }
+
+        .notification-icon {
+            font-size: 24px;
+            color: orange;
+            margin-right: 20px;
+        }
+
+        .profile-name {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
     </style>
 
 </head>
 
 <body class="bg3">
-    <a href="/">back to home</a>
 
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+
+
+        <!-- Toggle Button for small screens -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Center (Nav links) - collapses on smaller screens -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Listing</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Right side (User profile and icons) -->
+    <div class="d-flex align-items-center">
+
+        <!-- User Profile Image and Name -->
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
+                id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="profile-name">Test-name</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Settings</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Sign out</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</nav>
 
     <div class="container">
         <div class="row justify-content-center">
@@ -185,13 +265,13 @@
                     <!-- Found Items Content -->
                     <div class="tab-pane fade show active" id="found-items" role="tabpanel"
                         aria-labelledby="found-items-tab">
-                        <p>Here are the found items...</p>
+                        <p>Items listed that you found</p>
                     </div>
 
                     <!-- Requested Items Content -->
                     <div class="tab-pane fade" id="requested-items" role="tabpanel"
                         aria-labelledby="requested-items-tab">
-                        <p>You have yet to make any Requests for items! </p>
+                        <p>Items that u lost are shown here </p>
                     </div>
                 </div>
             </div>
