@@ -1,22 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask App</title>
+    <title>Profile Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <style>
+        .profileborder {
+            border: 5px solid black;
+            padding-top: 40px;
+            padding-left: 60px;
+            padding-right: 30px;
+            border-bottom: 0px;
+            padding-bottom: 30px;
+
+            /* Ensure content is spaced evenly */
+        }
+
+        .listborder {
+            border: 5px solid black;
+            border-top: 0px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profle-img {
+            border: 3px solid black;
+            height: 200px;
+            width: 200px;
+            padding: 0px;
+
+        }
+
+        .description-box {
+            width: 250px;
+            /* Set the width of the box */
+            height: 130px;
+            /* Set the height of the box */
+            resize: none;
+            /* Disable manual resizing */
+            padding: 10px;
+            border: 1px solid #ccc;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .profile {
+            max-height: 200px;
+            overflow: hidden
+        }
+
+        .profile_name {
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            line-height: 1;
+
+        }
+
+        .profile_username {
+            font-size: 16px;
+            margin-top: 0px;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .bg1 {
+            background-color: yellow;
+        }
+
+        .bg2 {
+            background-color: lightgreen;
+        }
+
+        .bg3 {
+            background-color: aqua;
+        }
+
+        /* Remove all borders except the bottom border */
+        .nav-tabs {
+            border-bottom: 2px solid lightgreen;
+            /* Change the white line to light green */
+        }
+
+        /* Active tab with only bottom border */
+        .nav-tabs .nav-link.active {
+            background-color: lightgreen;
+            color: #000;
+            border: none;
+            /* Remove all borders */
+            border-bottom: 2px solid black;
+            /* Keep only the black bottom border */
+        }
+
+        /* Inactive Tab Color */
+        .nav-tabs .nav-link {
+            color: black;
+            border: none;
+            /* Remove all borders */
+        }
+
+        /* Remove hover effect for side borders, if any */
+        .nav-tabs .nav-link:hover {
+            border-bottom: 2px solid #000;
+            /* Black bottom border on hover */
+            color: #000;
+            background-color: transparent;
+        }
+
+        /* Remove default border from tab content */
+        .tab-content {
+            border: none;
+        }
+
+        .modal-backdrop {
+            backdrop-filter: blur(5px);
+            /* Apply the blur */
+        }
+    </style>
+
 </head>
-<body>
-    <h1>this is user profile page</h1>
+
+<body class="bg3">
     <a href="/">back to home</a>
 
 
-    <h1 id="name" type="text"></h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-10 profileborder bg1">
+
+                <div class="row profile">
+                    <div class="col-3">
+                        <img class="profle-img" src="/app/static/img/icon_watch.png" alt="">
+                    </div>
+                    <div class="col-6">
+                        <div class="profile_name">Editable Name</div>
+                        <div class="profile_username">@username</div>
+                        <div>Profile Description</div>
+
+
+                    </div>
+                    <div class="col-3">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#editProfileModal">
+                            Edit Profile
+                        </button>
+                        <div>Contact information</div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-10 listborder bg2">
+                <div class="row">
+                    <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="found-items-tab" data-bs-toggle="tab"
+                                data-bs-target="#found-items" type="button" role="tab" aria-controls="found-items"
+                                aria-selected="true">
+                                <i class="bi bi-gift"></i> Found Items
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="requested-items-tab" data-bs-toggle="tab"
+                                data-bs-target="#requested-items" type="button" role="tab"
+                                aria-controls="requested-items" aria-selected="false">
+                                <i class="bi bi-megaphone"></i> Requested Items
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="myTabContent">
+                    <!-- Found Items Content -->
+                    <div class="tab-pane fade show active" id="found-items" role="tabpanel"
+                        aria-labelledby="found-items-tab">
+                        <p>Here are the found items...</p>
+                    </div>
+
+                    <!-- Requested Items Content -->
+                    <div class="tab-pane fade" id="requested-items" role="tabpanel"
+                        aria-labelledby="requested-items-tab">
+                        <p>You have yet to make any Requests for items! </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Structure -->
+        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Profile Editing Form -->
+                        <form>
+                            <div class="mb-3">
+                                <label for="profileName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="profileName" value="Editable Name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="profileUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="profileUsername" value="@username">
+                            </div>
+                            <div class="mb-3">
+                                <label for="profileDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="profileDescription"
+                                    rows="3">Profile Description</textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
 
 
 
 
 
 
-   
+
+        <!-- Bootstrap -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+
 </body>
+
 </html>
