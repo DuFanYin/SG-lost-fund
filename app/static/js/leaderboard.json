@@ -1,0 +1,32 @@
+[
+    {
+        "ranking": 1,
+        "username": "PlayerOne",
+        "items_found": 20,
+        "points": 1500
+    },
+    {
+        "ranking": 2,
+        "username": "FinderPro",
+        "items_found": 18,
+        "points": 1400
+    },
+    {
+        "ranking": 3,
+        "username": "LostAndFoundMaster",
+        "items_found": 15,
+        "points": 1300
+    },
+    {
+        "ranking": 4,
+        "username": "TreasureHunter",
+        "items_found": 12,
+        "points": 1200
+    },
+    {
+        "ranking": 5,
+        "username": "DiscoveryGuru",
+        "items_found": 10,
+        "points": 1100
+    }
+]
