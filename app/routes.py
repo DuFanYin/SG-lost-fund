@@ -17,3 +17,7 @@ def dash_board():
 @main.route('/listing')
 def listing():
     return render_template('listing.html')
+
+@main.route('/footer')
+def footer():
+    return render_template('footer.html')
