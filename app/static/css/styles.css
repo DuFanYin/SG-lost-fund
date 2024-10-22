@@ -88,3 +88,21 @@ body {
     padding-left: 18px;
     padding-right: 18px;
 }
+
+#panel {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 250px;
+    background-color: rgba(255, 255, 255, 0.9); /* White with slight transparency */
+    box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3); /* Adds shadow for better visibility */
+    padding: 20px;
+    overflow-y: auto;
+    display: none; /* Hidden by default until it needs to be shown */
+    transition: transform 0.3s ease; /* Smooth transition for panel appearance */
+}
+
+#panel.open {
+    display: block; /* Shows the panel when it's open */
+}

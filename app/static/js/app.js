@@ -87,29 +87,112 @@ function sanitizeHTML(strings) {
     return result;
 }
 
-function initMap() {
+function getUserLocation() {
 
+    const defaultPos = { lat: 1.3521, lng: 103.8198 }; // Singapore center
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            const pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            renderMapWithFeatures(pos); // Call the map rendering function with the user's location
+        }, () => {
+            console.log("Geolocation permission denied. Using default location.");
+            renderMapWithFeatures(defaultPos);
+        });
+    } else {
+
+        console.log("Geolocation is not supported by this browser. Using default location.");
+        renderMapWithFeatures(defaultPos);
+    }
+}
+
+function renderMapWithFeatures(centerPosition) {
+    let defaultZoomLevel = 11;
+    let zoomedInLevel = 18;
+
+    // Initialize the map with the given center position
     const map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 11,
-        center: { lat: 1.3521, lng: 103.8198 },
+        zoom: defaultZoomLevel,
+        center: centerPosition,
         styles: mapStyle,
     });
+
+    const bounds = new google.maps.LatLngBounds();
+    const infoWindow = new google.maps.InfoWindow();
+    let currentInfoWindow = infoWindow;
+    const infoPane = document.getElementById('panel');
+    const uniqueCategories = new Set();
 
     // Load the items GeoJSON onto the map.
     map.data.loadGeoJson("../static/js/items.json", { idPropertyName: 'itemid' });
 
     // Define the custom marker icons, using the item's "category".
     map.data.setStyle((feature) => {
+        const category = feature.getProperty("category");
+        const iconURL = `../static/img/icon_${category}.png`
+
+        imageExists(iconURL, (exists) => {
+            if (exists) {
+                map.data.overrideStyle(feature, {
+                    icon: {
+                        url: iconURL,
+                        scaledSize: new google.maps.Size(32, 32),
+                    }
+                });
+            } else {
+                map.data.setStyle({
+                    icon: {
+                        url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Default marker icon
+                        scaledSize: new google.maps.Size(32, 32),
+                    },
+                });
+            }
+
+        });
         return {
             icon: {
-                url: `../static/img/icon_${feature.getProperty('category')}.png`,
-                scaledSize: new google.maps.Size(64, 64),
+                url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Default marker icon
+                scaledSize: new google.maps.Size(32, 32),
             },
         };
     });
 
-    const apiKey = 'API_KEY';
-    const infoWindow = new google.maps.InfoWindow();
+    // Adjust the bounds to include all features added to the map
+    map.data.addListener('addfeature', (event) => {
+        if (event.feature.getGeometry().getType() === 'Point') {
+            const position = event.feature.getGeometry().get();
+            bounds.extend(position);
+
+            const category = event.feature.getProperty('category');
+            if (category) {
+                uniqueCategories.add(category);
+            }
+        }
+        
+    });
+
+
+    // Fit the map to the bounds after all markers are loaded
+    map.data.addListener('addfeature', () => {
+
+        map.fitBounds(bounds);
+        console.log(uniqueCategories);
+        const categoryArray = Array.from(uniqueCategories);
+
+        const items = [];
+        map.data.forEach((feature) => {
+        
+            const itemID = feature.getProperty("itemid");
+            if(itemID){
+                items.push({
+                    itemid: itemID,
+                });
+            }
+        });
+        showItemsList(map.data, items, categoryArray);
+    });
 
     // Show the information for a store when its marker is clicked.
     map.data.addListener('click', (event) => {
@@ -119,18 +202,43 @@ function initMap() {
         const hours = event.feature.getProperty('found_time');
         const phone = event.feature.getProperty('phone');
         const position = event.feature.getGeometry().get();
-        const content = sanitizeHTML`
-        <img style="float:left; width:200px; margin-top:30px" src="../static/img/logo_${category}.png" alt="No Image">
-        <div style="margin-left:220px; margin-bottom:20px;">
-          <h2>${name}</h2><p>${description}</p>
-          <p><b>Found Time:</b> ${hours}<br/><b>Phone:</b> ${phone}</p>
-        </div>
-        `;
 
+        
+        // Content for InfoWindow
+        const content = `
+        <div>
+          <img style="float:left; width:200px; margin-top:30px" src="https://www.google.com/imgres?q=cat%20image&imgurl=https%3A%2F%2Fi.natgeofe.com%2Fn%2F548467d8-c5f1-4551-9f58-6817a8d2c45e%2FNationalGeographic_2572187_square.jpg&imgrefurl=https%3A%2F%2Fwww.nationalgeographic.com%2Fanimals%2Fmammals%2Ffacts%2Fdomestic-cat&docid=K6Qd9XWnQFQCoM&tbnid=eAP244UcF5wdYM&vet=12ahUKEwjJs67amqKJAxW2yzgGHQKWKRYQM3oECB0QAA..i&w=3072&h=3072&hcb=2&itg=1&ved=2ahUKEwjJs67amqKJAxW2yzgGHQKWKRYQM3oECB0QAA">
+          <div style="margin-left:220px; margin-bottom:20px;">
+            <h2>${name}</h2><p>${description}</p>
+            <p><b>Found Time:</b> ${hours}<br/><b>Phone:</b> ${phone}</p>
+          </div>
+        </div>`;
+
+        // Set InfoWindow content and open it
         infoWindow.setContent(content);
         infoWindow.setPosition(position);
         infoWindow.setOptions({ pixelOffset: new google.maps.Size(0, -30) });
+        if (currentInfoWindow) {
+            currentInfoWindow.close();
+        }
+    
+        // Open the new InfoWindow
         infoWindow.open(map);
+        currentInfoWindow = infoWindow;
+
+        // Zoom in to the selected marker
+        map.setZoom(zoomedInLevel);
+        map.setCenter(position);
+
+        google.maps.event.addListener(infoWindow, 'closeclick', () => {
+
+            map.setZoom(defaultZoomLevel);
+            map.fitBounds(bounds);
+
+            if (infoPane.classList.contains("open")) {
+                infoPane.classList.remove("open");
+            }
+        });
     });
 
     // AUTOCOMPLETE SEARCH BAR 
@@ -158,9 +266,7 @@ function initMap() {
     map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
 
     const autocomplete = new google.maps.places.Autocomplete(input, options);
-
-    autocomplete.setFields(
-        ['address_components', 'geometry', 'name']);
+    autocomplete.setFields(['address_components', 'geometry', 'name']);
 
     // Set the origin point when the user selects an address
     const originMarker = new google.maps.Marker({ map: map });
@@ -173,8 +279,6 @@ function initMap() {
         const place = autocomplete.getPlace();
 
         if (!place.geometry) {
-            // User entered the name of a Place that was not suggested and
-            // pressed the Enter key, or the Place Details request failed.
             window.alert('No address available for input: \'' + place.name + '\'');
             return;
         }
@@ -182,223 +286,197 @@ function initMap() {
         // Recenter the map to the selected address
         originLocation = place.geometry.location;
         map.setCenter(originLocation);
-        map.setZoom(9);
-        console.log(place);
+        map.setZoom(zoomedInLevel);
 
         originMarker.setPosition(originLocation);
         originMarker.setVisible(true);
 
-        // Use the selected address as the origin to calculate distances
-        // to each of the store locations
-        console.log(map.data);
+        // Use the selected address as the origin to calculate distances to each of the store locations
         const rankedItems = await calculateDistances(map.data, originLocation);
         showItemsList(map.data, rankedItems);
-
-        return;
     });
+
+
 }
 
-// /**
-//  * Use Distance Matrix API to calculate distance from origin to each store.
-//  * @param {google.maps.Data} data The geospatial data object layer for the map
-//  * @param {google.maps.LatLng} origin Geographical coordinates in latitude
-//  * and longitude
-//  * @return {Promise<object[]>} n Promise fulfilled by an array of objects with
-//  * a distanceText, distanceVal, and storeid property, sorted ascending
-//  * by distanceVal.
-//  */
-// async function calculateDistances(data, origin) {
-//     const items = [];
-//     const destinations = [];
+function imageExists(url, callback) {
+    const img = new Image();
+    img.onload = () => callback(true);
+    img.onerror = () => callback(false);
+    img.src = url;
+}
 
-//     // Build parallel arrays for the store IDs and destinations
-//     data.forEach((store) => {
-//         const storeNum = store.getProperty('storeid');
-//         const storeLoc = store.getGeometry().get();
+async function calculateDistances(data, origin) {
+    const items = [];
+    const destinations = [];
 
-//         items.push(storeNum);
-//         destinations.push(storeLoc);
-//     });
+    data.forEach((item) => {
+        const itemID = item.getProperty('itemid');
+        const location = item.getGeometry().get();
 
-//     // Retrieve the distances of each store from the origin
-//     // The returned list will be in the same order as the destinations list
-//     const service = new google.maps.DistanceMatrixService();
-//     const getDistanceMatrix =
-//         (service, parameters) => new Promise((resolve, reject) => {
-//             service.getDistanceMatrix(parameters, (response, status) => {
-//                 if (status != google.maps.DistanceMatrixStatus.OK) {
-//                     reject(response);
-//                 } else {
-//                     const distances = [];
-//                     const results = response.rows[0].elements;
-//                     for (let j = 0; j < results.length; j++) {
-//                         const element = results[j];
-//                         const distanceText = element.distance.text;
-//                         const distanceVal = element.distance.value;
-//                         const distanceObject = {
-//                             itemid: items[j],
-//                             distanceText: distanceText,
-//                             distanceVal: distanceVal,
-//                         };
-//                         distances.push(distanceObject);
-//                     }
+        items.push(itemID);
+        destinations.push(location);
+    });
 
-//                     resolve(distances);
-//                 }
-//             });
-//         });
+    // Retrieve the distances of each store from the origin
+    // The returned list will be in the same order as the destinations list
+    const service = new google.maps.DistanceMatrixService();
+    const getDistanceMatrix =
+        (service, parameters) => new Promise((resolve, reject) => {
+            service.getDistanceMatrix(parameters, (response, status) => {
+                if (status != google.maps.DistanceMatrixStatus.OK) {
+                    reject(response);
+                } else {
+                    const distances = [];
+                    const results = response.rows[0].elements;
+                    for (let j = 0; j < results.length; j++) {
+                        const element = results[j];
+                        const distanceText = element.distance.text;
+                        const distanceVal = element.distance.value;
+                        const distanceObject = {
+                            itemid: items[j],
+                            distanceText: distanceText,
+                            distanceVal: distanceVal,
+                        };
+                        distances.push(distanceObject);
+                    }
 
-//     const distancesList = await getDistanceMatrix(service, {
-//         origins: [origin],
-//         destinations: destinations,
-//         travelMode: 'DRIVING',
-//         unitSystem: google.maps.UnitSystem.METRIC,
-//     });
+                    resolve(distances);
+                }
+            });
+        });
 
-//     distancesList.sort((first, second) => {
-//         return first.distanceVal - second.distanceVal;
-//     });
+    const distancesList = await getDistanceMatrix(service, {
+        origins: [origin],
+        destinations: destinations,
+        travelMode: 'DRIVING',
+        unitSystem: google.maps.UnitSystem.METRIC,
+    });
 
-//     return distancesList;
-// }
+    distancesList.sort((first, second) => {
+        return first.distanceVal - second.distanceVal;
+    });
 
-// /**
-//  * Build the content of the side panel from the sorted list of items
-//  * and display it.
-//  * @param {google.maps.Data} data The geospatial data object layer for the map
-//  * @param {object[]} stores An array of objects with a distanceText,
-//  * distanceVal, and storeid property.
-//  */
+    return distancesList;
+}
+
+function showItemsList(data, items, categoryArray) {
+    const panel = document.getElementById('panel');
+
+    // Ensure the panel is in the HTML
+    if (!panel) {
+        console.error('Sidebar element (#panel) not found in the document.');
+        return;
+    }
+
+    // Clear the previous details in the sidebar
+    panel.innerHTML = '';
+
+    // Add filter controls to the sidebar
+    const filterContainer = document.createElement('div');
+    filterContainer.setAttribute('id', 'filter-container');
+    filterContainer.style.margin = '10px 18px';
+
+    const filterLabel = document.createElement('label');
+    filterLabel.textContent = 'Filter by Category: ';
+    filterLabel.setAttribute('for', 'category-filter');
+    filterContainer.appendChild(filterLabel);
+
+    const categoryFilter = document.createElement('select');
+    categoryFilter.setAttribute('id', 'category-filter');
+
+    const allOption = document.createElement('option');
+    allOption.value = 'all';
+    allOption.textContent = 'All';
+    categoryFilter.appendChild(allOption);
+
+    // Add options for each unique category
+    categoryArray.forEach((category) => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category.charAt(0).toUpperCase() + category.slice(1); // Capitalize category name
+        categoryFilter.appendChild(option);
+    });
+
+    filterContainer.appendChild(categoryFilter);
+    panel.appendChild(filterContainer);
+
+    // Store the original items list
+    panel.originalItems = items;
+
+    // Add Event Listener for Filter Change
+    categoryFilter.addEventListener('change', () => {
+        applyCategoryFilter(panel, data);
+    });
+
+    // Display the list of items in the sidebar
+    items.forEach((item) => {
+        const currentItem = data.getFeatureById(item.itemid);
+    
+        const name = document.createElement('p');
+        name.classList.add('place');
+        name.textContent = currentItem.getProperty('name');
+        panel.appendChild(name);
+        
+        const distanceText = document.createElement('p');
+        distanceText.classList.add('distanceText');
+        distanceText.textContent = item.distanceText;
+        panel.appendChild(distanceText);
+        
+    });
+
+    // Show the panel by adding the 'open' class
+    panel.classList.add('open');
+    document.getElementById('map').classList.add('panel-open');
+}
+
+// Apply the category filter to the map and panel items
+function applyCategoryFilter(panel, data) {
+    const selectedCategory = document.getElementById('category-filter').value;
+    let filteredItems = panel.originalItems;
+
+    if (selectedCategory !== 'all') {
+        filteredItems = panel.originalItems.filter((item) => {
+            const feature = data.getFeatureById(item.itemid);
+            return feature.getProperty('category') === selectedCategory;
+        });
+    }
+
+    // Clear the panel except for the filter controls
+    while (panel.childNodes.length > 1) {
+        panel.removeChild(panel.lastChild);
+    }
+
+    // Display the filtered items in the sidebar
+    filteredItems.forEach((item) => {
+        const currentItem = data.getFeatureById(item.itemid);
+
+        const name = document.createElement('p');
+        name.classList.add('place');
+        name.textContent = currentItem.getProperty('name');
+        panel.appendChild(name);
+
+        const distanceText = document.createElement('p');
+        distanceText.classList.add('distanceText');
+        distanceText.textContent = item.distanceText;
+        panel.appendChild(distanceText);
+    });
+
+    // Update the visibility of markers on the map
+    applyCategoryFilterToMap(data);
+}
 
 
-// function showItemsList(data, items) {
-//     if (items.length == 0) {
-//         console.log('no items');
-//         return;
-//     }
 
-//     let panel = document.getElementById('panel');
-//     // If the panel already exists, use it. Else, create it and add to the page.
-//     if (panel) {
-//         // If panel is already open, close it
-//         if (panel.classList.contains('open')) {
-//             panel.classList.remove('open');
-//             document.getElementById('map').classList.remove('panel-open');
-//             return;
-//         }
-//     } else {
-//         panel = document.createElement('div');
-//         panel.setAttribute('id', 'panel');
-//         const body = document.body;
-//         body.insertBefore(panel, body.childNodes[0]);
-//     }
+function applyCategoryFilterToMap(data) {
+    const selectedCategory = document.getElementById('category-filter').value;
 
-//     // Clear the previous details
-//     panel.innerHTML = '';
-
-//     // **Add Filter Controls**
-//     const filterContainer = document.createElement('div');
-//     filterContainer.setAttribute('id', 'filter-container');
-//     filterContainer.style.margin = '10px 18px';
-
-//     const filterLabel = document.createElement('label');
-//     filterLabel.textContent = 'Filter by Category: ';
-//     filterLabel.setAttribute('for', 'category-filter');
-//     filterContainer.appendChild(filterLabel);
-
-//     const categoryFilter = document.createElement('select');
-//     categoryFilter.setAttribute('id', 'category-filter');
-//     categoryFilter.innerHTML = `
-//     <option value="all">All</option>
-//     <option value="patisserie">Patisserie</option>
-//     <option value="cafe">Cafe</option>
-//   `;
-//     filterContainer.appendChild(categoryFilter);
-//     panel.appendChild(filterContainer);
-
-//     // **Store the Original items List**
-//     panel.originalItems = items; // Attach original items to the panel for filtering
-
-//     // **Add Event Listener for Filter**
-//     categoryFilter.addEventListener('change', () => {
-//         applyCategoryFilter(panel, data);
-//     });
-
-//     // **Display items**
-//     items.forEach((item) => {
-//         // Add item details with text formatting
-//         const name = document.createElement('p');
-//         name.classList.add('place');
-//         const currentItem = data.getFeatureById(item.itemid);
-//         name.textContent = currentItem.getProperty('name');
-//         panel.appendChild(name);
-//         const distanceText = document.createElement('p');
-//         distanceText.classList.add('distanceText');
-//         distanceText.textContent = item.distanceText;
-//         panel.appendChild(distanceText);
-//     });
-
-//     // Toggle the panel
-//     if (panel.classList.contains('open')) {
-//         panel.classList.remove('open');
-//         document.getElementById('map').classList.remove('panel-open');
-//     } else {
-//         panel.classList.add('open');
-//         document.getElementById('map').classList.add('panel-open');
-//     }
-//     // **Open the Panel and Adjust Map**
-//     panel.classList.add('open');
-//     document.getElementById('map').classList.add('panel-open');
-// }
-
-
-// function applyCategoryFilter(panel, data) {
-//     const selectedCategory = document.getElementById('category-filter').value;
-//     let filteredItems= panel.originalItems;
-
-//     if (selectedCategory !== 'all') {
-//         filteredItems = panel.originalItems.filter(item => {
-//             const feature = data.getFeatureById(item.item);
-//             return feature.getProperty('category') === selectedCategory;
-//         });
-//     }
-
-//     // Clear the panel except for the filter controls
-//     while (panel.childNodes.length > 1) { // Assuming first child is filterContainer
-//         panel.removeChild(panel.lastChild);
-//     }
-
-//     // Display the filtered items
-//     filteredItems.forEach((item) => {
-//         const name = document.createElement('p');
-//         name.classList.add('place');
-//         const currentItem = data.getFeatureById(item.itemid);
-//         name.textContent = currentItem.getProperty('name');
-//         panel.appendChild(name);
-//         const distanceText = document.createElement('p');
-//         distanceText.classList.add('distanceText');
-//         distanceText.textContent = item.distanceText;
-//         panel.appendChild(distanceText);
-//     });
-
-//     // **Update Map Markers Visibility**
-//     applyCategoryFilterToMap(data);
-// }
-
-// /**
-//  * Apply the selected category filter to the map markers.
-//  * @param {google.maps.Data} data The geospatial data object layer for the map.
-//  */
-// function applyCategoryFilterToMap(data) {
-//     const selectedCategory = document.getElementById('category-filter').value;
-
-//     data.forEach((feature) => {
-//         const category = feature.getProperty('category');
-//         if (selectedCategory === 'all' || category === selectedCategory) {
-//             data.overrideStyle(feature, { visible: true });
-//         } else {
-//             data.overrideStyle(feature, { visible: false });
-//         }
-//     });
-// }
-
+    data.forEach((feature) => {
+        const category = feature.getProperty('category');
+        if (selectedCategory === 'all' || category === selectedCategory) {
+            data.overrideStyle(feature, { visible: true });
+        } else {
+            data.overrideStyle(feature, { visible: false });
+        }
+    });
+}
