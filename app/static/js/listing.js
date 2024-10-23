@@ -43,12 +43,7 @@ Vue.createApp({
                     formDataToSend.append('file', this.formData.file);
                 }
 
-                axios.post('http://127.0.0.1:5000/api/item', formDataToSend, {
-                    headers: {
-                        // 'Content-Type': 'multipart/form-data'
-                        'Content-Type': 'application/json' // Set content type to application/json
-                    }
-                })
+                axios.post('http://127.0.0.1:5000/listing', formDataToSend)
                     .then(response => {
                         console.log("Form Submitted Successfully:", response.data);
                         alert('Form submitted successfully!');
@@ -82,3 +77,10 @@ Vue.createApp({
         }
     }
 }).mount('#temp');
+
+
+
+   // headers: {
+        // 'Content-Type': 'multipart/form-data'
+//        'Content-Type': 'application/json' // Set content type to application/json
+ //   }
