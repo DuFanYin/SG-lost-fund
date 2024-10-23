@@ -10,17 +10,22 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 @main.route('/')
 def index():
     return render_template('home.html')
+
 
 @main.route('/user_profile')
 def user_profile():
     return render_template('user_profile.html')
 
+
 @main.route('/dash_board')
 def dash_board():
     return render_template('dash_board.html')
+
+
 @main.route('/listing', methods=['POST', 'GET'])
 def listing():
     if request.method == 'GET':
@@ -63,6 +68,7 @@ def listing():
     }
 
     return jsonify(response_data), 200
+
 
 @main.route('/footer')
 def footer():
