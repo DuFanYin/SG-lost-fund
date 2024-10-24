@@ -10,7 +10,8 @@ Vue.createApp({
                 handoff_location: '',
                 file: null
             },
-            characterCount: 0
+            characterCount: 0,
+            formSubmitted: false
         };
     },
     methods: {
@@ -46,7 +47,8 @@ Vue.createApp({
                 axios.post('http://127.0.0.1:5000/listing', formDataToSend)
                     .then(response => {
                         console.log("Form Submitted Successfully:", response.data);
-                        alert('Form submitted successfully!');
+                        // alert('Form submitted successfully!');
+                        this.formSubmitted = true;
                         this.resetForm();
                     })
                     .catch(error => {
