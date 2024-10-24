@@ -73,3 +73,8 @@ def listing():
 @main.route('/footer')
 def footer():
     return render_template('footer.html')
+
+
+@main.route('/login')
+def login():
+    return render_template('login.html')
