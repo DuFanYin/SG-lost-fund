@@ -1,80 +1,4 @@
-const mapStyle = [{
-    'featureType': 'administrative',
-    'elementType': 'all',
-    'stylers': [{
-        'visibility': 'on',
-    },
-    {
-        'lightness': 33,
-    },
-    ],
-},
-{
-    'featureType': 'landscape',
-    'elementType': 'all',
-    'stylers': [{
-        'color': '#f2e5d4',
-    }],
-},
-{
-    'featureType': 'poi.park',
-    'elementType': 'geometry',
-    'stylers': [{
-        'color': '#c5dac6',
-    }],
-},
-{
-    'featureType': 'poi.park',
-    'elementType': 'labels',
-    'stylers': [{
-        'visibility': 'on',
-    },
-    {
-        'lightness': 20,
-    },
-    ],
-},
-{
-    'featureType': 'road',
-    'elementType': 'all',
-    'stylers': [{
-        'lightness': 20,
-    }],
-},
-{
-    'featureType': 'road.highway',
-    'elementType': 'geometry',
-    'stylers': [{
-        'color': '#c5c6c6',
-    }],
-},
-{
-    'featureType': 'road.arterial',
-    'elementType': 'geometry',
-    'stylers': [{
-        'color': '#e4d7c6',
-    }],
-},
-{
-    'featureType': 'road.local',
-    'elementType': 'geometry',
-    'stylers': [{
-        'color': '#fbfaf7',
-    }],
-},
-{
-    'featureType': 'water',
-    'elementType': 'all',
-    'stylers': [{
-        'visibility': 'on',
-    },
-    {
-        'color': '#acbcc9',
-    },
-    ],
-},
-];
-
+// COMPLETED //
 function sanitizeHTML(strings) {
     const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' };
     let result = strings[0];
@@ -88,7 +12,6 @@ function sanitizeHTML(strings) {
 }
 
 function getUserLocation() {
-
     const defaultPos = { lat: 1.3521, lng: 103.8198 }; // Singapore center
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
@@ -112,12 +35,18 @@ function renderMapWithFeatures(centerPosition) {
     let defaultZoomLevel = 11;
     let zoomedInLevel = 18;
 
+
     // Initialize the map with the given center position
     const map = new google.maps.Map(document.getElementById('map'), {
         zoom: defaultZoomLevel,
         center: centerPosition,
-        styles: mapStyle,
+        styles: [],
+        mapTypeId: 'roadmap', // Options: 'roadmap' (default), 'satellite', 'hybrid', 'terrain'
+        mapTypeControl: false, // Disable default map type control
     });
+
+    addLayersButton(map);
+    map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(document.getElementById('layers-button'));
 
     const bounds = new google.maps.LatLngBounds();
     const infoWindow = new google.maps.InfoWindow();
@@ -170,28 +99,44 @@ function renderMapWithFeatures(centerPosition) {
                 uniqueCategories.add(category);
             }
         }
-        
+
     });
 
+    const togglePanelButton = document.getElementById('toggle-panel-button');
+    const card = document.getElementById('card');
+    const cardBody = document.getElementById('cardBody');
+
+    togglePanelButton.addEventListener('click', () => {
+        if (panel.classList.contains('open')) {
+            card.style.zIndex = 0;
+            panel.classList.remove('open');
+            togglePanelButton.innerHTML = '<img src="https://maps.gstatic.com/tactile/pane/arrow_left_2x.png" class="flipped-horizontal" alt="<" id="arrow">';
+
+        } else {
+            card.style.zIndex = 2;
+            panel.classList.add('open');
+            togglePanelButton.innerHTML = '<img src="https://maps.gstatic.com/tactile/pane/arrow_left_2x.png" alt=">" id="arrow">'; 
+
+        }
+    });
 
     // Fit the map to the bounds after all markers are loaded
     map.data.addListener('addfeature', () => {
 
         map.fitBounds(bounds);
-        console.log(uniqueCategories);
         const categoryArray = Array.from(uniqueCategories);
 
         const items = [];
         map.data.forEach((feature) => {
-        
+
             const itemID = feature.getProperty("itemid");
-            if(itemID){
+            if (itemID) {
                 items.push({
                     itemid: itemID,
                 });
             }
         });
-        showItemsList(map.data, items, categoryArray);
+        // showItemsList(map.data, items, categoryArray);
     });
 
     // Show the information for a store when its marker is clicked.
@@ -203,7 +148,7 @@ function renderMapWithFeatures(centerPosition) {
         const phone = event.feature.getProperty('phone');
         const position = event.feature.getGeometry().get();
 
-        
+
         // Content for InfoWindow
         const content = `
         <div>
@@ -221,7 +166,7 @@ function renderMapWithFeatures(centerPosition) {
         if (currentInfoWindow) {
             currentInfoWindow.close();
         }
-    
+
         // Open the new InfoWindow
         infoWindow.open(map);
         currentInfoWindow = infoWindow;
@@ -241,34 +186,27 @@ function renderMapWithFeatures(centerPosition) {
         });
     });
 
-    // AUTOCOMPLETE SEARCH BAR 
-    const card = document.createElement('div');
-    const titleBar = document.createElement('div');
-    const title = document.createElement('div');
-    const container = document.createElement('div');
+    // AUTOCOMPLETE SEARCH BAR //
+    const container = document.getElementById('sidebar-autocomplete-container');
     const input = document.createElement('input');
     const options = {
         types: ['address'],
         componentRestrictions: { country: 'sg' },
     };
+    const panel = document.getElementById('panel');
 
-    card.setAttribute('id', 'autocomplete-card');
-    title.setAttribute('id', 'title');
-    title.textContent = 'Location of missing item';
-    titleBar.appendChild(title);
     container.setAttribute('id', 'autocomplete-container');
+
     input.setAttribute('id', 'autocomplete-input');
     input.setAttribute('type', 'text');
     input.setAttribute('placeholder', 'Enter an address');
+    input.style.width = '100%';
+
     container.appendChild(input);
-    card.appendChild(titleBar);
-    card.appendChild(container);
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
 
     const autocomplete = new google.maps.places.Autocomplete(input, options);
     autocomplete.setFields(['address_components', 'geometry', 'name']);
 
-    // Set the origin point when the user selects an address
     const originMarker = new google.maps.Marker({ map: map });
     originMarker.setVisible(false);
     let originLocation = map.getCenter();
@@ -293,8 +231,10 @@ function renderMapWithFeatures(centerPosition) {
 
         // Use the selected address as the origin to calculate distances to each of the store locations
         const rankedItems = await calculateDistances(map.data, originLocation);
-        showItemsList(map.data, rankedItems);
+        console.log(rankedItems);
+        showItemsList(map.data, rankedItems, Array.from(uniqueCategories));
     });
+
 
 
 }
@@ -307,6 +247,7 @@ function imageExists(url, callback) {
 }
 
 async function calculateDistances(data, origin) {
+
     const items = [];
     const destinations = [];
 
@@ -318,8 +259,6 @@ async function calculateDistances(data, origin) {
         destinations.push(location);
     });
 
-    // Retrieve the distances of each store from the origin
-    // The returned list will be in the same order as the destinations list
     const service = new google.maps.DistanceMatrixService();
     const getDistanceMatrix =
         (service, parameters) => new Promise((resolve, reject) => {
@@ -346,6 +285,7 @@ async function calculateDistances(data, origin) {
             });
         });
 
+    console.log(getDistanceMatrix);
     const distancesList = await getDistanceMatrix(service, {
         origins: [origin],
         destinations: destinations,
@@ -356,21 +296,22 @@ async function calculateDistances(data, origin) {
     distancesList.sort((first, second) => {
         return first.distanceVal - second.distanceVal;
     });
-
     return distancesList;
 }
 
 function showItemsList(data, items, categoryArray) {
     const panel = document.getElementById('panel');
 
-    // Ensure the panel is in the HTML
     if (!panel) {
         console.error('Sidebar element (#panel) not found in the document.');
         return;
     }
 
     // Clear the previous details in the sidebar
-    panel.innerHTML = '';
+    const totalElementChildren = panel.children.length;
+    for (let i = panel.children.length - 1; i >= 3; i--) {
+        panel.removeChild(panel.children[i]);
+    }
 
     // Add filter controls to the sidebar
     const filterContainer = document.createElement('div');
@@ -411,22 +352,26 @@ function showItemsList(data, items, categoryArray) {
 
     // Display the list of items in the sidebar
     items.forEach((item) => {
+        console.log(item);
         const currentItem = data.getFeatureById(item.itemid);
-    
+
         const name = document.createElement('p');
         name.classList.add('place');
         name.textContent = currentItem.getProperty('name');
         panel.appendChild(name);
-        
+
         const distanceText = document.createElement('p');
         distanceText.classList.add('distanceText');
         distanceText.textContent = item.distanceText;
         panel.appendChild(distanceText);
-        
+
     });
 
     // Show the panel by adding the 'open' class
     panel.classList.add('open');
+    document.getElementById("temp").style.zIndex = 2;
+    document.getElementById("temp").style.display = "inline-block";
+
     document.getElementById('map').classList.add('panel-open');
 }
 
@@ -477,6 +422,31 @@ function applyCategoryFilterToMap(data) {
             data.overrideStyle(feature, { visible: true });
         } else {
             data.overrideStyle(feature, { visible: false });
+        }
+    });
+}
+
+
+
+function addLayersButton(map) {
+    const layersButton = document.getElementById('layers-button');
+
+    layersButton.addEventListener('click', (event) => {
+        const layerOption = event.target.getAttribute('data-layer');
+
+        if (layerOption === 'terrain') {
+            map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
+        } else if (layerOption === 'traffic') {
+            const trafficLayer = new google.maps.TrafficLayer();
+            trafficLayer.setMap(map);
+        } else if (layerOption === 'transit') {
+            const transitLayer = new google.maps.TransitLayer();
+            transitLayer.setMap(map);
+        } else if (layerOption === 'biking') {
+            const bikeLayer = new google.maps.BicyclingLayer();
+            bikeLayer.setMap(map);
+        } else if (layerOption === 'more') {
+            // You can add additional functionality for "more"
         }
     });
 }

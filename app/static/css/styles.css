@@ -1,73 +1,55 @@
 #map {
     height: 100%;
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    z-index: 0;
 }
-
+nav{
+    z-index: 1;
+}
 html,
 body {
     height: 100%;
     margin: 0;
     padding: 0;
-}
+    overflow: hidden;
 
-/* Styling for autocomplete search bar */
-#autocomplete-card {
-    background-color: #fff;
-    border-radius: 2px 0 0 2px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    box-sizing: border-box;
-    font-family: Roboto;
-    margin: 10px 10px 0 0;
-    -moz-box-sizing: border-box;
-    outline: none;
 }
 
 #autocomplete-container {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    margin-right: 12px;
+    display: inline-block;
+    align-items: center;
+    background-color: white;
+    border-radius: 25px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+    padding: 5px 10px;
+    position: fixed;
+    z-index: 3;
+    width:350px;
+    margin-left: 25px;
 }
 
 #autocomplete-input {
-    background-color: #fff;
-    font-family: Roboto;
-    font-size: 15px;
-    font-weight: 300;
-    margin-left: 12px;
-    padding: 0 11px 0 13px;
-    text-overflow: ellipsis;
-    width: 400px;
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 5px 10px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
 }
 
 #autocomplete-input:focus {
     border-color: #4d90fe;
 }
 
-#title {
-    color: #fff;
-    background-color: #acbcc9;
-    font-size: 18px;
-    font-weight: 400;
-    padding: 6px 12px;
-}
-
-.hidden {
-    display: none;
-}
-
-/* Styling for an info pane that slides out from the left. 
-   * Hidden by default. */
-#panel {
-    height: 100%;
-    width: null;
-    background-color: white;
-    position: fixed;
-    z-index: 1;
-    overflow-x: hidden;
-    transition: all .2s ease-out;
-}
-
 .open {
-    width: 250px;
+    width: 400px;
+}
+
+.hidden{
+    display: none;
 }
 
 .place {
@@ -90,19 +72,136 @@ body {
 }
 
 #panel {
-    position: fixed;
+    position: absolute;
+    z-index: 1;
     left: 0;
     top: 0;
     height: 100%;
-    width: 250px;
-    background-color: rgba(255, 255, 255, 0.9); /* White with slight transparency */
+    width: 400px;
+    background-color: rgba(255, 255, 255, 1); 
     box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3); /* Adds shadow for better visibility */
     padding: 20px;
+    overflow-x: hidden;
     overflow-y: auto;
     display: none; /* Hidden by default until it needs to be shown */
-    transition: transform 0.3s ease; /* Smooth transition for panel appearance */
+    transition: left 0.3s ease; /* Smooth transition for panel appearance */
 }
 
 #panel.open {
-    display: block; /* Shows the panel when it's open */
+    display: inline-block; /* Shows the panel when it's open */
+}
+
+
+.toggle-panel-button {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 0px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: left 0.3s ease; /* Smooth transition for button movement */
+    width:23px;
+    height:48px;
+}
+
+#panel.open ~ .toggle-panel-button {
+    left: 400px; /* Button position when panel is open */
+}
+
+.flipped-horizontal {
+    transform: scaleX(-1);
+}
+
+
+#arrow{
+    width: 100%;
+}
+
+.layers-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+.layers-icon {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+}
+
+.layers-menu {
+    display: none;
+    flex-direction: row;
+    margin-top: 5px;
+}
+
+.layer-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    margin: 0 5px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.layer-icon {
+    width: 32px; /* Set the appropriate size for your icons */
+    height: 32px;
+    margin-bottom: 5px;
+}
+
+.layers-container:hover .layers-menu {
+    display: flex;
+}
+
+
+.card, .card-body{
+    position: fixed;
+    z-index: 0;
+    left: 0;
+    top: 0;
+    height: 170px;
+    width: 400px;
+    background-color: rgba(255, 255, 255, 1); 
+    /* box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.2); Adds shadow for better visibility */
+    padding: 20px;
+}
+
+
+#panel::-webkit-scrollbar {
+    width: 12px;
+}
+
+#panel::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+#panel::-webkit-scrollbar-thumb {
+    background-color: #4285f4; /* Blue color for the thumb */
+    border: 2px solid #f1f1f1; /* Adds space between thumb and track */
+    padding-top: 60px;
+}
+
+#panel::-webkit-scrollbar-thumb:hover {
+    background-color: #357ae8; /* Darker blue on hover */
+}
+
+#results-container {
+    flex-grow: 1; /* This allows the results container to grow and take up remaining space */
+    overflow-y: auto; /* Makes the results section scrollable */
+    padding: 150px 20px 0px 20px; /* Optional: padding for content */
 }
