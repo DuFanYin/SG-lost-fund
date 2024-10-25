@@ -1,4 +1,6 @@
 // COMPLETED //
+const card = document.getElementById('card');
+
 function sanitizeHTML(strings) {
     const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' };
     let result = strings[0];
@@ -103,9 +105,6 @@ function renderMapWithFeatures(centerPosition) {
     });
 
     const togglePanelButton = document.getElementById('toggle-panel-button');
-    const card = document.getElementById('card');
-    const cardBody = document.getElementById('cardBody');
-
     togglePanelButton.addEventListener('click', () => {
         if (panel.classList.contains('open')) {
             card.style.zIndex = 0;
@@ -136,7 +135,6 @@ function renderMapWithFeatures(centerPosition) {
                 });
             }
         });
-        // showItemsList(map.data, items, categoryArray);
     });
 
     // Show the information for a store when its marker is clicked.
@@ -180,9 +178,6 @@ function renderMapWithFeatures(centerPosition) {
             map.setZoom(defaultZoomLevel);
             map.fitBounds(bounds);
 
-            if (infoPane.classList.contains("open")) {
-                infoPane.classList.remove("open");
-            }
         });
     });
 
@@ -231,8 +226,8 @@ function renderMapWithFeatures(centerPosition) {
 
         // Use the selected address as the origin to calculate distances to each of the store locations
         const rankedItems = await calculateDistances(map.data, originLocation);
-        console.log(rankedItems);
         showItemsList(map.data, rankedItems, Array.from(uniqueCategories));
+
     });
 
 
@@ -307,9 +302,8 @@ function showItemsList(data, items, categoryArray) {
         return;
     }
 
-    // Clear the previous details in the sidebar
     const totalElementChildren = panel.children.length;
-    for (let i = panel.children.length - 1; i >= 3; i--) {
+    for (let i = panel.children.length - 1; i >= 2; i--) {
         panel.removeChild(panel.children[i]);
     }
 
@@ -331,7 +325,6 @@ function showItemsList(data, items, categoryArray) {
     allOption.textContent = 'All';
     categoryFilter.appendChild(allOption);
 
-    // Add options for each unique category
     categoryArray.forEach((category) => {
         const option = document.createElement('option');
         option.value = category;
@@ -342,41 +335,78 @@ function showItemsList(data, items, categoryArray) {
     filterContainer.appendChild(categoryFilter);
     panel.appendChild(filterContainer);
 
-    // Store the original items list
     panel.originalItems = items;
 
-    // Add Event Listener for Filter Change
     categoryFilter.addEventListener('change', () => {
         applyCategoryFilter(panel, data);
     });
 
+
     // Display the list of items in the sidebar
     items.forEach((item) => {
-        console.log(item);
-        const currentItem = data.getFeatureById(item.itemid);
-
-        const name = document.createElement('p');
-        name.classList.add('place');
-        name.textContent = currentItem.getProperty('name');
-        panel.appendChild(name);
-
-        const distanceText = document.createElement('p');
-        distanceText.classList.add('distanceText');
-        distanceText.textContent = item.distanceText;
-        panel.appendChild(distanceText);
-
+        addCards(data, item);
     });
 
     // Show the panel by adding the 'open' class
     panel.classList.add('open');
-    document.getElementById("temp").style.zIndex = 2;
-    document.getElementById("temp").style.display = "inline-block";
+    card.style.zIndex = 2;
 
     document.getElementById('map').classList.add('panel-open');
 }
 
+function addCards(data, item){
+    const temp = document.createElement('div');
+    temp.classList.add('card');
+
+    const tempBody = document.createElement('div');
+    tempBody.classList.add('card-body');
+
+    const currentItem = data.getFeatureById(item.itemid);
+
+    const name = document.createElement('p');
+    name.classList.add('place');
+    name.textContent = currentItem.getProperty('name');
+    tempBody.appendChild(name);
+
+    const distanceText = document.createElement('p');
+    distanceText.classList.add('distanceText');
+    distanceText.textContent = item.distanceText;
+    tempBody.appendChild(distanceText);
+
+    temp.appendChild(tempBody);
+
+    // Add click event listener to show the InfoWindow when the card is clicked
+    temp.addEventListener('click', () => {
+        const position = currentItem.getGeometry().get();
+        const name = currentItem.getProperty('name');
+        const description = currentItem.getProperty('description');
+        const hours = currentItem.getProperty('found_time');
+        const phone = currentItem.getProperty('phone');
+
+        // Content for InfoWindow
+        const content = `
+        <div>
+          <h2>${name}</h2>
+          <p>${description}</p>
+          <p><b>Found Time:</b> ${hours}<br/><b>Phone:</b> ${phone}</p>
+        </div>`;
+
+    const infoWindow = new google.maps.InfoWindow();
+        
+        // Set InfoWindow content and open it
+        infoWindow.setContent(content);
+        infoWindow.setPosition(position);
+
+        infoWindow.open(map);
+    });
+
+    const panel = document.getElementById('panel');
+    panel.appendChild(temp);
+}
 // Apply the category filter to the map and panel items
 function applyCategoryFilter(panel, data) {
+    card.style.zIndex = 2;
+
     const selectedCategory = document.getElementById('category-filter').value;
     let filteredItems = panel.originalItems;
 
@@ -388,23 +418,14 @@ function applyCategoryFilter(panel, data) {
     }
 
     // Clear the panel except for the filter controls
-    while (panel.childNodes.length > 1) {
+    while (panel.childNodes.length > 6) {
+        console.log(panel.lastChild);
         panel.removeChild(panel.lastChild);
     }
 
     // Display the filtered items in the sidebar
     filteredItems.forEach((item) => {
-        const currentItem = data.getFeatureById(item.itemid);
-
-        const name = document.createElement('p');
-        name.classList.add('place');
-        name.textContent = currentItem.getProperty('name');
-        panel.appendChild(name);
-
-        const distanceText = document.createElement('p');
-        distanceText.classList.add('distanceText');
-        distanceText.textContent = item.distanceText;
-        panel.appendChild(distanceText);
+        addCards(data, item);
     });
 
     // Update the visibility of markers on the map

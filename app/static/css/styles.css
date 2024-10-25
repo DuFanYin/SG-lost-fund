@@ -169,7 +169,7 @@ body {
 }
 
 
-.card, .card-body{
+#card, #card-body{
     position: fixed;
     z-index: 0;
     left: 0;
