@@ -155,3 +155,8 @@ def login():
 
         except Exception as e:
             return jsonify({"error": f"Invalid token: {str(e)}"}), 401
+
+
+@main.route('/navbar')
+def navbar():
+    return render_template('navbar.html')
