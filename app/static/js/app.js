@@ -1,7 +1,7 @@
 // COMPLETED //
 const card = document.getElementById('card');
 let defaultZoomLevel = 11;
-let zoomedInLevel = 18;
+let zoomedInLevel = 15;
 var map = "";
 var bounds = null;
 var infoWindow = null;
@@ -36,7 +36,6 @@ function getUserLocation() {
             renderMapWithFeatures(defaultPos);
         });
     } else {
-
         console.log("Geolocation is not supported by this browser. Using default location.");
         renderMapWithFeatures(defaultPos);
     }
@@ -52,9 +51,6 @@ function renderMapWithFeatures(centerPosition) {
         mapTypeId: 'roadmap', // Options: 'roadmap' (default), 'satellite', 'hybrid', 'terrain'
         mapTypeControl: false, // Disable default map type control
     });
-
-    addLayersButton(map);
-    map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(document.getElementById('layers-button'));
 
     bounds = new google.maps.LatLngBounds();
     infoWindow = new google.maps.InfoWindow();
@@ -345,8 +341,6 @@ function showItemsList(data, items, categoryArray) {
     panel.classList.add('open');
     card.style.zIndex = 2;
     document.getElementById('arrow').src = "../static/img/arrow_left.png"
-    adjustPanelsForScreenSize();
-
 }
 
 function addCards(data, item) {
@@ -426,6 +420,8 @@ function addCards(data, item) {
         closeButton.style.right = '10px';
         closeButton.addEventListener('click', () => {
             infoPanel.style.display = 'none';
+            document.getElementById('toggle-panel-button').classList.remove('hidden');
+
         });
         infoPanel.appendChild(closeButton);
 
@@ -434,15 +430,7 @@ function addCards(data, item) {
         map.setCenter(position);
         adjustPanelsForScreenSize();
 
-        // google.maps.event.addListener(infoWindow, 'closeclick', () => {
-
-        //     map.setZoom(defaultZoomLevel);
-        //     map.fitBounds(bounds);
-
-        // });
     });
-
-
 
     const panel = document.getElementById('panel');
     panel.appendChild(temp);
@@ -452,10 +440,11 @@ function addCards(data, item) {
 function adjustPanelsForScreenSize() {
     const infoPanel = document.getElementById('info-panel');
     const panel = document.getElementById('panel');
+    document.getElementById('toggle-panel-button').classList.add('hidden');
 
     if (!infoPanel || !panel) return; // Guard clause if the panels don't exist yet
 
-    if (window.innerWidth >= 768) { // Medium breakpoint onwards
+    if (window.innerWidth >= 992) { // Medium breakpoint onwards
         infoPanel.style.left = "350px";
     } else {
         infoPanel.style.left = 0;
@@ -507,29 +496,6 @@ function applyCategoryFilterToMap(data) {
             data.overrideStyle(feature, { visible: true });
         } else {
             data.overrideStyle(feature, { visible: false });
-        }
-    });
-}
-
-function addLayersButton(map) {
-    const layersButton = document.getElementById('layers-button');
-
-    layersButton.addEventListener('click', (event) => {
-        const layerOption = event.target.getAttribute('data-layer');
-
-        if (layerOption === 'terrain') {
-            map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
-        } else if (layerOption === 'traffic') {
-            const trafficLayer = new google.maps.TrafficLayer();
-            trafficLayer.setMap(map);
-        } else if (layerOption === 'transit') {
-            const transitLayer = new google.maps.TransitLayer();
-            transitLayer.setMap(map);
-        } else if (layerOption === 'biking') {
-            const bikeLayer = new google.maps.BicyclingLayer();
-            bikeLayer.setMap(map);
-        } else if (layerOption === 'more') {
-            // You can add additional functionality for "more"
         }
     });
 }

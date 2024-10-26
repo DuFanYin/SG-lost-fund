@@ -121,54 +121,6 @@ body {
     width: 100%;
 }
 
-/* LAYERS */
-.layers-container {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-}
-
-.layers-icon {
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-}
-
-.layers-menu {
-    display: none;
-    flex-direction: row;
-    margin-top: 5px;
-}
-
-.layer-option {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    margin: 0 5px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-.layer-icon {
-    width: 32px; /* Set the appropriate size for your icons */
-    height: 32px;
-    margin-bottom: 5px;
-}
-
-.layers-container:hover .layers-menu {
-    display: flex;
-}
-
 
 #card, #card-body{
     position: absolute;
