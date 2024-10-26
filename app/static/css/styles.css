@@ -4,9 +4,12 @@
     position: absolute;
     bottom: 0px;
     z-index: 0;
+    overflow: hidden;
+
 }
 nav{
     z-index: 1;
+    overflow: hidden;
 }
 html,
 body {
@@ -18,7 +21,7 @@ body {
 }
 
 #autocomplete-container {
-    display: inline-block;
+    display: block;
     align-items: center;
     background-color: white;
     border-radius: 25px; /* Rounded corners */
@@ -26,8 +29,9 @@ body {
     padding: 5px 10px;
     position: fixed;
     z-index: 3;
-    width:350px;
-    margin-left: 25px;
+    width:325px;
+    margin-left: 10px;
+    margin-top: 10px;
 }
 
 #autocomplete-input {
@@ -44,9 +48,6 @@ body {
     border-color: #4d90fe;
 }
 
-.open {
-    width: 400px;
-}
 
 .hidden{
     display: none;
@@ -75,20 +76,19 @@ body {
     position: absolute;
     z-index: 1;
     left: 0;
-    top: 0;
+    margin-top: 100px;
     height: 100%;
-    width: 400px;
+    width: 350px;
     background-color: rgba(255, 255, 255, 1); 
     box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3); /* Adds shadow for better visibility */
     padding: 20px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: scroll;
     display: none; /* Hidden by default until it needs to be shown */
     transition: left 0.3s ease; /* Smooth transition for panel appearance */
 }
 
 #panel.open {
-    display: inline-block; /* Shows the panel when it's open */
+    display: block; /* Shows the panel when it's open */
 }
 
 
@@ -102,14 +102,14 @@ body {
     cursor: pointer;
     padding: 0px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
+    z-index: 2;
     transition: left 0.3s ease; /* Smooth transition for button movement */
-    width:23px;
+    width: 20px;
     height:48px;
 }
 
 #panel.open ~ .toggle-panel-button {
-    left: 400px; /* Button position when panel is open */
+    left: 350px; /* Button position when panel is open */
 }
 
 .flipped-horizontal {
@@ -121,6 +121,7 @@ body {
     width: 100%;
 }
 
+/* LAYERS */
 .layers-container {
     position: absolute;
     bottom: 20px;
@@ -170,20 +171,20 @@ body {
 
 
 #card, #card-body{
-    position: fixed;
+    position: absolute;
     z-index: 0;
     left: 0;
-    top: 0;
-    height: 170px;
-    width: 400px;
-    background-color: rgba(255, 255, 255, 1); 
+    display: block;
+    height: 100px;
+    width: 350px;
+    background-color: white; 
     /* box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.2); Adds shadow for better visibility */
-    padding: 20px;
 }
 
 
+/* SCROLLBAR */
 #panel::-webkit-scrollbar {
-    width: 12px;
+    width: 5px;
 }
 
 #panel::-webkit-scrollbar-track {
@@ -191,17 +192,48 @@ body {
 }
 
 #panel::-webkit-scrollbar-thumb {
-    background-color: #4285f4; /* Blue color for the thumb */
-    border: 2px solid #f1f1f1; /* Adds space between thumb and track */
-    padding-top: 60px;
+    background-color: lightgrey;
 }
 
 #panel::-webkit-scrollbar-thumb:hover {
-    background-color: #357ae8; /* Darker blue on hover */
+    background-color: darkgrey;
 }
 
-#results-container {
-    flex-grow: 1; /* This allows the results container to grow and take up remaining space */
-    overflow-y: auto; /* Makes the results section scrollable */
-    padding: 150px 20px 0px 20px; /* Optional: padding for content */
+/* FILTER CONTAINER */
+#filter-container{
+    margin: 10px 18px;
 }
+
+
+
+
+#info-panel {
+    width: 360px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    overflow-y: auto;
+    position: absolute;
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+/* Close button for the info panel */
+.close-button {
+    background-color: #ff5c5c;
+    border: none;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.close-button:hover {
+    background-color: #ff2a2a;
+}
+
+

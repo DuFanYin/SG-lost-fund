@@ -1,5 +1,14 @@
 // COMPLETED //
 const card = document.getElementById('card');
+let defaultZoomLevel = 11;
+let zoomedInLevel = 18;
+var map = "";
+var bounds = null;
+var infoWindow = null;
+var currentInfoWindow = null;
+var infoPane = document.getElementById('panel');
+var uniqueCategories = new Set();
+
 
 function sanitizeHTML(strings) {
     const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' };
@@ -34,12 +43,9 @@ function getUserLocation() {
 }
 
 function renderMapWithFeatures(centerPosition) {
-    let defaultZoomLevel = 11;
-    let zoomedInLevel = 18;
-
 
     // Initialize the map with the given center position
-    const map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
         zoom: defaultZoomLevel,
         center: centerPosition,
         styles: [],
@@ -50,45 +56,15 @@ function renderMapWithFeatures(centerPosition) {
     addLayersButton(map);
     map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(document.getElementById('layers-button'));
 
-    const bounds = new google.maps.LatLngBounds();
-    const infoWindow = new google.maps.InfoWindow();
-    let currentInfoWindow = infoWindow;
-    const infoPane = document.getElementById('panel');
-    const uniqueCategories = new Set();
+    bounds = new google.maps.LatLngBounds();
+    infoWindow = new google.maps.InfoWindow();
+    currentInfoWindow = infoWindow;
 
     // Load the items GeoJSON onto the map.
     map.data.loadGeoJson("../static/js/items.json", { idPropertyName: 'itemid' });
 
     // Define the custom marker icons, using the item's "category".
-    map.data.setStyle((feature) => {
-        const category = feature.getProperty("category");
-        const iconURL = `../static/img/icon_${category}.png`
-
-        imageExists(iconURL, (exists) => {
-            if (exists) {
-                map.data.overrideStyle(feature, {
-                    icon: {
-                        url: iconURL,
-                        scaledSize: new google.maps.Size(32, 32),
-                    }
-                });
-            } else {
-                map.data.setStyle({
-                    icon: {
-                        url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Default marker icon
-                        scaledSize: new google.maps.Size(32, 32),
-                    },
-                });
-            }
-
-        });
-        return {
-            icon: {
-                url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Default marker icon
-                scaledSize: new google.maps.Size(32, 32),
-            },
-        };
-    });
+    addCustomMarker();
 
     // Adjust the bounds to include all features added to the map
     map.data.addListener('addfeature', (event) => {
@@ -109,13 +85,12 @@ function renderMapWithFeatures(centerPosition) {
         if (panel.classList.contains('open')) {
             card.style.zIndex = 0;
             panel.classList.remove('open');
-            togglePanelButton.innerHTML = '<img src="https://maps.gstatic.com/tactile/pane/arrow_left_2x.png" class="flipped-horizontal" alt="<" id="arrow">';
+            document.getElementById('arrow').src = "../static/img/arrow_right.png"
 
         } else {
             card.style.zIndex = 2;
             panel.classList.add('open');
-            togglePanelButton.innerHTML = '<img src="https://maps.gstatic.com/tactile/pane/arrow_left_2x.png" alt=">" id="arrow">'; 
-
+            document.getElementById('arrow').src = "../static/img//arrow_left.png"
         }
     });
 
@@ -149,9 +124,10 @@ function renderMapWithFeatures(centerPosition) {
 
         // Content for InfoWindow
         const content = `
-        <div>
-          <img style="float:left; width:200px; margin-top:30px" src="https://www.google.com/imgres?q=cat%20image&imgurl=https%3A%2F%2Fi.natgeofe.com%2Fn%2F548467d8-c5f1-4551-9f58-6817a8d2c45e%2FNationalGeographic_2572187_square.jpg&imgrefurl=https%3A%2F%2Fwww.nationalgeographic.com%2Fanimals%2Fmammals%2Ffacts%2Fdomestic-cat&docid=K6Qd9XWnQFQCoM&tbnid=eAP244UcF5wdYM&vet=12ahUKEwjJs67amqKJAxW2yzgGHQKWKRYQM3oECB0QAA..i&w=3072&h=3072&hcb=2&itg=1&ved=2ahUKEwjJs67amqKJAxW2yzgGHQKWKRYQM3oECB0QAA">
-          <div style="margin-left:220px; margin-bottom:20px;">
+        <div class="card">
+            <div class="card-body">
+                <img style="width:200px; margin-top:30px" src=".../static/images/profile-icon.jpg">
+                <div style="margin-left:220px; margin-bottom:20px;">
             <h2>${name}</h2><p>${description}</p>
             <p><b>Found Time:</b> ${hours}<br/><b>Phone:</b> ${phone}</p>
           </div>
@@ -173,12 +149,12 @@ function renderMapWithFeatures(centerPosition) {
         map.setZoom(zoomedInLevel);
         map.setCenter(position);
 
-        google.maps.event.addListener(infoWindow, 'closeclick', () => {
+        // google.maps.event.addListener(infoWindow, 'closeclick', () => {
 
-            map.setZoom(defaultZoomLevel);
-            map.fitBounds(bounds);
+        //     map.setZoom(defaultZoomLevel);
+        //     map.fitBounds(bounds);
 
-        });
+        // });
     });
 
     // AUTOCOMPLETE SEARCH BAR //
@@ -241,6 +217,38 @@ function imageExists(url, callback) {
     img.src = url;
 }
 
+function addCustomMarker() {
+    map.data.setStyle((feature) => {
+        const category = feature.getProperty("category");
+        const iconURL = `../static/img/icon_${category}.png`
+
+        imageExists(iconURL, (exists) => {
+            if (exists) {
+                map.data.overrideStyle(feature, {
+                    icon: {
+                        url: iconURL,
+                        scaledSize: new google.maps.Size(32, 32),
+                    }
+                });
+            } else {
+                map.data.setStyle({
+                    icon: {
+                        url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Default marker icon
+                        scaledSize: new google.maps.Size(32, 32),
+                    },
+                });
+            }
+
+        });
+        return {
+            icon: {
+                url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Default marker icon
+                scaledSize: new google.maps.Size(32, 32),
+            },
+        };
+    });
+}
+
 async function calculateDistances(data, origin) {
 
     const items = [];
@@ -280,7 +288,6 @@ async function calculateDistances(data, origin) {
             });
         });
 
-    console.log(getDistanceMatrix);
     const distancesList = await getDistanceMatrix(service, {
         origins: [origin],
         destinations: destinations,
@@ -308,17 +315,7 @@ function showItemsList(data, items, categoryArray) {
     }
 
     // Add filter controls to the sidebar
-    const filterContainer = document.createElement('div');
-    filterContainer.setAttribute('id', 'filter-container');
-    filterContainer.style.margin = '10px 18px';
-
-    const filterLabel = document.createElement('label');
-    filterLabel.textContent = 'Filter by Category: ';
-    filterLabel.setAttribute('for', 'category-filter');
-    filterContainer.appendChild(filterLabel);
-
-    const categoryFilter = document.createElement('select');
-    categoryFilter.setAttribute('id', 'category-filter');
+    const categoryFilter = document.getElementById('category-filter');
 
     const allOption = document.createElement('option');
     allOption.value = 'all';
@@ -331,9 +328,6 @@ function showItemsList(data, items, categoryArray) {
         option.textContent = category.charAt(0).toUpperCase() + category.slice(1); // Capitalize category name
         categoryFilter.appendChild(option);
     });
-
-    filterContainer.appendChild(categoryFilter);
-    panel.appendChild(filterContainer);
 
     panel.originalItems = items;
 
@@ -350,11 +344,12 @@ function showItemsList(data, items, categoryArray) {
     // Show the panel by adding the 'open' class
     panel.classList.add('open');
     card.style.zIndex = 2;
+    document.getElementById('arrow').src = "../static/img/arrow_left.png"
+    adjustPanelsForScreenSize();
 
-    document.getElementById('map').classList.add('panel-open');
 }
 
-function addCards(data, item){
+function addCards(data, item) {
     const temp = document.createElement('div');
     temp.classList.add('card');
 
@@ -377,32 +372,103 @@ function addCards(data, item){
 
     // Add click event listener to show the InfoWindow when the card is clicked
     temp.addEventListener('click', () => {
+        const category = currentItem.getProperty('category');
         const position = currentItem.getGeometry().get();
         const name = currentItem.getProperty('name');
         const description = currentItem.getProperty('description');
         const hours = currentItem.getProperty('found_time');
         const phone = currentItem.getProperty('phone');
 
-        // Content for InfoWindow
+        // Check if a secondary panel already exists, if not, create one
+        let infoPanel = document.getElementById('info-panel');
+        if (!infoPanel) {
+            infoPanel = document.createElement('div');
+            infoPanel.setAttribute('id', 'info-panel');
+            infoPanel.classList.add('info-panel');
+
+            // Append the secondary panel to the body or map container
+            document.body.appendChild(infoPanel);
+        }
+
+        // Clear the previous content of the secondary panel
+        infoPanel.innerHTML = '';
+
+        // Set up the content for the secondary panel
         const content = `
-        <div>
-          <h2>${name}</h2>
-          <p>${description}</p>
-          <p><b>Found Time:</b> ${hours}<br/><b>Phone:</b> ${phone}</p>
-        </div>`;
+            <div class="info-panel-content">
+                <img style="width: 100%; height: auto;" src="../static/img/profile-icon.jpg">
+                <div style="padding: 20px;">
+                    <h2>${name}</h2>
+                    <p>${description}</p>
+                    <p><b>Found Time:</b> ${hours}<br/><b>Phone:</b> ${phone}</p>
+                </div>
+            </div>`;
 
-    const infoWindow = new google.maps.InfoWindow();
-        
-        // Set InfoWindow content and open it
-        infoWindow.setContent(content);
-        infoWindow.setPosition(position);
+        infoPanel.innerHTML = content;
 
-        infoWindow.open(map);
+        // Ensure the panel is visible
+        infoPanel.style.display = 'block';
+        infoPanel.style.position = 'fixed';
+        infoPanel.style.left = '350px'; // Align the secondary panel to the right side of the viewport
+        infoPanel.style.height = '100%';
+        infoPanel.style.width = '350px'; // Adjust as necessary for desired width
+        infoPanel.style.backgroundColor = '#fff';
+        infoPanel.style.boxShadow = '-2px 0px 5px rgba(0, 0, 0, 0.3)'; // Adds shadow for better visibility
+        infoPanel.style.overflowY = 'auto';
+        infoPanel.style.zIndex = '3'; // Make sure it appears above the map and main panel
+
+        // Optionally, add a close button to the secondary panel
+        const closeButton = document.createElement('button');
+        closeButton.textContent = 'Close';
+        closeButton.classList.add('close-button');
+        closeButton.style.position = 'absolute';
+        closeButton.style.top = '10px';
+        closeButton.style.right = '10px';
+        closeButton.addEventListener('click', () => {
+            infoPanel.style.display = 'none';
+        });
+        infoPanel.appendChild(closeButton);
+
+        // Center the map on the selected marker (optional)
+        map.setZoom(zoomedInLevel);
+        map.setCenter(position);
+        adjustPanelsForScreenSize();
+
+        // google.maps.event.addListener(infoWindow, 'closeclick', () => {
+
+        //     map.setZoom(defaultZoomLevel);
+        //     map.fitBounds(bounds);
+
+        // });
     });
+
+
 
     const panel = document.getElementById('panel');
     panel.appendChild(temp);
 }
+
+
+function adjustPanelsForScreenSize() {
+    const infoPanel = document.getElementById('info-panel');
+    const panel = document.getElementById('panel');
+
+    if (!infoPanel || !panel) return; // Guard clause if the panels don't exist yet
+
+    if (window.innerWidth >= 768) { // Medium breakpoint onwards
+        infoPanel.style.left = "350px";
+    } else {
+        infoPanel.style.left = 0;
+    }
+}
+
+// Add event listener for resizing the window
+window.addEventListener('resize', adjustPanelsForScreenSize);
+
+
+
+
+
 // Apply the category filter to the map and panel items
 function applyCategoryFilter(panel, data) {
     card.style.zIndex = 2;
@@ -432,8 +498,6 @@ function applyCategoryFilter(panel, data) {
     applyCategoryFilterToMap(data);
 }
 
-
-
 function applyCategoryFilterToMap(data) {
     const selectedCategory = document.getElementById('category-filter').value;
 
@@ -446,8 +510,6 @@ function applyCategoryFilterToMap(data) {
         }
     });
 }
-
-
 
 function addLayersButton(map) {
     const layersButton = document.getElementById('layers-button');

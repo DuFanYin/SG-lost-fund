@@ -36,19 +36,20 @@
         </div>
     </nav>
     <div id="sidebar-autocomplete-container"></div>
-    <div class="card" id="card">
-        <div class="card-body" id="cardBody">
-
+    <div class="container" id="card">
+        <div class="container" id="cardBody">
         </div>
     </div>
     <div id="panel" class="sidebar">
-
-        <div id="results-container">
-        </div>
         <h4>Items Nearby</h4>
+        <div id="filter-container">
+            <label>
+                Filter: <select id="category-filter"></select>
+            </label>
+        </div>
     </div>
     <button id="toggle-panel-button" class="toggle-panel-button">
-        <img src="https://maps.gstatic.com/tactile/pane/arrow_left_2x.png" alt=">" id="arrow" class="flipped-horizontal">
+        <img src="../static/img/arrow_right.png" id="arrow">
     </button>
     <div>
         <div id="map" class="map-container"></div>
@@ -84,7 +85,7 @@
     </script>
     <script src="../static/js/app.js"></script>
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=&libraries=places&loading=async&callback=getUserLocation">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBI4DCVUE76O9lZUimz8uY9oAPEecHchv8&libraries=places&loading=async&callback=getUserLocation">
         </script>
 
 
