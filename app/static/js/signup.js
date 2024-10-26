@@ -15,6 +15,7 @@ firebase.initializeApp(firebaseConfig);
 Vue.createApp({
     data() {
         return {
+            username: '',
             email: '',
             password: '',
             confirmPassword: '',
@@ -45,11 +46,21 @@ Vue.createApp({
                         'Authorization': 'Bearer ' + idToken,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email: this.email })
+                    body: JSON.stringify({ username: this.username, email: this.email })
                 });
 
                 if (response.ok) {
                     this.successMessage = 'User registered successfully!';
+
+                    // alert
+                    alert(`Welcome ${this.username} to the SG Lost & Found Website!`);
+
+                    // redirect user to home page
+                    setTimeout(() => {
+                        location.assign('/'); 
+                    }, 100); 
+
+                    this.username = '';
                     this.email = '';
                     this.password = '';
                     this.confirmPassword = '';
@@ -57,6 +68,7 @@ Vue.createApp({
                     const errorData = await response.json();
                     this.errorMessage = errorData.error || 'Error registering user';
                 }
+
             } catch (error) {
                 console.error('Error signing up:', error);
                 this.errorMessage = 'Error signing up: ' + error.message;

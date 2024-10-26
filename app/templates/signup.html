@@ -47,14 +47,6 @@
             flex: 1;
         }
 
-
-        .card {
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-
         .signup-button {
             background-color: blue;
             color: white;
@@ -76,13 +68,20 @@
     <div class="background"></div>
 
     <!-- Form content -->
-    <div id="app">
+    <div id="app" class="d-flex justify-content-center align-items-center">
         <div class="col-12 col-sm-10 col-md-8 col-lg-6">
-            <div class="card shadow-lg">
-                <div class="card-body">
+            <div class="card bg-light bg-opacity-75 shadow-lg rounded-3">
+                <div class="card-body p-4">
                     <h1 class="text-center mb-4">Sign Up</h1>
 
                     <form @submit.prevent="signUp">
+                        <!-- Username -->
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="bx bxs-user"></i></span>
+                            <input v-model="username" type="text" class="form-control" placeholder="Username"
+                                required />
+                        </div>
+
                         <!-- Email -->
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bx bxs-envelope"></i></span>
@@ -99,8 +98,8 @@
                         <!-- Confirm Password -->
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bx bxs-lock-alt"></i></span>
-                            <input v-model="confirmPassword" type="password" class="form-control" placeholder="Confirm Password"
-                                required />
+                            <input v-model="confirmPassword" type="password" class="form-control"
+                                placeholder="Confirm Password" required />
                         </div>
 
                         <!-- Error message -->
