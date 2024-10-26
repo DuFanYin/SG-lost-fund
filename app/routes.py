@@ -106,15 +106,15 @@ def signup():
 
             # Get user data from the request
             data = request.json
-            username = data.get('username')
+            # username = data.get('username')
             email = data.get('email')
 
-            if not username or not email:
-                return jsonify({"error": "Username and email are required"}), 400
+            if not email:
+                return jsonify({"error": "Email are required"}), 400
 
             # Store the user profile in Firestore using UID as the document ID
             user_data = {
-                'username': username,
+                # 'username': username,
                 'email': email,
                 'uid': uid
             }
