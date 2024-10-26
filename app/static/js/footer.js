@@ -1,6 +1,6 @@
 // Load footer content into the page
 function loadFooter() {
-    fetch('/footer')  
+    fetch('/footer')  // Correct path to the Flask route
         .then(response => response.text())
         .then(data => {
             document.getElementById('footer-placeholder').innerHTML = data;
@@ -8,4 +8,6 @@ function loadFooter() {
         .catch(error => console.error('Error loading footer:', error));
 }
 
-window.onload = loadFooter;
+document.addEventListener("DOMContentLoaded", function() {
+    loadFooter();
+});
