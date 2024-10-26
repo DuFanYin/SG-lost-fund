@@ -1,0 +1,17 @@
+/* static/styles.css */
+body {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+form {
+    display: inline-block;
+    text-align: left;
+}
+
+label, input {
+    display: block;
+    margin-bottom: 10px;
+}
