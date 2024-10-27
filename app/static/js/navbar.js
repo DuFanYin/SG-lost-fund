@@ -1,32 +1,29 @@
 const app = Vue.createApp({
     data() {
-        return {
-            isLoggedIn: sessionStorage.getItem('loggedIn') === 'true' // Check login status from sessionStorage
-        };
+        return {};
+    },
+    computed: {
+        isLoggedIn() {
+            // Dynamically check sessionStorage for 'loggedIn' status
+            return sessionStorage.getItem('loggedIn') === 'true';
+        }
     },
     methods: {
         logout() {
-            // Clear session storage on logout
             sessionStorage.clear();
-            this.isLoggedIn = false; // Update Vue state
-            window.location.href = '/login'; // Redirect to login page
-        },
-        checkLoginStatus() {
-            // Check login status from session storage
-            this.isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
+            window.location.href = '/login';
         }
     },
     mounted() {
-        this.checkLoginStatus(); // Check login status when component mounts
         console.log("Navbar mounted, isLoggedIn:", this.isLoggedIn);
     }
 });
 
-// Fetch the navbar HTML and mount Vue after loading
+// Fetch and load the navbar content, then mount Vue
 fetch('/navbar')
     .then(response => response.text())
     .then(data => {
         document.getElementById('navbar-placeholder').innerHTML = data;
-        app.mount('#navbar-placeholder'); // Mount Vue app to the navbar placeholder
+        app.mount('#navbar-placeholder');
     })
     .catch(error => console.error('Error loading navbar:', error));
