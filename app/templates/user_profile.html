@@ -12,6 +12,12 @@
     <!-- Vue-->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
+    <!-- Boxicons for input icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
     <style>
         .profileborder {
             border: 5px solid black;
@@ -126,20 +132,12 @@
             /* Apply the blur */
         }
 
-        .navbar-custom {
-            background-color: #fff; /* White background for navbar */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add some shadow */
-        }
-
-        .navbar-nav {
-            flex-grow: 1;
-        }
-
         .profile-img {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            object-fit: cover; /* Ensure the image fits the circle */
+            object-fit: cover;
+            /* Ensure the image fits the circle */
         }
 
         .points {
@@ -157,27 +155,30 @@
             margin-left: 10px;
             font-weight: bold;
         }
-
     </style>
 
 </head>
+
 <body class="bg3" id="app">
+
+    <!-- Navbar placeholder -->
+    <div id="navbar-placeholder"></div>
 
     <!-- Nav Bar -->
     <!-- Nav Bar with Offcanvas -->
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <div class="container-fluid">
-            <!-- Move the hamburger (navbar-toggler) to the left -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+    <!-- <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid"> -->
+    <!-- Move the hamburger (navbar-toggler) to the left -->
+    <!-- <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-            </button>
+            </button> -->
 
-            <!-- Navbar brand or title -->
-            <a class="navbar-brand ms-2">SG Lost & Found</a>
+    <!-- Navbar brand or title -->
+    <!-- <a class="navbar-brand ms-2">SG Lost & Found</a> -->
 
-            <!-- Right-aligned Navbar items (Visible in normal mode) -->
-            <div class="collapse navbar-collapse" id="nvbr">
+    <!-- Right-aligned Navbar items (Visible in normal mode) -->
+    <!-- <div class="collapse navbar-collapse" id="nvbr">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
                         <a class="nav-link" href="/">Home</a>
@@ -191,10 +192,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/signup">Sign up</a>
                     </li>
-                </ul>
+                </ul> -->
 
-                <!-- Right-aligned Sign In -->
-                <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+    <!-- Right-aligned Sign In -->
+    <!-- <ul class="navbar-nav ms-auto mb-2 mb-md-0">
                     <li class="nav-item">
                         <a class="nav-link" href="/login">
                             <i class="fas fa-sign-in-alt"></i> Login
@@ -203,8 +204,11 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav> -->
 
+    <br>
+    <br>
+    
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-10 profileborder bg1">
@@ -243,7 +247,8 @@
         </div>
 
         <!-- Modal Structure -->
-        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -258,11 +263,13 @@
                             </div>
                             <div class="mb-3">
                                 <label for="profileUsernameInput" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="profileUsernameInput" v-model="tempProfileUsername">
+                                <input type="text" class="form-control" id="profileUsernameInput"
+                                    v-model="tempProfileUsername">
                             </div>
                             <div class="mb-3">
                                 <label for="profileDescriptionInput" class="form-label">Description</label>
-                                <textarea class="form-control" id="profileDescriptionInput" rows="3" v-model="tempProfileDescription"></textarea>
+                                <textarea class="form-control" id="profileDescriptionInput" rows="3"
+                                    v-model="tempProfileDescription"></textarea>
                             </div>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
@@ -279,6 +286,11 @@
         crossorigin="anonymous"></script>
 
     <script>
+        // Check if the user is logged in by verifying session storage
+        if (sessionStorage.getItem('loggedIn') !== 'true') {
+            window.location.href = '/login'; // Redirect to login if not logged in
+        }
+
         Vue.createApp({
             data() {
                 return {
@@ -301,5 +313,16 @@
             }
         }).mount('#app');
     </script>
+
+    <!-- Footer placeholder -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Load the JavaScript to include the footer -->
+    <script src="../static/js/footer.js"></script>
+
+    <!-- Load the JavaScript to include the Navbar -->
+    <script src="../static/js/navbar.js"></script>
+
 </body>
+
 </html>
