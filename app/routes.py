@@ -129,19 +129,16 @@ def signup():
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        # Serve the login HTML page
         return render_template('login.html')
-
     elif request.method == 'POST':
-        # Handle the POST request for login
         auth_header = request.headers.get('Authorization')
         if not auth_header or not auth_header.startswith('Bearer '):
             return jsonify({"error": "Authorization token missing"}), 401
 
         id_token = auth_header.split("Bearer ")[1]
+        print("Received ID Token:", id_token)  # Log token for debugging
 
         try:
-            # Verify the ID token
             decoded_token = auth.verify_id_token(id_token)
             uid = decoded_token['uid']
 
@@ -153,9 +150,15 @@ def login():
             else:
                 return jsonify({"error": "User data not found in database"}), 404
 
+        except auth.InvalidIdTokenError:
+            return jsonify({"error": "Invalid ID token"}), 401
+        except auth.ExpiredIdTokenError:
+            return jsonify({"error": "Expired ID token"}), 401
+        except auth.RevokedIdTokenError:
+            return jsonify({"error": "Revoked ID token"}), 401
         except Exception as e:
-            return jsonify({"error": f"Invalid token: {str(e)}"}), 401
-
+            print("Token verification error:", e)
+            return jsonify({"error": f"Authentication error: {str(e)}"}), 401
 
 @main.route('/navbar')
 def navbar():
