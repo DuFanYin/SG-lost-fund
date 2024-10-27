@@ -5,494 +5,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/dashboard.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.js"></script>
+
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+     <!-- Font Awesome -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-    <style>
-        .pink-box,
-        .yellow-box,
-        .green-box,
-        .leaderboard {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 10px;
-            /* Optional for rounded corners */
-            padding: 20px;
-        }
-
-        /* The pink, yellow, and green boxes should occupy the same height as the leaderboard */
-        .pink-box {
-            background-color: pink;
-        }
-
-        .yellow-box {
-            background-color: #d6eaf8;
-        }
-
-        .green-box {
-            background-color: #d0ece7;
-        }
-
-        /* Adjust margins between the yellow and green boxes */
-        .yellow-box,
-        .green-box {
-            margin-bottom: 10px;
-            /* Small margin at the bottom */
-        }
-
-        /* Leaderboard */
-        .leaderboard {
-            background-color: #6698FF;
-            color: white;
-            border-radius: 10px;
-            padding: 20px;
-            height: 100%;
-            /* Same height as the boxes above */
-        }
-
-        .table-hover {
-            width: 100%;
-        }
-
-        p {
-            text-align: center;
-            font-size: 40px;
-            font-weight: bold;
-        }
-
-        span {
-            text-align: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .leaderboard table {
-            width: 100%;
-            /* Ensure full width */
-            text-align: left;
-            border-collapse: collapse;
-            /* Collapse borders */
-        }
-
-        .leaderboard th,
-        .leaderboard td {
-            padding: 1% 2%;
-            /* Adjust padding */
-            background-color: #2563EB;
-            /* Ensure consistent background */
-        }
-
-        .leaderboard tr:nth-child(even) td {
-            background-color: #60A5FA;
-        }
-
-        .leaderboard h2 {
-            text-align: center;
-            font-size: 2em;
-            /* Use relative sizing */
-        }
-
-        .chart-container {
-            display: flex;
-            /* Use flexbox for centering */
-            justify-content: center;
-            /* Center horizontally */
-            align-items: center;
-            /* Center vertically */
-            height: auto;
-            /* Ensure the height is defined */
-            padding: 20px;
-            /* Add padding if necessary */
-        }
-
-        #lineChart,
-        #barChart {
-            width: 100%;
-            /* Ensure the charts take full width of the container */
-            height: 100%;
-            /* Match the height of the container */
-            max-height: 100%;
-            /* Prevent exceeding container height */
-        }
-
-        #pieChart {
-            max-width: 100%;
-            /* Limit the width to avoid overflow */
-            max-height: 100%;
-            /* Limit the height to avoid overflow */
-            width: auto;
-            /* Allow the width to be auto */
-            height: auto;
-            /* Allow the height to be auto */
-            max-width: none;
-        }
-
-        .container {
-            margin-bottom: 20px;
-            /* Add margin below each container */
-        }
-
-        .p-1 {
-            padding: 10px;
-            /* Add padding inside each container */
-        }
-
-        .form-select {
-            margin-top: 20px;
-            /* Add space above the dropdown */
-            width: 50%;
-            /* Set a fixed width for the dropdown */
-        }
-
-        .pie-chart-container {
-            margin-top: 150px;
-            /* Adjust this value as needed */
-        }
-    </style>
+    <!-- Firebase App (Core) SDK with compat versions for older-style imports -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script> 
 
     <title>User Dashboard</title>
 </head>
 
-<body>
     <!-- Navbar placeholder -->
     <div id="navbar-placeholder"></div>
 
-    <!-- <button class="m-1">
-        <a href="/">Back to Home</a>
-    </button> -->
-
-    <div class="container-fluid">
-        <!-- First Row: Total Number of Users, Lost Item Reports, and Recovered Items -->
+    <!-- Form content -->
+    <body id="dashboard_app">
+        <div class="container-fluid">
         <div class="row">
-            <!-- Column with Total Number of Users and the two smaller boxes -->
             <div class="col-lg-6 d-flex flex-column">
-                <!-- Total Number of Users (full-width) -->
                 <div class="pink-box w-100 mb-3 mt-3">
                     <br> <i class="fas fa-users"></i>
                     <span>Total Number of Users</span>
-                    <p>20,000</p>
+                    <p>{{ totalUsers }}</p>  
                 </div>
-
-                <!-- Lost Item Reports and Recovered Items side by side -->
                 <div class="row">
-                    <div class=" col-md-6 col-lg-6 d-flex align-items-stretch">
+                    <div class="col-md-6 col-lg-6 d-flex align-items-stretch">
                         <div class="yellow-box w-100">
                             <br> <i class="fas fa-book"></i>
                             <span>Total Lost Item Reports</span>
-                            <p>157</p>
+                            <p>{{ lostItemReports }}</p>
                         </div>
                     </div>
-                    <div class=" col-md-6 col-lg-6 d-flex align-items-stretch">
+                    <div class="col-md-6 col-lg-6 d-flex align-items-stretch">
                         <div class="green-box w-100">
                             <br> <i class="fas fa-thumbs-up"></i>
                             <span>Total Number of Recovered Items</span>
-                            <p>82</p>
+                            <p>{{ recoveredItems }}</p>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Column with the Leaderboard -->
-            <div class="col-lg-6 col-md-12">
-                <div class="leaderboard mt-2">
-                    <h2 class="text-center">Leaderboard</h2>
-                    <br>
-                    <table class="table table-hover text-white">
-                        <thead>
-                            <tr>
-                                <th>Ranking</th>
-                                <th>Username</th>
-                                <th>Number of items found</th>
-                                <th>Points</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboardData">
-                            <!-- Dynamic leaderboard data -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Second Row: Charts -->
-        <div class="row mt-3">
-            <div class="col-lg-6 col-md-6 d-flex flex-column">
-                <!-- Pie Chart -->
-                <div class="p-1 bg-light rounded-3 flex-fill">
-                    <div class="container-fluid py-2 chart-container pie-chart-container">
-                        <canvas id="pieChart"></canvas>
-                    </div>
-                    <select id="statusSelect" class="form-select mt-2"> <!-- Moved the dropdown here -->
-                        <option value="Returned">Returned</option>
-                        <option value="Found">Found</option>
-                    </select>
-                </div>
-            </div>
-
-
-            <div class="col-lg-6 col-md-6 d-flex flex-column">
-                <!-- Stacked Line and Bar Charts -->
-                <div class="p-1 bg-light rounded-3 flex-fill">
-                    <div class="container-fluid py-2 chart-container">
-                        <div id="lineChart" style="width: 100%; height: 300px;"></div>
-                    </div>
-                </div>
-                <div class="p-1 bg-light rounded-3 flex-fill">
-                    <div class="container-fluid py-2 chart-container">
-                        <div id="barChart" style="width: 100%; height: 300px;"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        function showData() {
-            let url = "/static/js/leaderboard.json";
-
-            axios.get(url)
-                .then(response => {
-                    const data = response.data; // Access data from the response
-                    const tableBody = document.getElementById('leaderboardData');
-                    let tableRows = '';
-
-                    // Loop through the data and build table rows dynamically
-                    data.forEach(player => {
-                        tableRows += `
-                            <tr>
-                                <td>${player.ranking}</td>
-                                <td>${player.username}</td>
-                                <td>${player.items_found}</td>
-                                <td>${player.points}</td>
-                            </tr>
-                        `;
-                    });
-                    tableBody.innerHTML = tableRows;
-                })
-                .catch(error => {
-                    console.log("Error loading JSON:", error.message);
-                });
-        }
-
-        function lineChart() {
-            axios.get('static/js/lineChart.json') // Update this path to your JSON file
-                .then(response => {
-                    const jsonData = response.data.data; // Access the data property from JSON
-
-                    // Create the layout for the plot
-                    const layout = {
-                        title: 'Weekly Items Found and Returned',
-                        xaxis: {
-                            title: 'Weeks',
-                            showgrid: true,
-                            zeroline: false
-                        },
-                        yaxis: {
-                            title: 'Number of Items',
-                            showline: true
-                        },
-                        legend: {
-                            x: 0,
-                            y: 1,
-                            traceorder: 'normal',
-                            orientation: 'h'
-                        },
-                        autosize: true // Ensure the plot resizes with the container
-                    };
-
-                    // Create the plot with displayModeBar set to false
-                    Plotly.newPlot('lineChart', jsonData, layout, { responsive: true, displayModeBar: false });
-                })
-                .catch(error => {
-                    console.error("Error fetching the JSON data:", error);
-                });
-        }
-
-
-        let pieChartInstance; // Variable to hold the chart instance
-        function pieChart() {
-            axios.get('static/js/pieChart.json') // Update this path to your JSON file
-                .then(response => {
-                    console.log(response.data); // Log the response to check its structure
-                    const jsonData = response.data.data; // Access the data property from JSON
-
-                    if (!jsonData) {
-                        console.error("No data found in the response.");
-                        return;
-                    }
-
-                    // Create the plot
-                    const renderChart = (status) => {
-                        let filteredData, successRate = 0, totalCount = 0;
-
-                        // Filter data based on status
-                        filteredData = jsonData.filter(item => item.item_status === status);
-
-                        // Calculate the success rate based on the status
-                        if (filteredData.length > 0) {
-                            const successfulCount = filteredData[0].success_count; // Get success count
-                            totalCount = filteredData[0].total_count; // Get total count
-                            successRate = (successfulCount / totalCount) * 100; // Calculate success rate as a percentage
-                        }
-
-                        const ctx = document.getElementById('pieChart').getContext('2d');
-
-                        // Destroy the existing chart instance if it exists
-                        if (pieChartInstance) {
-                            pieChartInstance.destroy(); // Destroy the old chart instance
-                        }
-
-                        // Create a new chart instance
-                        pieChartInstance = new Chart(ctx, {
-                            type: 'pie',
-                            data: {
-                                labels: ['Success Rate', 'Failure Rate'], // Labels for the pie chart
-                                datasets: [{
-                                    data: [successRate, 100 - successRate], // Data for success and failure
-                                    backgroundColor: ['#36a2eb', '#ff6384'], // Colors for the segments
-                                }]
-                            },
-                            options: {
-                                responsive: true, // Make chart responsive
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    legend: {
-                                        display: true,
-                                        position: 'top'
-                                    },
-                                    title: {
-                                        display: true,
-                                        text: `Success Rate for ${status} Items`
-                                    },
-                                    datalabels: {
-                                        formatter: (value, ctx) => {
-                                            const total = ctx.chart.data.datasets[0].data.reduce((acc, val) => acc + val, 0);
-                                            const percentage = (value / total * 100).toFixed(0); // Calculate percentage
-                                            return percentage + '%'; // Display percentage
-                                        },
-                                        color: '#fff',
-                                        font: {
-                                            weight: 'bold',
-                                            size: 14
-                                        }
-                                    }
-                                }
-                            },
-                            plugins: [ChartDataLabels] // Enable the Data Labels plugin
-                        });
-                    }
-
-                    // Set up event listener for dropdown selection change
-                    document.getElementById('statusSelect').addEventListener('change', function () {
-                        renderChart(this.value); // Render chart for selected status
-                    });
-
-                    // Initial chart rendering
-                    renderChart('Returned'); // Default value to display on load
-                })
-                .catch(error => {
-                    console.error("Error fetching the JSON data:", error);
-                });
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            pieChart(); // Call the function to initialize after DOM is loaded
-        });
-
-
-        function barChart() {
-            axios.get('static/js/barChart.json')
-                .then(function (response) {
-                    // Handle successful response
-                    const data = response.data;
-
-                    // Sort the items by report_count in descending order and take the top 5
-                    const top5Items = data.items_reported.sort((a, b) => b.report_count - a.report_count).slice(0, 5);
-
-                    // Extract data for the top 5 items for the bar chart
-                    const itemNames = top5Items.map(item => item.item_name);
-                    const reportCounts = top5Items.map(item => item.report_count);
-                    const percentages = top5Items.map(item => item.percentage_of_total);
-
-                    // Get the current month name
-                    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                    const currentMonth = monthNames[new Date().getMonth()];
-
-                    // Bar chart configuration for top 5 items
-                    const trace1 = {
-                        x: itemNames, // Item names on the x-axis
-                        y: reportCounts, // Report counts on the y-axis (vertical bars)
-                        type: 'bar', // Bar chart
-                        text: percentages.map(percent => percent + '%'), // Display percentage on each bar
-                        textposition: 'auto',
-                        marker: {
-                            color: 'rgba(55, 128, 191, 0.7)',
-                            line: {
-                                color: 'rgba(55, 128, 191, 1.0)',
-                                width: 2
-                            }
-                        }
-                    };
-
-                    const layout = {
-                        title: `Top 5 Most Reported Items - ${currentMonth} ${new Date().getFullYear()}`, // Use dynamic month and year
-                        xaxis: {
-                            title: 'Item Names' // Labels on x-axis
-                        },
-                        yaxis: {
-                            title: 'Number of Reports' // Labels on y-axis
-                        },
-                        margin: {
-                            l: 50,
-                            r: 50,
-                            b: 100,
-                            t: 50,
-                            pad: 4
-                        },
-                        autosize: true, // Automatically size the chart
-                    };
-
-                    // Render the vertical bar chart for the top 5 items without mode bar
-                    Plotly.newPlot('barChart', [trace1], layout, { displayModeBar: false, responsive: true }); // Combine options in one object
-                })
-                .catch(function (error) {
-                    // Handle error if the request fails
-                    console.error('Error fetching the JSON data:', error);
-                });
-        }
-
-
-        window.onload = function () {
-            showData();
-            lineChart();
-            pieChart();
-            barChart();
-        };
-    </script>
-
-
-    <!-- Footer placeholder -->
-    <div id="footer-placeholder"></div>
+    <!-- Vue.js Initialization Script -->
+    <script src="static/js/dash_board.js"></script>
 
     <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Vue.js and Axios -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="../static/js/dash_board.js"></script>
 
     <!-- Load the JavaScript to include the footer -->
     <script src="../static/js/footer.js"></script>
@@ -503,3 +75,7 @@
 </body>
 
 </html>
+
+
+
+
