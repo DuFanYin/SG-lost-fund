@@ -139,28 +139,44 @@ def signup():
         return render_template('signup.html')
     
     if request.method == 'POST':
-        # Proceed with sign-up logic, expecting an Authorization token in the header
+        # Extract and verify the Authorization token from headers
         auth_header = request.headers.get('Authorization')
         if not auth_header or not auth_header.startswith('Bearer '):
-            return jsonify({"error": "Authorization token missing"}), 401
+            return jsonify({"error": "Authorization token missing or malformed"}), 401
+        
+        # Extract ID token from the header
         id_token = auth_header.split("Bearer ")[1]
         try:
             # Verify the ID token
             decoded_token = auth.verify_id_token(id_token)
             uid = decoded_token['uid']
-            # Get user data from the request
+            print(f"Token verified successfully. UID: {uid}")
+
+            # Get user data from the request body
             data = request.json
             username = data.get('username')
             email = data.get('email')
+            
             if not username or not email:
                 return jsonify({"error": "Username and Email are required"}), 400
-            # Store the user profile in Firestore using UID as the document ID
+
+            # Save the user profile in Firestore
             user_data = {
                 'username': username,
                 'email': email,
                 'uid': uid
             }
             db.collection('users').document(uid).set(user_data)
+            print(f"User data saved to Firestore for UID: {uid}")
+
             return jsonify({"status": "User registered successfully"}), 200
+
+        except auth.ExpiredIdTokenError:
+            return jsonify({"error": "Token expired"}), 401
+        except auth.RevokedIdTokenError:
+            return jsonify({"error": "Token has been revoked"}), 401
+        except auth.InvalidIdTokenError:
+            return jsonify({"error": "Invalid token"}), 401
         except Exception as e:
-            return jsonify({"error": f"Invalid token: {str(e)}"}), 401
+            print(f"Unexpected error: {e}")
+            return jsonify({"error": f"Server error: {str(e)}"}), 500
