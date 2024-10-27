@@ -1,51 +1,64 @@
-<!-- navbar.html -->
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <div class="container-fluid">
-        <!-- Navbar Toggler for Mobile View -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nvbr"
-            aria-controls="nvbr" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<link rel="stylesheet" href="../static/css/navbar.css">
 
-        <!-- Brand Logo or Name -->
-        <a class="navbar-brand ms-2">SG Lost & Found</a>
+<div id="navbar-placeholder">
+    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <div class="container-fluid">
+            <!-- Navbar Toggler for Mobile View -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nvbr"
+                aria-controls="nvbr" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <!-- Navbar Links -->
-        <div class="collapse navbar-collapse" id="nvbr">
-            <!-- Left-aligned Links -->
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/dash_board">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/listing">Post Listing</a>
-                </li>
-            </ul>
+            <!-- Brand Logo or Name -->
+            <a class="navbar-brand ms-2 fw-bold text-primary" href="/">SG Lost & Found</a>
 
-            <!-- Right-aligned Login or Profile Options -->
-            <ul class="navbar-nav ms-auto mb-2 mb-md-0">
-                <!-- Show Login if not logged in -->
-                <li v-if="!isLoggedIn" class="nav-item">
-                    <a class="nav-link" href="/login">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </a>
-                </li>
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse" id="nvbr">
+                <!-- Left-aligned Links -->
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item">
+                        <a :class="['nav-link', activeTab === 'home' ? 'active' : '']" href="/"
+                            @click="setActiveTab('home')">
+                            Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a :class="['nav-link', activeTab === 'dash_board' ? 'active' : '']" href="/dash_board"
+                            @click="setActiveTab('dash_board')">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a :class="['nav-link', activeTab === 'listing' ? 'active' : '']" href="/listing"
+                            @click="setActiveTab('listing')">
+                            Post Listing
+                        </a>
+                    </li>
+                </ul>
 
-                <!-- Show Profile dropdown if logged in -->
-                <li v-if="isLoggedIn" class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user"></i> Profile
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/user_profile">Profile</a></li>
-                        <li><a class="dropdown-item" href="#" @click="logout">Sign Out</a></li>
-                    </ul>
-                </li>
-            </ul>
+                <!-- Right-aligned Login or Profile Options -->
+                <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+                    <!-- Show Login if not logged in -->
+                    <li v-if="!isLoggedIn" class="nav-item">
+                        <a :class="['nav-link', activeTab === 'login' ? 'active' : '']" href="/login"
+                            @click="setActiveTab('login')">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </li>
+
+                    <!-- Show Profile dropdown if logged in -->
+                    <li v-if="isLoggedIn" class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/user_profile">My Profile</a></li>
+                            <li><a class="dropdown-item" href="#" @click="logout">Sign Out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
+</div>
