@@ -1,4 +1,4 @@
-// Initialize Firebase
+// Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAUZYEkqQSsEVM7rMCLqaEKoibGPiP_YJI",
     authDomain: "wad2project-db69b.firebaseapp.com",
@@ -12,11 +12,13 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-
+// Vue Application
 const dashboardApp = Vue.createApp({
     data() {
         return {
-            totalUsers: 0, // Temporarily set to see if it displays
+            totalUsers: 0,
+            lostItemReports: 0,
+            recoveredItems: 0
         };
     },
     methods: {
@@ -26,20 +28,19 @@ const dashboardApp = Vue.createApp({
                 const usersRef = db.collection('users');
                 const snapshot = await usersRef.get();
                 
-                this.totalUsers = snapshot.size; // Updates totalUsers with the count of users
-                console.log("Total users:", this.totalUsers); // To check the count in console
+                this.totalUsers = snapshot.size; // Update totalUsers
+                console.log("Total users found:", this.totalUsers); // Log to confirm count
             } catch (error) {
                 console.error("Error counting users:", error);
-                this.totalUsers = 0; // In case of error, totalUsers is set to 0
+                this.totalUsers = 0; // Set to 0 in case of error
             }
         }
     },
     mounted() {
-        console.log("Vue instance mounted successfully."); // Confirm that the instance is mounted
+        console.log("Vue instance mounted successfully."); // Confirmation message
         this.countUsers();
     }
 });
 
-// Change the mount point to '#app'
+// Mount the Vue app to #app
 dashboardApp.mount('#app');
-
