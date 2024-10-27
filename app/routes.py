@@ -4,11 +4,18 @@ from firebase_admin import credentials, firestore
 from flask import Flask, jsonify, request, render_template, Blueprint
 from werkzeug.utils import secure_filename
 
+from firebase_admin import credentials, auth, firestore
 
 main = Blueprint('main', __name__)
 
-cred = credentials.Certificate('static/js/firebase.json')
-firebase_admin.initialize_app(cred)
+# Initialize Firebase Admin SDK
+if not firebase_admin._apps:
+    cred = credentials.Certificate('app/static/js/firebase.json')  # Replace with your Firebase Admin SDK key file path
+    firebase_admin.initialize_app(cred)
+
+# cred = credentials.Certificate('static/js/firebase.json')
+# firebase_admin.initialize_app(cred)
+
 db = firestore.client()
 
 UPLOAD_FOLDER = 'uploads/'
@@ -89,6 +96,71 @@ def footer():
     return render_template('footer.html')
 
 
-@main.route('/login')
+@main.route('/navbar')
+def navbar():
+    return render_template('navbar.html')
+
+
+@main.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"error": "Authorization token missing"}), 401
+        id_token = auth_header.split("Bearer ")[1]
+        print("Received ID Token:", id_token)  # Log token for debugging
+        try:
+            decoded_token = auth.verify_id_token(id_token)
+            uid = decoded_token['uid']
+            # Retrieve user data from Firestore
+            user_doc = db.collection('users').document(uid).get()
+            if user_doc.exists:
+                user_data = user_doc.to_dict()
+                return jsonify({"status": "Login successful", "user_data": user_data}), 200
+            else:
+                return jsonify({"error": "User data not found in database"}), 404
+        except auth.InvalidIdTokenError:
+            return jsonify({"error": "Invalid ID token"}), 401
+        except auth.ExpiredIdTokenError:
+            return jsonify({"error": "Expired ID token"}), 401
+        except auth.RevokedIdTokenError:
+            return jsonify({"error": "Revoked ID token"}), 401
+        except Exception as e:
+            print("Token verification error:", e)
+            return jsonify({"error": f"Authentication error: {str(e)}"}), 401
+
+
+@main.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'GET':
+        # Render the signup form without any authorization checks
+        return render_template('signup.html')
+    
+    if request.method == 'POST':
+        # Proceed with sign-up logic, expecting an Authorization token in the header
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"error": "Authorization token missing"}), 401
+        id_token = auth_header.split("Bearer ")[1]
+        try:
+            # Verify the ID token
+            decoded_token = auth.verify_id_token(id_token)
+            uid = decoded_token['uid']
+            # Get user data from the request
+            data = request.json
+            username = data.get('username')
+            email = data.get('email')
+            if not username or not email:
+                return jsonify({"error": "Username and Email are required"}), 400
+            # Store the user profile in Firestore using UID as the document ID
+            user_data = {
+                'username': username,
+                'email': email,
+                'uid': uid
+            }
+            db.collection('users').document(uid).set(user_data)
+            return jsonify({"status": "User registered successfully"}), 200
+        except Exception as e:
+            return jsonify({"error": f"Invalid token: {str(e)}"}), 401
