@@ -9,3 +9,5 @@ this is how you link the js files
 
 <script src="{{ url_for('static', filename='js/app2.js') }}"></script>
 
+
+form data is saved into firebase under a collection called "listings"
