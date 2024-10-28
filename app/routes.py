@@ -1,3 +1,4 @@
+
 import os
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -52,6 +53,8 @@ def listing():
     item_type = request.form.get('item_type')
     handoff_method = request.form.get('handoff_method')
     handoff_location = request.form.get('handoff_location')
+    report_type = request.form.get('report_type')  # Extract report type from form
+    status = 'Pending'  # Set status to 'Pending' by default
 
     # Handle file upload
     if 'file' not in request.files:
@@ -79,7 +82,9 @@ def listing():
         'item_type': item_type,
         'handoff_method': handoff_method,
         'handoff_location': handoff_location,
-        'file': filename  # Store the saved filename
+        'file': filename,  # Store the saved filename
+        'report_type': report_type,  # Include report type
+        'status': status  # Set status to 'Pending'
     }
 
     # Add document to Firestore (e.g., in a collection called "listings")
@@ -89,6 +94,7 @@ def listing():
     response_data = doc_data
 
     return jsonify(response_data), 200
+
 
 
 @main.route('/footer')
