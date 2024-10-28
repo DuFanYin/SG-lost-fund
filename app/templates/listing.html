@@ -90,36 +90,46 @@
                         <form @submit.prevent="submitForm">
                             <!-- Item Name -->
                             <div class="mb-3">
-                                <label for="item_name" class="form-label">Item Name: <span
-                                        style="color: red;">*</span></label>
-                                <input type="text" v-model="formData.item_name" class="form-control" id="item_name"
-                                    placeholder="Enter Item Name" required>
+                                <label for="item_name" class="form-label">Item Name: <span style="color: red;">*</span></label>
+                                <input type="text" v-model="formData.item_name" class="form-control" id="item_name" placeholder="Enter Item Name" required>
                             </div>
-
+                        
                             <!-- Location Found -->
                             <div class="mb-3">
-                                <label for="location" class="form-label">Location Found: <span
-                                        style="color: red;">*</span></label>
-                                <input type="text" v-model="formData.location" class="form-control" id="location"
-                                    placeholder="Enter Location Found" required>
+                                <label for="location" class="form-label">Location Found: <span style="color: red;">*</span></label>
+                                <input type="text" v-model="formData.location" class="form-control" id="location" placeholder="Enter Location Found" required>
+                            </div>
+                        
+                           <!-- Report Type -->
+                            <div class="mb-3">
+                                <label for="report_type" class="form-label">Report Type: <span style="color: red;">*</span></label>
+                                <select v-model="formData.report_type" class="form-select" id="report_type" required>
+                                    <option value="" disabled>Select Report Type</option>
+                                    <option value="Lost">Lost</option>
+                                    <option value="Found">Found</option>
+                                </select>
                             </div>
 
+                            <!-- Transaction Status -->
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Transaction Status: <span style="color: red;">*</span></label>
+                                <select v-model="formData.status" class="form-select" id="status" required>
+                                    <option value="" disabled>Select Status</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Successful" disabled>Successful</option> <!-- Initially disabled -->
+                                </select>
+                            </div>
+                        
                             <!-- Item Description + Characters check -->
                             <div class="mb-3">
-                                <label for="item_description" class="form-label">Item Description: <span
-                                        style="color: red;">*</span></label>
-                                <textarea v-model="formData.item_description" @input="checkCharacterCount"
-                                    class="form-control" id="item_description" placeholder="Enter Item Description"
-                                    rows="4" required></textarea>
-                                <small class="text-muted"
-                                    v-text="'Characters remaining: ' + (200 - characterCount)"></small>
+                                <label for="item_description" class="form-label">Item Description: <span style="color: red;">*</span></label>
+                                <textarea v-model="formData.item_description" @input="checkCharacterCount" class="form-control" id="item_description" placeholder="Enter Item Description" rows="4" required></textarea>
+                                <small class="text-muted" v-text="'Characters remaining: ' + (200 - characterCount)"></small>
                             </div>
-
-
+                        
                             <!-- Item Type -->
                             <div class="mb-3">
-                                <label for="item_type" class="form-label">Item Type: <span
-                                        style="color: red;">*</span></label>
+                                <label for="item_type" class="form-label">Item Type: <span style="color: red;">*</span></label>
                                 <select v-model="formData.item_type" class="form-select" id="item_type" required>
                                     <option value="" disabled>Select Item Type</option>
                                     <option value="Electronics">Electronics</option>
@@ -130,46 +140,37 @@
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
-
+                        
                             <!-- File Upload -->
                             <div class="mb-3">
-                                <label for="file" class="form-label">Upload Image: <span
-                                        style="color: red;">*</span></label>
+                                <label for="file" class="form-label">Upload Image: <span style="color: red;">*</span></label>
                                 <input type="file" @change="handleFileUpload" class="form-control" id="file" required>
                             </div>
-
+                        
                             <!-- Hand off Details -->
-                            <br>
-                            <br>
                             <h3 class="text-start text-md-left">Hand Off Details</h3>
-                            <br>
-
+                            
                             <!-- Handoff Method -->
                             <div class="mb-3">
-                                <label for="handoff_method" class="form-label">Handoff Method: <span
-                                        style="color: red;">*</span></label>
-                                <select v-model="formData.handoff_method" class="form-select" id="handoff_method"
-                                    required>
+                                <label for="handoff_method" class="form-label">Handoff Method: <span style="color: red;">*</span></label>
+                                <select v-model="formData.handoff_method" class="form-select" id="handoff_method" required>
                                     <option value="" disabled>Select Handoff Method</option>
                                     <option value="Mail">Mail</option>
                                     <option value="In-Person">In-Person</option>
                                 </select>
                             </div>
-
+                        
                             <!-- Handoff Location -->
                             <div class="mb-3">
-                                <label for="handoff_location" class="form-label">Handoff Location: <span
-                                        style="color: red;">*</span></label>
-                                <input type="text" v-model="formData.handoff_location" class="form-control"
-                                    id="handoff_location" placeholder="Enter Handoff Location" required>
+                                <label for="handoff_location" class="form-label">Handoff Location: <span style="color: red;">*</span></label>
+                                <input type="text" v-model="formData.handoff_location" class="form-control" id="handoff_location" placeholder="Enter Handoff Location" required>
                             </div>
-
+                        
                             <!-- Submit Button -->
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary">POST</button>
                             </div>
-
-                            <br>
+                        
                             <p style="font-style: italic; margin-left: 12px;">
                                 Please fill up the required fields <span style="color: red;">*</span>
                             </p>

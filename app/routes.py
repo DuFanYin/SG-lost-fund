@@ -40,6 +40,15 @@ def dash_board():
     return render_template('dash_board.html')
 
 
+from flask import Blueprint, render_template, request, jsonify
+from werkzeug.utils import secure_filename
+import os
+
+main = Blueprint('main', __name__)
+
+UPLOAD_FOLDER = 'path/to/upload/folder'  # Update this to your desired upload folder
+# Ensure your database connection (Firestore) is set up correctly
+
 @main.route('/listing', methods=['POST', 'GET'])
 def listing():
     if request.method == 'GET':
@@ -52,6 +61,8 @@ def listing():
     item_type = request.form.get('item_type')
     handoff_method = request.form.get('handoff_method')
     handoff_location = request.form.get('handoff_location')
+    report_type = request.form.get('report_type')  # Extract report type
+    status = request.form.get('status')  # Extract status
 
     # Handle file upload
     if 'file' not in request.files:
@@ -79,7 +90,9 @@ def listing():
         'item_type': item_type,
         'handoff_method': handoff_method,
         'handoff_location': handoff_location,
-        'file': filename  # Store the saved filename
+        'file': filename,  # Store the saved filename
+        'report_type': report_type,  # Include report type
+        'status': status  # Include status
     }
 
     # Add document to Firestore (e.g., in a collection called "listings")
@@ -89,7 +102,6 @@ def listing():
     response_data = doc_data
 
     return jsonify(response_data), 200
-
 
 @main.route('/footer')
 def footer():
