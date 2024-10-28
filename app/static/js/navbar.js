@@ -41,11 +41,12 @@ const app = Vue.createApp({
                         console.error("Document does not exist");
                     }
                 }); // Close onSnapshot correctly here
-        setActiveTab(tab, event) {
+        },
+        setActiveTabWithEvent(tab, event) {  // Renamed to avoid conflict with the existing setActiveTab
             if (tab === 'listing' && !this.isLoggedIn) {
                 event.preventDefault(); // Prevent default navigation behavior
                 // Show the modal if the user is not logged in
-                var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
                 loginModal.show();
             } else {
                 this.activeTab = tab; // Set active tab for dynamic styling
