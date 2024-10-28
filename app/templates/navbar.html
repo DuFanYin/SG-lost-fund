@@ -1,20 +1,20 @@
+<!-- CSS Link -->
 <link rel="stylesheet" href="../static/css/navbar.css">
 
 <div id="navbar-placeholder">
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container-fluid">
+
             <!-- Navbar Toggler for Mobile View -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nvbr"
                 aria-controls="nvbr" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- Brand Logo or Name -->
             <a class="navbar-brand ms-2 fw-bold text-primary" href="/">SG Lost & Found</a>
 
             <!-- Navbar Links -->
             <div class="collapse navbar-collapse" id="nvbr">
-                <!-- Left-aligned Links -->
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
                         <a :class="['nav-link', activeTab === 'home' ? 'active' : '']" href="/"
@@ -30,7 +30,7 @@
                     </li>
                     <li class="nav-item">
                         <a :class="['nav-link', activeTab === 'listing' ? 'active' : '']" href="/listing"
-                            @click="setActiveTab('listing')">
+                            @click="setActiveTab('listing', $event)">
                             Post Listing
                         </a>
                     </li>
@@ -40,6 +40,7 @@
 
                 <!-- Right-aligned Login or Profile Options -->
                 <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+
                     <!-- Show Login if not logged in -->
                     <li v-if="!isLoggedIn" class="nav-item">
                         <a :class="['nav-link', activeTab === 'login' ? 'active' : '']" href="/login"
@@ -65,4 +66,29 @@
             </div>
         </div>
     </nav>
+</div>
+
+<!-- Modal pop up for Login -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Login Required</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                You need to log in to post a listing. You will be redirected to the login page shortly.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @click="startRedirectToLogin">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loader spinner -->
+<div v-if="showSpinner" class="overlay">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
 </div>

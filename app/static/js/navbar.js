@@ -5,6 +5,7 @@ const app = Vue.createApp({
             username: sessionStorage.getItem('username') || '', // Get username from sessionStorage
             points: sessionStorage.getItem('points') || 0,
             uid: sessionStorage.getItem('uid') || 0,
+            showSpinner: false // Control visibility of the loading spinner overlay
         };
     },
     computed: {
@@ -40,6 +41,22 @@ const app = Vue.createApp({
                         console.error("Document does not exist");
                     }
                 }); // Close onSnapshot correctly here
+        setActiveTab(tab, event) {
+            if (tab === 'listing' && !this.isLoggedIn) {
+                event.preventDefault(); // Prevent default navigation behavior
+                // Show the modal if the user is not logged in
+                var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                loginModal.show();
+            } else {
+                this.activeTab = tab; // Set active tab for dynamic styling
+            }
+        },
+        startRedirectToLogin() {
+            this.showSpinner = true; // Show the full-screen overlay with spinner
+            setTimeout(this.redirectToLogin, 2000); // Wait for 2 seconds, then redirect
+        },
+        redirectToLogin() {
+            window.location.href = '/login'; // Redirect to login page
         }
     },
     mounted() {
