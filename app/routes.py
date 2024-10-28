@@ -2,7 +2,7 @@
 import os
 import firebase_admin
 from firebase_admin import credentials, firestore
-from flask import Flask, jsonify, request, render_template, Blueprint
+from flask import Flask, jsonify, request, render_template, Blueprint, redirect, url_for, request, session
 from werkzeug.utils import secure_filename
 
 from firebase_admin import credentials, auth, firestore
@@ -109,33 +109,58 @@ def navbar():
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'GET':
-        return render_template('login.html')
-    elif request.method == 'POST':
-        auth_header = request.headers.get('Authorization')
-        if not auth_header or not auth_header.startswith('Bearer '):
-            return jsonify({"error": "Authorization token missing"}), 401
-        id_token = auth_header.split("Bearer ")[1]
-        print("Received ID Token:", id_token)  # Log token for debugging
+    message = ""  # Initialize message variable
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
         try:
-            decoded_token = auth.verify_id_token(id_token)
-            uid = decoded_token['uid']
-            # Retrieve user data from Firestore
-            user_doc = db.collection('users').document(uid).get()
+            # Attempt to sign in the user
+            user = auth.get_user_by_email(email)
+
+            # Set user session (e.g., store UID in session)
+            session['user_uid'] = user.uid  # Store UID in session
+            
+            # Fetch username from Firestore
+            user_doc = db.collection('users').document(user.uid).get()
             if user_doc.exists:
-                user_data = user_doc.to_dict()
-                return jsonify({"status": "Login successful", "user_data": user_data}), 200
-            else:
-                return jsonify({"error": "User data not found in database"}), 404
-        except auth.InvalidIdTokenError:
-            return jsonify({"error": "Invalid ID token"}), 401
-        except auth.ExpiredIdTokenError:
-            return jsonify({"error": "Expired ID token"}), 401
-        except auth.RevokedIdTokenError:
-            return jsonify({"error": "Revoked ID token"}), 401
+                session['username'] = user_doc.to_dict().get('username')
+
+            message = 'Login successful! Redirecting to dashboard...'  # Set success message
+            return redirect(url_for('dashboard'))  # Redirect to dashboard
+
         except Exception as e:
-            print("Token verification error:", e)
-            return jsonify({"error": f"Authentication error: {str(e)}"}), 401
+            message = str(e)  # Set error message
+
+    return render_template('login.html', message=message)  # Render login page with message
+
+    # if request.method == 'GET':
+    #     return render_template('login.html')
+    # elif request.method == 'POST':
+    #     auth_header = request.headers.get('Authorization')
+    #     if not auth_header or not auth_header.startswith('Bearer '):
+    #         return jsonify({"error": "Authorization token missing"}), 401
+    #     id_token = auth_header.split("Bearer ")[1]
+    #     print("Received ID Token:", id_token)  # Log token for debugging
+    #     try:
+    #         decoded_token = auth.verify_id_token(id_token)
+    #         uid = decoded_token['uid']
+    #         # Retrieve user data from Firestore
+    #         user_doc = db.collection('users').document(uid).get()
+    #         if user_doc.exists:
+    #             user_data = user_doc.to_dict()
+    #             return jsonify({"status": "Login successful", "user_data": user_data}), 200
+    #         else:
+    #             return jsonify({"error": "User data not found in database"}), 404
+    #     except auth.InvalidIdTokenError:
+    #         return jsonify({"error": "Invalid ID token"}), 401
+    #     except auth.ExpiredIdTokenError:
+    #         return jsonify({"error": "Expired ID token"}), 401
+    #     except auth.RevokedIdTokenError:
+    #         return jsonify({"error": "Revoked ID token"}), 401
+    #     except Exception as e:
+    #         print("Token verification error:", e)
+    #         return jsonify({"error": f"Authentication error: {str(e)}"}), 401
 
 
 @main.route('/signup', methods=['GET', 'POST'])
