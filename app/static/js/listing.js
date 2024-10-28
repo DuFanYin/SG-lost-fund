@@ -8,9 +8,7 @@ Vue.createApp({
                 item_type: '',
                 handoff_method: '',
                 handoff_location: '',
-                file: null,
-                report_type: '', // New field for Report Type
-                status: 'Pending' // Default status set to Pending
+                file: null
             },
             characterCount: 0,
             formSubmitted: false
@@ -26,14 +24,14 @@ Vue.createApp({
             }
         },
         submitForm() {
-            const { item_name, location, item_description, item_type, handoff_method, handoff_location, report_type } = this.formData;
+            const { item_name, location, item_description, item_type, handoff_method, handoff_location } = this.formData;
 
             if (item_description.length > 200) {
                 alert("Item description cannot exceed 200 characters.");
                 return;
             }
 
-            if (item_name && location && item_description && item_type && handoff_method && handoff_location && report_type) {
+            if (item_name && location && item_description && item_type && handoff_method && handoff_location) {
                 const formDataToSend = new FormData();
                 formDataToSend.append('item_name', item_name);
                 formDataToSend.append('location', location);
@@ -41,8 +39,6 @@ Vue.createApp({
                 formDataToSend.append('item_type', item_type);
                 formDataToSend.append('handoff_method', handoff_method);
                 formDataToSend.append('handoff_location', handoff_location);
-                formDataToSend.append('report_type', report_type); // Append report type
-                formDataToSend.append('status', this.formData.status); // Always Pending
 
                 if (this.formData.file) {
                     formDataToSend.append('file', this.formData.file);
@@ -51,6 +47,7 @@ Vue.createApp({
                 axios.post('http://127.0.0.1:5000/listing', formDataToSend)
                     .then(response => {
                         console.log("Form Submitted Successfully:", response.data);
+                        // alert('Form submitted successfully!');
                         this.formSubmitted = true;
                         this.resetForm();
                     })
@@ -76,11 +73,16 @@ Vue.createApp({
                 item_type: '',
                 handoff_method: '',
                 handoff_location: '',
-                file: null,
-                report_type: '', // Reset the new fields
-                status: 'Pending' // Reset the status to Pending
+                file: null
             };
             this.characterCount = 0;
         }
     }
 }).mount('#temp');
+
+
+
+   // headers: {
+        // 'Content-Type': 'multipart/form-data'
+//        'Content-Type': 'application/json' // Set content type to application/json
+ //   }
