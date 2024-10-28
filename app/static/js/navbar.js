@@ -1,23 +1,25 @@
 const app = Vue.createApp({
     data() {
         return {
-            isLoggedIn: sessionStorage.getItem('loggedIn') === 'true' // Check login status from sessionStorage
+            activeTab: window.location.pathname.replace('/', '') || 'home' // Set default tab based on URL path
         };
+    },
+    computed: {
+        isLoggedIn() {
+            // Dynamically check login status
+            return sessionStorage.getItem('loggedIn') === 'true';
+        }
     },
     methods: {
         logout() {
-            // Clear session storage on logout
-            sessionStorage.clear();
-            this.isLoggedIn = false; // Update Vue state
+            sessionStorage.clear(); // Clear session storage on logout
             window.location.href = '/login'; // Redirect to login page
         },
-        checkLoginStatus() {
-            // Check login status from session storage
-            this.isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
+        setActiveTab(tab) {
+            this.activeTab = tab; // Set active tab for dynamic styling
         }
     },
     mounted() {
-        this.checkLoginStatus(); // Check login status when component mounts
         console.log("Navbar mounted, isLoggedIn:", this.isLoggedIn);
     }
 });

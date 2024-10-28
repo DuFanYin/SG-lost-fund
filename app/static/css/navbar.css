@@ -1,0 +1,65 @@
+.navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1rem;
+}
+
+.navbar-brand {
+    color: #007bff; /* Blue color for the brand name */
+    font-size: 1.25rem;
+}
+
+.navbar-brand:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.nav-link {
+    color: #333 !important; /* Dark gray for links */
+    font-weight: 500;
+    transition: color 0.2s ease, border-color 0.2s ease; /* Smooth transition */
+}
+
+.nav-link:hover {
+    color: #007bff !important;
+}
+
+.nav-link.active {
+    color: #007bff !important; /* Blue color for active link */
+    position: relative;
+    font-weight: bold;
+}
+
+.nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #007bff; /* Blue underline */
+    border-radius: 2px;
+}
+
+.navbar .fa-sign-in-alt,
+.navbar .fa-user {
+    color: #333 !important;
+    margin-right: 5px;
+}
+
+.dropdown-menu {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for dropdown */
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+    color: red;
+}
+
+.navbar-nav .nav-item .nav-link i {
+    font-size: 1rem;
+    vertical-align: middle;
+}
