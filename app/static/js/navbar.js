@@ -1,12 +1,13 @@
 const app = Vue.createApp({
     data() {
         return {
-            activeTab: window.location.pathname.replace('/', '') || 'home' // Set default tab based on URL path
+            activeTab: window.location.pathname.replace('/', '') || 'home', // Set default tab based on URL path
+            username: sessionStorage.getItem('username') || '' // Get username from sessionStorage
         };
     },
     computed: {
         isLoggedIn() {
-            // Dynamically check login status
+            // Check login status from session storage
             return sessionStorage.getItem('loggedIn') === 'true';
         }
     },
@@ -21,6 +22,7 @@ const app = Vue.createApp({
     },
     mounted() {
         console.log("Navbar mounted, isLoggedIn:", this.isLoggedIn);
+        console.log("Username:", this.username); 
     }
 });
 
@@ -29,6 +31,6 @@ fetch('/navbar')
     .then(response => response.text())
     .then(data => {
         document.getElementById('navbar-placeholder').innerHTML = data;
-        app.mount('#navbar-placeholder'); // Mount Vue app to the navbar placeholder
+        app.mount('#navbar-placeholder'); 
     })
     .catch(error => console.error('Error loading navbar:', error));
