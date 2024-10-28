@@ -125,6 +125,8 @@ def login():
             user_doc = db.collection('users').document(user.uid).get()
             if user_doc.exists:
                 session['username'] = user_doc.to_dict().get('username')
+                session['points'] = user_doc.to_dict().get('points')
+     
 
             message = 'Login successful! Redirecting to dashboard...'  # Set success message
             return redirect(url_for('dashboard'))  # Redirect to dashboard

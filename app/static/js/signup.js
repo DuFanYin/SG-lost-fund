@@ -47,7 +47,7 @@ Vue.createApp({
                     uid: user.uid,  // Storing UID
                     username: this.username,
                     email: this.email,
-                    points: 0,
+                    points:200,
                 });
 
                 // Redirect to the login page

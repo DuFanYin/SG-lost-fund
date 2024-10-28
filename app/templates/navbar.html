@@ -36,6 +36,8 @@
                     </li>
                 </ul>
 
+                <button v-if="isLoggedIn" v-text="points"></button>
+
                 <!-- Right-aligned Login or Profile Options -->
                 <ul class="navbar-nav ms-auto mb-2 mb-md-0">
                     <!-- Show Login if not logged in -->
@@ -47,6 +49,8 @@
                     </li>
 
                     <!-- Show Username dropdown if logged in -->
+
+                    
                     <li v-if="isLoggedIn" class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">

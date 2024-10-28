@@ -2,7 +2,9 @@ const app = Vue.createApp({
     data() {
         return {
             activeTab: window.location.pathname.replace('/', '') || 'home', // Set default tab based on URL path
-            username: sessionStorage.getItem('username') || '' // Get username from sessionStorage
+            username: sessionStorage.getItem('username') || '', // Get username from sessionStorage
+            points: sessionStorage.getItem('points') || 0,
+            uid: sessionStorage.getItem('uid') || 0,
         };
     },
     computed: {
@@ -18,11 +20,37 @@ const app = Vue.createApp({
         },
         setActiveTab(tab) {
             this.activeTab = tab; // Set active tab for dynamic styling
+        },
+        
+        setupRealTimeListener() {
+            const userId = sessionStorage.getItem('uid'); // Assuming you store the user ID in session storage
+            if (!userId) {
+                console.error("User ID not found in session storage");
+                return;
+            }
+    
+            db.collection('users').doc(userId)
+                .onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        console.log("Received updated data:", userData);
+                        sessionStorage.setItem('points', userData.points);
+                        this.points = userData.points;
+                    } else {
+                        console.error("Document does not exist");
+                    }
+                }); // Close onSnapshot correctly here
         }
     },
     mounted() {
         console.log("Navbar mounted, isLoggedIn:", this.isLoggedIn);
         console.log("Username:", this.username); 
+        console.log("Points:", this.points)
+        console.log("uid:", this.uid)
+
+        if (this.isLoggedIn) {
+            this.setupRealTimeListener(); // Automatically call it here when the component mounts
+        }
     }
 });
 
