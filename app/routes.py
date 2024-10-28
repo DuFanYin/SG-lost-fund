@@ -180,7 +180,7 @@ def signup():
             # Save user data in Firestore
             db.collection('users').document(user.uid).set({
                 'username': username,
-                'email': email
+                'email': email,
             })
 
             message = 'Sign up successful! Please log in.'  # Set success message
