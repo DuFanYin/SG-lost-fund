@@ -1,4 +1,4 @@
-// Initialize Firebase
+// Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAUZYEkqQSsEVM7rMCLqaEKoibGPiP_YJI",
     authDomain: "wad2project-db69b.firebaseapp.com",
@@ -9,72 +9,53 @@ const firebaseConfig = {
     appId: "1:262163048895:web:5ab7dd89cf3bc6daaad90a",
     measurementId: "G-PKT1RMGB01"
 };
+
+// Initialize Firebase app
 firebase.initializeApp(firebaseConfig);
 
-// Vue component
+// Initialize Firebase services
+const auth = firebase.auth();
+const db = firebase.firestore();
+
 Vue.createApp({
     data() {
         return {
+            username: '',
             email: '',
             password: '',
             confirmPassword: '',
-            username: '',
-            errorMessage: '',
-            successMessage: ''
+            errorMessage: ''
         };
     },
     methods: {
         async signUp() {
-            this.errorMessage = '';  // Clear any previous error messages
-            this.successMessage = '';  // Clear any previous success messages
+            this.errorMessage = ''; // Reset error message
 
-            // Check if password and confirmPassword match
+            // Validate password match
             if (this.password !== this.confirmPassword) {
-                this.errorMessage = "Passwords do not match";
+                this.errorMessage = 'Passwords do not match.';
                 return;
             }
 
             try {
-                // Ensure Firebase Auth persistence
-                await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                // Create user with email and password
+                const userCredential = await auth.createUserWithEmailAndPassword(this.email, this.password);
+                const user = userCredential.user;
 
-                // Create user with email and password in Firebase
-                const userCredential = await firebase.auth().createUserWithEmailAndPassword(this.email, this.password);
-
-                // Retrieve the ID token
-                const idToken = await userCredential.user.getIdToken();
-
-                // Send the ID token and user data to the backend
-                const response = await fetch('/signup', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer ' + idToken,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username: this.username, email: this.email })
+                // Save the username, email, and UID to Firestore
+                await db.collection('users').doc(user.uid).set({
+                    uid: user.uid,  // Storing UID
+                    username: this.username,
+                    email: this.email,
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    this.successMessage = 'User registered successfully!';
-                    console.log('User registered successfully:', data);
-                    alert('User registered successfully!');
+                // Redirect to the login page
+                alert('Sign up successful! Redirecting to login...');
+                window.location.href = '/login'; // Adjust the path according to your routing setup
 
-                    window.location.href = '/login'
-
-                    // Optionally, reset form fields
-                    this.email = '';
-                    this.password = '';
-                    this.confirmPassword = '';
-                    this.username = '';
-                } else {
-                    const errorData = await response.json();
-                    this.errorMessage = 'Error registering user: ' + (errorData.error || 'Unknown error');
-                    console.error('Error registering user:', errorData);
-                }
             } catch (error) {
-                console.error('Error signing up:', error);
-                this.errorMessage = 'Error signing up: ' + error.message;
+                // Handle errors here
+                this.errorMessage = error.message;
             }
         }
     }
@@ -94,37 +75,40 @@ Vue.createApp({
 // };
 // firebase.initializeApp(firebaseConfig);
 
-// // Vue instance
+// // Vue component
 // Vue.createApp({
 //     data() {
 //         return {
-//             username: '',
 //             email: '',
 //             password: '',
 //             confirmPassword: '',
+//             username: '',
 //             errorMessage: '',
 //             successMessage: ''
 //         };
 //     },
 //     methods: {
 //         async signUp() {
-//             this.errorMessage = '';  // Clear previous error message
-//             this.successMessage = '';  // Clear previous success message
+//             this.errorMessage = '';  // Clear any previous error messages
+//             this.successMessage = '';  // Clear any previous success messages
 
-//             // // Validate if password and confirmPassword match
-//             // if (this.password !== this.confirmPassword) {
-//             //     this.errorMessage = "Passwords do not match";
-//             //     return;
-//             // }
+//             // Check if password and confirmPassword match
+//             if (this.password !== this.confirmPassword) {
+//                 this.errorMessage = "Passwords do not match";
+//                 return;
+//             }
 
 //             try {
+//                 // Ensure Firebase Auth persistence
+//                 await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
 //                 // Create user with email and password in Firebase
 //                 const userCredential = await firebase.auth().createUserWithEmailAndPassword(this.email, this.password);
+
+//                 // Retrieve the ID token
 //                 const idToken = await userCredential.user.getIdToken();
-//                 console.log("ID Token:", idToken);  // Add this to check if the token is generated correctly
 
-
-//                 // Send the ID token and email to the backend
+//                 // Send the ID token and user data to the backend
 //                 const response = await fetch('/signup', {
 //                     method: 'POST',
 //                     headers: {
@@ -135,25 +119,23 @@ Vue.createApp({
 //                 });
 
 //                 if (response.ok) {
+//                     const data = await response.json();
 //                     this.successMessage = 'User registered successfully!';
+//                     console.log('User registered successfully:', data);
+//                     alert('User registered successfully!');
 
-//                     // alert
-//                     alert(`Welcome ${this.username} to the SG Lost & Found Website!`);
+//                     window.location.href = '/login'
 
-//                     // redirect user to home page
-//                     setTimeout(() => {
-//                         location.assign('/user_profile');
-//                     }, 100);
-
-//                     this.username = '';
+//                     // Optionally, reset form fields
 //                     this.email = '';
 //                     this.password = '';
 //                     this.confirmPassword = '';
+//                     this.username = '';
 //                 } else {
 //                     const errorData = await response.json();
-//                     this.errorMessage = errorData.error || 'Error registering user';
+//                     this.errorMessage = 'Error registering user: ' + (errorData.error || 'Unknown error');
+//                     console.error('Error registering user:', errorData);
 //                 }
-
 //             } catch (error) {
 //                 console.error('Error signing up:', error);
 //                 this.errorMessage = 'Error signing up: ' + error.message;
@@ -161,3 +143,4 @@ Vue.createApp({
 //         }
 //     }
 // }).mount('#app');
+

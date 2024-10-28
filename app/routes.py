@@ -134,49 +134,75 @@ def login():
 
 @main.route('/signup', methods=['GET', 'POST'])
 def signup():
-    if request.method == 'GET':
-        # Render the signup form without any authorization checks
-        return render_template('signup.html')
-    
+    message = ""  # Initialize message variable
     if request.method == 'POST':
-        # Extract and verify the Authorization token from headers
-        auth_header = request.headers.get('Authorization')
-        if not auth_header or not auth_header.startswith('Bearer '):
-            return jsonify({"error": "Authorization token missing or malformed"}), 401
-        
-        # Extract ID token from the header
-        id_token = auth_header.split("Bearer ")[1]
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+
         try:
-            # Verify the ID token
-            decoded_token = auth.verify_id_token(id_token)
-            uid = decoded_token['uid']
-            print(f"Token verified successfully. UID: {uid}")
-
-            # Get user data from the request body
-            data = request.json
-            username = data.get('username')
-            email = data.get('email')
-            
-            if not username or not email:
-                return jsonify({"error": "Username and Email are required"}), 400
-
-            # Save the user profile in Firestore
-            user_data = {
+            # Create user in Firebase Authentication
+            user = auth.create_user(
+                email=email,
+                password=password
+            )
+            # Save user data in Firestore
+            db.collection('users').document(user.uid).set({
                 'username': username,
-                'email': email,
-                'uid': uid
-            }
-            db.collection('users').document(uid).set(user_data)
-            print(f"User data saved to Firestore for UID: {uid}")
+                'email': email
+            })
 
-            return jsonify({"status": "User registered successfully"}), 200
+            message = 'Sign up successful! Please log in.'  # Set success message
+            return render_template('login.html', message=message)  # Redirect to login page with message
 
-        except auth.ExpiredIdTokenError:
-            return jsonify({"error": "Token expired"}), 401
-        except auth.RevokedIdTokenError:
-            return jsonify({"error": "Token has been revoked"}), 401
-        except auth.InvalidIdTokenError:
-            return jsonify({"error": "Invalid token"}), 401
         except Exception as e:
-            print(f"Unexpected error: {e}")
-            return jsonify({"error": f"Server error: {str(e)}"}), 500
+            message = str(e)  # Set error message
+
+    return render_template('signup.html', message=message)  # Render your signup page template with message
+
+    # if request.method == 'GET':
+    #     # Render the signup form without any authorization checks
+    #     return render_template('signup.html')
+    
+    # if request.method == 'POST':
+    #     # Extract and verify the Authorization token from headers
+    #     auth_header = request.headers.get('Authorization')
+    #     if not auth_header or not auth_header.startswith('Bearer '):
+    #         return jsonify({"error": "Authorization token missing or malformed"}), 401
+        
+    #     # Extract ID token from the header
+    #     id_token = auth_header.split("Bearer ")[1]
+    #     try:
+    #         # Verify the ID token
+    #         decoded_token = auth.verify_id_token(id_token)
+    #         uid = decoded_token['uid']
+    #         print(f"Token verified successfully. UID: {uid}")
+
+    #         # Get user data from the request body
+    #         data = request.json
+    #         username = data.get('username')
+    #         email = data.get('email')
+            
+    #         if not username or not email:
+    #             return jsonify({"error": "Username and Email are required"}), 400
+
+    #         # Save the user profile in Firestore
+    #         user_data = {
+    #             'username': username,
+    #             'email': email,
+    #             'uid': uid
+    #         }
+    #         db.collection('users').document(uid).set(user_data)
+    #         print(f"User data saved to Firestore for UID: {uid}")
+
+    #         return jsonify({"status": "User registered successfully"}), 200
+
+    #     except auth.ExpiredIdTokenError:
+    #         return jsonify({"error": "Token expired"}), 401
+    #     except auth.RevokedIdTokenError:
+    #         return jsonify({"error": "Token has been revoked"}), 401
+    #     except auth.InvalidIdTokenError:
+    #         return jsonify({"error": "Invalid token"}), 401
+    #     except Exception as e:
+    #         print(f"Unexpected error: {e}")
+    #         return jsonify({"error": f"Server error: {str(e)}"}), 500
