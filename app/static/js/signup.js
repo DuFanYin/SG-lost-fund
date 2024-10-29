@@ -22,14 +22,22 @@ Vue.createApp({
         return {
             username: '',
             email: '',
+            contantnum: '',
             password: '',
             confirmPassword: '',
             errorMessage: ''
         };
     },
     methods: {
+        validateContactNumber(){
+            // Remove any non-digit characters and limit to 8 digits
+            this.contantnum = this.contantnum.replace(/\D/g, '').slice(0, 8);
+        },
+        
         async signUp() {
             this.errorMessage = ''; // Reset error message
+
+
 
             // Validate password match
             if (this.password !== this.confirmPassword) {
@@ -47,7 +55,9 @@ Vue.createApp({
                     uid: user.uid,  // Storing UID
                     username: this.username,
                     email: this.email,
-                    points:200,
+                    points: 200,
+                    profiledesc: '',
+                    contantnum: this.contantnum,
                 });
 
                 // Redirect to the login page
