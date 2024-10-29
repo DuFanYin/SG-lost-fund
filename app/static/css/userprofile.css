@@ -1,0 +1,104 @@
+.profileborder {
+    border: 5px solid black;
+    padding-top: 40px;
+    padding-left: 60px;
+    padding-right: 30px;
+    border-bottom: 0px;
+    padding-bottom: 30px;
+
+    /* Ensure content is spaced evenly */
+}
+
+.listborder {
+    border: 5px solid black;
+    border-top: 0px;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: -60px;
+    /* Adjust this value as needed */
+}
+
+.profle-img {
+    border: 3px solid black;
+    height: 200px;
+    width: 200px;
+    padding: 0px;
+
+}
+
+.description-box {
+    width: 250px;
+    /* Set the width of the box */
+    height: 130px;
+    /* Set the height of the box */
+    resize: none;
+    /* Disable manual resizing */
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.profile {
+    max-height: 200px;
+    overflow: hidden;
+    padding-left: 80px
+}
+
+.profile_name {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 0px;
+    line-height: 1;
+
+}
+
+.profile_username {
+    font-size: 16px;
+    margin-top: 0px;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.bg1 {
+    background-color: yellow;
+}
+
+.bg2 {
+    background-color: lightgreen;
+}
+
+.bg3 {
+    background-color: aqua;
+}
+
+.modal-backdrop {
+    backdrop-filter: blur(5px);
+    /* Apply the blur */
+}
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    /* Ensure the image fits the circle */
+}
+
+.points {
+    margin-right: 10px;
+    color: orange;
+}
+
+.notification-icon {
+    font-size: 24px;
+    color: orange;
+    margin-right: 20px;
+}
+
+.profile-name {
+    margin-left: 10px;
+    font-weight: bold;
+}
