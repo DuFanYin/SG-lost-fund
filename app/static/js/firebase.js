@@ -1,4 +1,6 @@
 // Firebase Configuration
+
+
 const firebaseConfig = {
     apiKey: "AIzaSyAUZYEkqQSsEVM7rMCLqaEKoibGPiP_YJI",
     authDomain: "wad2project-db69b.firebaseapp.com",
