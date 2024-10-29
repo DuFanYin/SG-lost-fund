@@ -65,22 +65,6 @@
             font-weight: bold;
             padding: 10px;
         }
-
-        input[type="number"] {
-            -moz-appearance: textfield;
-            /* For Firefox */
-            -webkit-appearance: none;
-            /* For Chrome, Safari, Edge */
-            appearance: none;
-            /* For modern browsers */
-        }
-
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-            /* Removes any default margin */
-        }
     </style>
 </head>
 
@@ -110,36 +94,51 @@
                         <!-- Email -->
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bx bxs-envelope"></i></span>
-                            <input v-model="email" type="email" class="form-control" placeholder="Email" required />
-                        </div>
-
-                        <div class="input-group mb-3">
-                            <span class="input-group-text"><i class="bx bxs-phone"></i></span>
-                            <input v-model="contantnum" type="text" class="form-control" placeholder="Contact Number" required 
-                                   @input="validateContactNumber" maxlength="8" />
+                            <input v-model="email" type="email" class="form-control" placeholder="Email" required
+                                @input="checkEmail" />
                         </div>
 
                         <!-- Password -->
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bx bxs-lock-alt"></i></span>
-                            <input v-model="password" type="password" class="form-control" placeholder="Password"
-                                required />
+                            <input v-model="password" :type="showPassword ? 'text' : 'password'" class="form-control"
+                                placeholder="Password" required @input="checkPasswordCriteria" />
                         </div>
 
                         <!-- Confirm Password -->
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bx bxs-lock-alt"></i></span>
-                            <input v-model="confirmPassword" type="password" class="form-control"
-                                placeholder="Confirm Password" required />
+                            <input v-model="confirmPassword" :type="showConfirmPassword ? 'text' : 'password'"
+                                class="form-control" placeholder="Confirm Password" required
+                                @input="checkConfirmPassword" />
                         </div>
 
                         <!-- Error message -->
-                        <div v-if="errorMessage" class="errorMessage">{{ errorMessage }}</div>
+                        <!-- <div v-if="errorMessage" class="errorMessage">{{ errorMessage }}</div> -->
 
                         <!-- Sign Up button -->
                         <div class="d-flex justify-content-center">
                             <button type="submit" class="signup-button">Sign Up</button>
                         </div>
+
+                        <br>
+
+                        <!-- Password validation -->
+                        <div v-if="isPasswordInvalid" class="text-danger mb-3 d-flex justify-content-center">
+                            <ul>
+                                <li v-for="problem in passwordvalidation" :key="problem" v-text="problem"></li>
+                            </ul>
+                        </div>
+
+                        <!-- Confirm Password validation -->
+                        <div v-if="isConfirmPasswordInvalid" class="text-danger mb-3 d-flex justify-content-center">
+                            Confirm password must match the password.</div>
+
+
+                        <!-- Email validation -->
+                        <div v-if="isEmailInvalid" class="text-danger mb-3 d-flex justify-content-center">Please enter a
+                            valid email address.</div>
+
 
                         <!-- Divider -->
                         <div class="d-flex align-items-center justify-content-center my-4">
@@ -158,6 +157,24 @@
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Success!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You have signed up successfully! Redirecting you to the login page......
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Footer placeholder -->
     <div id="footer-placeholder"></div>
@@ -169,7 +186,7 @@
     <script src="../static/js/footer.js"></script>
 
     <!-- Load the Javascript to include signup.js -->
-    <script src="../static/js/signup.js"></script>
+    <script type="module" src="../static/js/signup.js"></script>
 
     <!-- Load the JavaScript to include the Navbar -->
     <script src="../static/js/navbar.js"></script>

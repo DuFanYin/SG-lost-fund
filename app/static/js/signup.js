@@ -1,47 +1,109 @@
 // Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyAUZYEkqQSsEVM7rMCLqaEKoibGPiP_YJI",
-    authDomain: "wad2project-db69b.firebaseapp.com",
-    databaseURL: "https://wad2project-db69b-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "wad2project-db69b",
-    storageBucket: "wad2project-db69b.appspot.com",
-    messagingSenderId: "262163048895",
-    appId: "1:262163048895:web:5ab7dd89cf3bc6daaad90a",
-    measurementId: "G-PKT1RMGB01"
-};
+// const firebaseConfig = {
+//     apiKey: "AIzaSyAUZYEkqQSsEVM7rMCLqaEKoibGPiP_YJI",
+//     authDomain: "wad2project-db69b.firebaseapp.com",
+//     databaseURL: "https://wad2project-db69b-default-rtdb.asia-southeast1.firebasedatabase.app",
+//     projectId: "wad2project-db69b",
+//     storageBucket: "wad2project-db69b.appspot.com",
+//     messagingSenderId: "262163048895",
+//     appId: "1:262163048895:web:5ab7dd89cf3bc6daaad90a",
+//     measurementId: "G-PKT1RMGB01"
+// };
 
-// Initialize Firebase app
-firebase.initializeApp(firebaseConfig);
+// // Initialize Firebase app
+// firebase.initializeApp(firebaseConfig);
 
-// Initialize Firebase services
-const auth = firebase.auth();
-const db = firebase.firestore();
+// // Initialize Firebase services
+// const auth = firebase.auth();
+// const db = firebase.firestore();
+
+import { app, auth, db } from '../js/firebaseConfig.js'; // Adjust the path according to your file structure
 
 Vue.createApp({
     data() {
         return {
             username: '',
             email: '',
-            contantnum: '',
             password: '',
             confirmPassword: '',
-            errorMessage: ''
+            errorMessage: '',
+            isPasswordInvalid: false,
+            passwordvalidation: [],
+            isConfirmPasswordInvalid: false,
+            isEmailInvalid: false,
+            emailErrorMessage: ''
         };
     },
     methods: {
-        validateContactNumber(){
-            // Remove any non-digit characters and limit to 8 digits
-            this.contantnum = this.contantnum.replace(/\D/g, '').slice(0, 8);
+        checkPasswordCriteria() {
+            this.passwordvalidation = [];
+            this.isPasswordInvalid = false;
+
+            if (this.password === "") {
+                return;
+            }
+
+            // Validation checks
+            if (this.password.length < 8) {
+                this.isPasswordInvalid = true;
+                this.passwordvalidation.push('Password must be at least 8 characters long.');
+            }
+            if (!/\d/.test(this.password)) {
+                this.isPasswordInvalid = true;
+                this.passwordvalidation.push('Password must contain at least one digit.');
+            }
+            if (!/[a-z]/.test(this.password)) {
+                this.isPasswordInvalid = true;
+                this.passwordvalidation.push('Password must contain at least one lowercase letter.');
+            }
+            if (!/[A-Z]/.test(this.password)) {
+                this.isPasswordInvalid = true;
+                this.passwordvalidation.push('Password must contain at least one uppercase letter.');
+            }
         },
-        
+
+        checkConfirmPassword() {
+            this.isConfirmPasswordInvalid = false;
+
+            if (this.confirmPassword === "") {
+                return;
+            }
+
+            if (this.confirmPassword !== this.password) {
+                this.isConfirmPasswordInvalid = true;
+            }
+        },
+
+        checkEmail() {
+            this.isEmailInvalid = false;
+            this.emailErrorMessage = '';
+
+            if (this.email === "") {
+                return;
+            }
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(this.email)) {
+                this.isEmailInvalid = true;
+            }
+        },
+
+
         async signUp() {
-            this.errorMessage = ''; // Reset error message
+            this.errorMessage = '';
 
+            // Check password criteria
+            this.checkPasswordCriteria();
 
+            // Validate confirm password
+            this.checkConfirmPassword();
+            if (this.isConfirmPasswordInvalid) {
+                return;
+            }
 
-            // Validate password match
-            if (this.password !== this.confirmPassword) {
-                this.errorMessage = 'Passwords do not match.';
+            // Validate email
+            this.checkEmail();
+            if (this.isEmailInvalid) {
                 return;
             }
 
@@ -56,13 +118,19 @@ Vue.createApp({
                     username: this.username,
                     email: this.email,
                     points: 200,
-                    profiledesc: '',
-                    contantnum: this.contantnum,
                 });
 
+                const modal = new bootstrap.Modal(document.getElementById('successModal'));
+                modal.show();
+
+                // Redirect to the login page after a brief delay
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2000);
+
                 // Redirect to the login page
-                alert('Sign up successful! Redirecting to login...');
-                window.location.href = '/login'; // Adjust the path according to your routing setup
+                // alert('Sign up successful! Redirecting to login...');
+                // window.location.href = '/login'; // Adjust the path according to your routing setup
 
             } catch (error) {
                 // Handle errors here
