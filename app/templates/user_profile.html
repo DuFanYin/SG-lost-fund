@@ -18,6 +18,12 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
+    <!-- Firebase App (Core) SDK with compat versions for older-style imports -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+
     <style>
         .profileborder {
             border: 5px solid black;
@@ -33,9 +39,11 @@
         .listborder {
             border: 5px solid black;
             border-top: 0px;
-            min-height: 100vh;
+            min-height: 80vh;
             display: flex;
             flex-direction: column;
+            margin-bottom: -60px;
+            /* Adjust this value as needed */
         }
 
         .profle-img {
@@ -62,7 +70,8 @@
 
         .profile {
             max-height: 200px;
-            overflow: hidden
+            overflow: hidden;
+            padding-left: 80px
         }
 
         .profile_name {
@@ -164,62 +173,20 @@
     <!-- Navbar placeholder -->
     <div id="navbar-placeholder"></div>
 
-    <!-- Nav Bar -->
-    <!-- Nav Bar with Offcanvas -->
-    <!-- <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <div class="container-fluid"> -->
-    <!-- Move the hamburger (navbar-toggler) to the left -->
-    <!-- <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button> -->
-
-    <!-- Navbar brand or title -->
-    <!-- <a class="navbar-brand ms-2">SG Lost & Found</a> -->
-
-    <!-- Right-aligned Navbar items (Visible in normal mode) -->
-    <!-- <div class="collapse navbar-collapse" id="nvbr">
-                <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/dash_board">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/listing">Post Listing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signup">Sign up</a>
-                    </li>
-                </ul> -->
-
-    <!-- Right-aligned Sign In -->
-    <!-- <ul class="navbar-nav ms-auto mb-2 mb-md-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">
-                            <i class="fas fa-sign-in-alt"></i> Login
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav> -->
-
-    <br>
-    <br>
-    
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-10 profileborder bg1">
+
                 <div class="row profile">
                     <div class="col-3">
-                        <img class="profle-img" :src="profileImg" alt="">
+                        <img class="profle-img" src="/app/static/img/icon_watch.png" alt="">
                     </div>
                     <div class="col-6">
-                        <div class="profile_name">{{ profileName }}</div>
-                        <div class="profile_username">{{ profileUsername }}</div>
-                        <div>{{ profileDescription }}</div>
+                        <div class="profile_name">Editable Name</div>
+                        <div class="profile_username">@username</div>
+                        <div>Profile Description</div>
+
+
                     </div>
                     <div class="col-3">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -229,6 +196,8 @@
                         <div>Contact information</div>
                     </div>
                 </div>
+
+
             </div>
         </div>
 
@@ -236,12 +205,36 @@
             <div class="col-10 listborder bg2">
                 <div class="row">
                     <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
-                        <!-- Tabs for "Found Items" and "Requested Items" -->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="found-items-tab" data-bs-toggle="tab"
+                                data-bs-target="#found-items" type="button" role="tab" aria-controls="found-items"
+                                aria-selected="true">
+                                <i class="bi bi-gift"></i> Found Items
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="requested-items-tab" data-bs-toggle="tab"
+                                data-bs-target="#requested-items" type="button" role="tab"
+                                aria-controls="requested-items" aria-selected="false">
+                                <i class="bi bi-megaphone"></i> Requested Items
+                            </button>
+                        </li>
                     </ul>
                 </div>
+
                 <!-- Tab Content -->
                 <div class="tab-content" id="myTabContent">
-                    <!-- Tab content for found and requested items -->
+                    <!-- Found Items Content -->
+                    <div class="tab-pane fade show active" id="found-items" role="tabpanel"
+                        aria-labelledby="found-items-tab">
+                        <p>Items listed that you found</p>
+                    </div>
+
+                    <!-- Requested Items Content -->
+                    <div class="tab-pane fade" id="requested-items" role="tabpanel"
+                        aria-labelledby="requested-items-tab">
+                        <p>Items that u lost are shown here </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -256,29 +249,33 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form @submit.prevent="saveChanges">
+                        <!-- Profile Editing Form -->
+                        <form>
                             <div class="mb-3">
-                                <label for="profileNameInput" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="profileNameInput" v-model="tempProfileName">
+                                <label for="profileName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="profileName" value="Editable Name">
                             </div>
                             <div class="mb-3">
-                                <label for="profileUsernameInput" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="profileUsernameInput"
-                                    v-model="tempProfileUsername">
+                                <label for="profileUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="profileUsername" value="@username">
                             </div>
                             <div class="mb-3">
-                                <label for="profileDescriptionInput" class="form-label">Description</label>
-                                <textarea class="form-control" id="profileDescriptionInput" rows="3"
-                                    v-model="tempProfileDescription"></textarea>
+                                <label for="profileDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="profileDescription"
+                                    rows="3">Profile Description</textarea>
                             </div>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
                         </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Footer placeholder -->
+    <div id="footer-placeholder"></div>
 
     <!-- Vue, Bootstrap, and JavaScript Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -291,31 +288,9 @@
             window.location.href = '/login'; // Redirect to login if not logged in
         }
 
-        Vue.createApp({
-            data() {
-                return {
-                    profileImg: '/app/static/img/icon_watch.png',
-                    profileName: 'Editable Name',
-                    profileUsername: '@username',
-                    profileDescription: 'Profile Description',
-                    // Temporary data for editing
-                    tempProfileName: 'Editable Name',
-                    tempProfileUsername: '@username',
-                    tempProfileDescription: 'Profile Description'
-                };
-            },
-            methods: {
-                saveChanges() {
-                    this.profileName = this.tempProfileName;
-                    this.profileUsername = this.tempProfileUsername;
-                    this.profileDescription = this.tempProfileDescription;
-                }
-            }
-        }).mount('#app');
     </script>
 
-    <!-- Footer placeholder -->
-    <div id="footer-placeholder"></div>
+    
 
     <!-- Load the JavaScript to include the footer -->
     <script src="../static/js/footer.js"></script>
