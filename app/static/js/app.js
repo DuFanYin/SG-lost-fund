@@ -9,7 +9,7 @@ var currentInfoWindow = null;
 var infoPane = document.getElementById('panel');
 var uniqueCategories = new Set();
 
-
+//Prevents XSS
 function sanitizeHTML(strings) {
     const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' };
     let result = strings[0];
@@ -22,6 +22,7 @@ function sanitizeHTML(strings) {
     return result;
 }
 
+//Gets user current location
 function getUserLocation() {
     const defaultPos = { lat: 1.3521, lng: 103.8198 }; // Singapore center
     if (navigator.geolocation) {
@@ -122,7 +123,7 @@ function renderMapWithFeatures(centerPosition) {
         const content = `
         <div class="card">
             <div class="card-body">
-                <img style="width:200px; margin-top:30px" src=".../static/images/profile-icon.jpg">
+                <img style="float:left; width:200px; margin-top:30px" src="../static/img/profile-icon.jpg">
                 <div style="margin-left:220px; margin-bottom:20px;">
             <h2>${name}</h2><p>${description}</p>
             <p><b>Found Time:</b> ${hours}<br/><b>Phone:</b> ${phone}</p>
@@ -440,7 +441,6 @@ function addCards(data, item) {
 function adjustPanelsForScreenSize() {
     const infoPanel = document.getElementById('info-panel');
     const panel = document.getElementById('panel');
-    document.getElementById('toggle-panel-button').classList.add('hidden');
 
     if (!infoPanel || !panel) return; // Guard clause if the panels don't exist yet
 
@@ -448,14 +448,13 @@ function adjustPanelsForScreenSize() {
         infoPanel.style.left = "350px";
     } else {
         infoPanel.style.left = 0;
+        document.getElementById('toggle-panel-button').classList.add('hidden');
+        
     }
 }
 
 // Add event listener for resizing the window
 window.addEventListener('resize', adjustPanelsForScreenSize);
-
-
-
 
 
 // Apply the category filter to the map and panel items

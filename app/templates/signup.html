@@ -65,6 +65,22 @@
             font-weight: bold;
             padding: 10px;
         }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+            /* For Firefox */
+            -webkit-appearance: none;
+            /* For Chrome, Safari, Edge */
+            appearance: none;
+            /* For modern browsers */
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            /* Removes any default margin */
+        }
     </style>
 </head>
 
@@ -95,6 +111,12 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bx bxs-envelope"></i></span>
                             <input v-model="email" type="email" class="form-control" placeholder="Email" required />
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="bx bxs-phone"></i></span>
+                            <input v-model="contantnum" type="text" class="form-control" placeholder="Contact Number" required 
+                                   @input="validateContactNumber" maxlength="8" />
                         </div>
 
                         <!-- Password -->

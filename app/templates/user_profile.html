@@ -6,169 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Vue-->
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-
-    <!-- Boxicons for input icons -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.js"></script>
 
     <!-- Firebase App (Core) SDK with compat versions for older-style imports -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
+    <script src="../static/js/firebase.js"></script>
 
-    <style>
-        .profileborder {
-            border: 5px solid black;
-            padding-top: 40px;
-            padding-left: 60px;
-            padding-right: 30px;
-            border-bottom: 0px;
-            padding-bottom: 30px;
+    <link rel="stylesheet" href="static/css/userprofile.css">
 
-            /* Ensure content is spaced evenly */
-        }
+        <!-- Bootstrap Bundle JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        .listborder {
-            border: 5px solid black;
-            border-top: 0px;
-            min-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            margin-bottom: -60px;
-            /* Adjust this value as needed */
-        }
+        <script>
+            // Check if the user is logged in by verifying session storage
+            if (sessionStorage.getItem('loggedIn') !== 'true') {
+                window.location.href = '/login'; // Redirect to login if not logged in
+            }
 
-        .profle-img {
-            border: 3px solid black;
-            height: 200px;
-            width: 200px;
-            padding: 0px;
+        </script>
 
-        }
+        <!-- Load the JavaScript to include the footer -->
+        <script src="../static/js/footer.js"></script>
 
-        .description-box {
-            width: 250px;
-            /* Set the width of the box */
-            height: 130px;
-            /* Set the height of the box */
-            resize: none;
-            /* Disable manual resizing */
-            padding: 10px;
-            border: 1px solid #ccc;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            line-height: 1.5;
-        }
+        <!-- Load the JavaScript to include the Navbar -->
+        <script src="../static/js/navbar.js"></script>
 
-        .profile {
-            max-height: 200px;
-            overflow: hidden;
-            padding-left: 80px
-        }
-
-        .profile_name {
-            font-size: 25px;
-            font-weight: bold;
-            margin-bottom: 0px;
-            line-height: 1;
-
-        }
-
-        .profile_username {
-            font-size: 16px;
-            margin-top: 0px;
-            line-height: 1;
-            margin-bottom: 10px;
-        }
-
-        .bg1 {
-            background-color: yellow;
-        }
-
-        .bg2 {
-            background-color: lightgreen;
-        }
-
-        .bg3 {
-            background-color: aqua;
-        }
-
-        /* Remove all borders except the bottom border */
-        .nav-tabs {
-            border-bottom: 2px solid lightgreen;
-            /* Change the white line to light green */
-        }
-
-        /* Active tab with only bottom border */
-        .nav-tabs .nav-link.active {
-            background-color: lightgreen;
-            color: #000;
-            border: none;
-            /* Remove all borders */
-            border-bottom: 2px solid black;
-            /* Keep only the black bottom border */
-        }
-
-        /* Inactive Tab Color */
-        .nav-tabs .nav-link {
-            color: black;
-            border: none;
-            /* Remove all borders */
-        }
-
-        /* Remove hover effect for side borders, if any */
-        .nav-tabs .nav-link:hover {
-            /* Black bottom border on hover */
-            color: #000;
-            background-color: transparent;
-        }
-
-        /* Remove default border from tab content */
-        .tab-content {
-            border: none;
-        }
-
-        .modal-backdrop {
-            backdrop-filter: blur(5px);
-            /* Apply the blur */
-        }
-
-        .profile-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            /* Ensure the image fits the circle */
-        }
-
-        .points {
-            margin-right: 10px;
-            color: orange;
-        }
-
-        .notification-icon {
-            font-size: 24px;
-            color: orange;
-            margin-right: 20px;
-        }
-
-        .profile-name {
-            margin-left: 10px;
-            font-weight: bold;
-        }
-    </style>
+        <!-- userprofile.js-->
+        <script src="../static/js/userprofile.js"></script>
 
 </head>
 
-<body class="bg3" id="app">
+<body class="bg3" id="profile">
 
     <!-- Navbar placeholder -->
     <div id="navbar-placeholder"></div>
@@ -176,28 +50,24 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-10 profileborder bg1">
-
                 <div class="row profile">
                     <div class="col-3">
-                        <img class="profle-img" src="/app/static/img/icon_watch.png" alt="">
+                        <img class="profle-img" src="{{ url_for('static', filename='img/icon_watch.png') }}"
+                            alt="Profile Picture">
                     </div>
                     <div class="col-6">
-                        <div class="profile_name">Editable Name</div>
-                        <div class="profile_username">@username</div>
-                        <div>Profile Description</div>
-
-
+                        <div class="profile_name" v-text="username"></div>
+                        <div class="profile_username" v-text="username"></div>
+                        <div v-text="profileDescription"></div>
                     </div>
                     <div class="col-3">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#editProfileModal">
                             Edit Profile
                         </button>
-                        <div>Contact information</div>
+                        <div v-text="contactNumber"></div>
                     </div>
                 </div>
-
-
             </div>
         </div>
 
@@ -250,53 +120,30 @@
                     </div>
                     <div class="modal-body">
                         <!-- Profile Editing Form -->
-                        <form>
+                        <form @submit.prevent="updateProfile">
                             <div class="mb-3">
                                 <label for="profileName" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="profileName" value="Editable Name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="profileUsername" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="profileUsername" value="@username">
+                                <input type="text" class="form-control" id="profileName" v-model="username">
                             </div>
                             <div class="mb-3">
                                 <label for="profileDescription" class="form-label">Description</label>
-                                <textarea class="form-control" id="profileDescription"
-                                    rows="3">Profile Description</textarea>
+                                <textarea class="form-control" id="profileDescription" rows="3"
+                                    v-model="profileDescription"></textarea>
                             </div>
+                            <div class="mb-3">
+                                <label for="contactNumber" class="form-label">Contact Number</label>
+                                <input type="text" class="form-control" id="contactNumber" v-model="contactNumber">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Footer placeholder -->
-    <div id="footer-placeholder"></div>
-
-    <!-- Vue, Bootstrap, and JavaScript Dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-
-    <script>
-        // Check if the user is logged in by verifying session storage
-        if (sessionStorage.getItem('loggedIn') !== 'true') {
-            window.location.href = '/login'; // Redirect to login if not logged in
-        }
-
-    </script>
+        <!-- Footer placeholder -->
+        <div id="footer-placeholder"></div>
 
     
-
-    <!-- Load the JavaScript to include the footer -->
-    <script src="../static/js/footer.js"></script>
-
-    <!-- Load the JavaScript to include the Navbar -->
-    <script src="../static/js/navbar.js"></script>
 
 </body>
 
