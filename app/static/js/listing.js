@@ -1,3 +1,5 @@
+import { db, collection, addDoc } from './firebaseConfig.js';
+
 Vue.createApp({
     data() {
         return {
@@ -9,8 +11,8 @@ Vue.createApp({
                 handoff_method: '',
                 handoff_location: '',
                 file: null,
-                report_type: '', // New field for Report Type
-                status: 'Pending' // Default status set to Pending
+                report_type: '',
+                status: 'Pending'
             },
             characterCount: 0,
             formSubmitted: false
@@ -19,58 +21,45 @@ Vue.createApp({
     methods: {
         checkCharacterCount() {
             this.characterCount = this.formData.item_description.length;
-
             if (this.characterCount > 200) {
                 this.formData.item_description = this.formData.item_description.slice(0, 200);
                 this.characterCount = 200;
             }
         },
-        submitForm() {
-            const { item_name, location, item_description, item_type, handoff_method, handoff_location, report_type } = this.formData;
+        async submitForm() {
+            try {
+                const uid = sessionStorage.getItem('uid');
+                console.log("Retrieved UID:", uid);
 
-            if (item_description.length > 200) {
-                alert("Item description cannot exceed 200 characters.");
-                return;
-            }
+                if (this.formData.item_name && this.formData.location && this.formData.item_description &&
+                    this.formData.item_type && this.formData.handoff_method && this.formData.handoff_location &&
+                    this.formData.report_type) {
 
-            // Retrieve uid from sessionStorage
-            const uid = sessionStorage.getItem('uid');
-            console.log("Retrieved UID:", uid); // Log the UID to ensure it's retrieved correctly
+                    // Prepare the data to be added to Firestore
+                    const formDataToSend = {
+                        item_name: this.formData.item_name,
+                        location: this.formData.location,
+                        item_description: this.formData.item_description,
+                        item_type: this.formData.item_type,
+                        handoff_method: this.formData.handoff_method,
+                        handoff_location: this.formData.handoff_location,
+                        report_type: this.formData.report_type,
+                        status: this.formData.status,
+                        uid: uid
+                    };
 
+                    // Add data to Firestore
+                    await addDoc(collection(db, "listings"), formDataToSend);
 
-            if (item_name && location && item_description && item_type && handoff_method && handoff_location && report_type) {
-                const formDataToSend = new FormData();
-                formDataToSend.append('item_name', item_name);
-                formDataToSend.append('location', location);
-                formDataToSend.append('item_description', item_description);
-                formDataToSend.append('item_type', item_type);
-                formDataToSend.append('handoff_method', handoff_method);
-                formDataToSend.append('handoff_location', handoff_location);
-                formDataToSend.append('report_type', report_type); // Append report type
-                formDataToSend.append('status', this.formData.status); // Always Pending
-                formDataToSend.append('uid', uid); // Append the user's uid
-
-                if (this.formData.file) {
-                    formDataToSend.append('file', this.formData.file);
+                    console.log("Form Submitted Successfully to Firestore");
+                    this.formSubmitted = true;
+                    this.resetForm();
+                } else {
+                    alert("Please fill in all fields.");
                 }
-
-                // // Log formData contents for debugging
-                // for (let [key, value] of formDataToSend.entries()) {
-                //     console.log(`${key}: ${value}`);
-                // }
-
-                axios.post('http://127.0.0.1:5000/listing', formDataToSend)
-                    .then(response => {
-                        console.log("Form Submitted Successfully:", response.data);
-                        this.formSubmitted = true;
-                        this.resetForm();
-                    })
-                    .catch(error => {
-                        console.error("Error submitting the form:", error);
-                        alert('There was an error submitting the form.');
-                    });
-            } else {
-                alert("Please fill in all fields.");
+            } catch (error) {
+                console.error("Error submitting form to Firestore:", error);
+                alert('There was an error submitting the form.');
             }
         },
         handleFileUpload(event) {
@@ -88,8 +77,8 @@ Vue.createApp({
                 handoff_method: '',
                 handoff_location: '',
                 file: null,
-                report_type: '', // Reset the new fields
-                status: 'Pending' // Reset the status to Pending
+                report_type: '',
+                status: 'Pending'
             };
             this.characterCount = 0;
         }

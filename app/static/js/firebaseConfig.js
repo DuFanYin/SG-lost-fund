@@ -12,11 +12,8 @@ const firebaseConfig = {
     measurementId: "G-PKT1RMGB01"
 };
 
-// Initialize Firebase app
-firebase.initializeApp(firebaseConfig);
-
-// Initialize Firebase Authentication
+const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+const db = firebase.firestore();
 
-// Initialize Firestore
-const db = firebase.firestore();  // Add this line to initialize Firestore
+export { app, auth, db };
