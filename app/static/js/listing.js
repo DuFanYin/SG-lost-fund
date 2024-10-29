@@ -1,9 +1,10 @@
-import { db, collection, addDoc } from './firebaseConfig.js';
+import { db } from './firebaseConfig.js';
 
 Vue.createApp({
     data() {
         return {
             formData: {
+                type: 'found', // Default type
                 item_name: '',
                 location: '',
                 item_description: '',
@@ -19,47 +20,39 @@ Vue.createApp({
         };
     },
     methods: {
+        setType(type) {
+            this.formData.type = type; // This updates the type
+        },
         checkCharacterCount() {
             this.characterCount = this.formData.item_description.length;
+
             if (this.characterCount > 200) {
                 this.formData.item_description = this.formData.item_description.slice(0, 200);
                 this.characterCount = 200;
             }
         },
-        async submitForm() {
-            try {
-                const uid = sessionStorage.getItem('uid');
-                console.log("Retrieved UID:", uid);
+        submitForm() {
+            const uid = sessionStorage.getItem('uid');
+            if (this.formData.item_name && this.formData.location && this.formData.item_description &&
+                this.formData.item_type && this.formData.handoff_method && this.formData.handoff_location &&
+                this.formData.report_type) {
 
-                if (this.formData.item_name && this.formData.location && this.formData.item_description &&
-                    this.formData.item_type && this.formData.handoff_method && this.formData.handoff_location &&
-                    this.formData.report_type) {
-
-                    // Prepare the data to be added to Firestore
-                    const formDataToSend = {
-                        item_name: this.formData.item_name,
-                        location: this.formData.location,
-                        item_description: this.formData.item_description,
-                        item_type: this.formData.item_type,
-                        handoff_method: this.formData.handoff_method,
-                        handoff_location: this.formData.handoff_location,
-                        report_type: this.formData.report_type,
-                        status: this.formData.status,
-                        uid: uid
-                    };
-
-                    // Add data to Firestore
-                    await addDoc(collection(db, "listings"), formDataToSend);
-
+                db.collection("listings").add({
+                    ...this.formData,
+                    uid: uid,
+                    status: this.formData.status,
+                })
+                .then(() => {
                     console.log("Form Submitted Successfully to Firestore");
                     this.formSubmitted = true;
                     this.resetForm();
-                } else {
-                    alert("Please fill in all fields.");
-                }
-            } catch (error) {
-                console.error("Error submitting form to Firestore:", error);
-                alert('There was an error submitting the form.');
+                })
+                .catch((error) => {
+                    console.error("Error submitting the form to Firestore:", error);
+                    alert('There was an error submitting the form.');
+                });
+            } else {
+                alert("Please fill in all fields.");
             }
         },
         handleFileUpload(event) {
@@ -70,6 +63,7 @@ Vue.createApp({
         },
         resetForm() {
             this.formData = {
+                type: 'found', // Reset to default type
                 item_name: '',
                 location: '',
                 item_description: '',
