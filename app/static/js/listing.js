@@ -33,6 +33,11 @@ Vue.createApp({
                 return;
             }
 
+            // Retrieve uid from sessionStorage
+            const uid = sessionStorage.getItem('uid');
+            console.log("Retrieved UID:", uid); // Log the UID to ensure it's retrieved correctly
+
+
             if (item_name && location && item_description && item_type && handoff_method && handoff_location && report_type) {
                 const formDataToSend = new FormData();
                 formDataToSend.append('item_name', item_name);
@@ -43,10 +48,16 @@ Vue.createApp({
                 formDataToSend.append('handoff_location', handoff_location);
                 formDataToSend.append('report_type', report_type); // Append report type
                 formDataToSend.append('status', this.formData.status); // Always Pending
+                formDataToSend.append('uid', uid); // Append the user's uid
 
                 if (this.formData.file) {
                     formDataToSend.append('file', this.formData.file);
                 }
+
+                // // Log formData contents for debugging
+                // for (let [key, value] of formDataToSend.entries()) {
+                //     console.log(`${key}: ${value}`);
+                // }
 
                 axios.post('http://127.0.0.1:5000/listing', formDataToSend)
                     .then(response => {

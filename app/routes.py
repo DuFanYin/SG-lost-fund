@@ -56,6 +56,11 @@ def listing():
     report_type = request.form.get('report_type')  # Extract report type from form
     status = 'Pending'  # Set status to 'Pending' by default
 
+    uid = request.form.get('uid')  # Retrieve the uid from the request
+
+    if not uid:
+        return jsonify({"error": "User ID is required"}), 400
+
     # Handle file upload
     if 'file' not in request.files:
         return jsonify({"error": "No file uploaded"}), 400
@@ -84,7 +89,9 @@ def listing():
         'handoff_location': handoff_location,
         'file': filename,  # Store the saved filename
         'report_type': report_type,  # Include report type
-        'status': status  # Set status to 'Pending'
+        'status': status,  # Set status to 'Pending'
+        'uid': uid  # Add uid to the Firestore document
+
     }
 
     # Add document to Firestore (e.g., in a collection called "listings")
