@@ -36,30 +36,78 @@
             <div class="col-lg-6 d-flex flex-column">
                 <div class="pink-box w-100 mb-3 mt-3">
                     <br> <i class="fas fa-users"></i>
-                    <span>Total Number of Users</span>
+                    <span>Total Number of Registered Users</span>
 
                     <!-- Direct binding -->
-                    <p v-text="totalUsers"></p>
-                    <!-- <p>{{ totalUsers }}</p> -->
+                    <p id="boldNumber" v-text="totalUsers"></p>
                 </div>
                 <div class="row gx-3 gx-md-5 mt-3"> <!-- Adjust gap with gx-* classes -->
                     <div class="col-md-6 col-lg-6 d-flex align-items-stretch">
                         <div class="yellow-box w-100">
                             <br> <i class="fas fa-book"></i>
                             <span>Total Lost Item Reports</span>
-                            <p>{{ lostItemReports }}</p>
+                            <p id="boldNumber" v-text="lostItemReports"></p>
                         </div>
                     </div>
                     <div class="col-md-6 d-flex align-items-stretch mt-3 mt-md-0"> <!-- Add top margin on small screens -->
                         <div class="green-box w-100">
                             <br> <i class="fas fa-thumbs-up"></i>
                             <span>Total Number of Recovered Items</span>
-                            <p>{{ recoveredItems }}</p>
-                        </div>
+                            <p id="boldNumber" v-text="recoveredItems"></p>                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="leaderboard mt-2">
+                    <h2 class="text-center">Leaderboard</h2>
+                    <br>
+                    <table class="table table-hover text-white">
+                        <thead>
+                            <tr>
+                                <th>Ranking</th>
+                                <th>Username</th>
+                                <th>Number of items found</th>
+                                <th>Points</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardData">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
         </div>
+        <div class="row mt-3">
+            <div class="col-lg-6 col-md-6 d-flex flex-column">
+           <!-- Pie Chart-->
+                <div class="p-1 bg-light rounded-3 flex-fill">
+                    <div class="container-fluid py-2 chart-container pie-chart-container">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                    <select id="statusSelect" class="form-select mt-2" v-model="selectedReportType" @change="updatePieChart">  
+                        <option disabled value="">Select Status</option> 
+                        <option value="Found">Found</option>
+                        <option value="Returned">Returned</option>
+                       
+                    </select>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 col-md-6 d-flex flex-column">
+                 <!-- Stacked Line and Bar Charts -->
+                <div class="p-1 bg-light rounded-3 flex-fill">
+                    <div class="container-fluid py-2 chart-container">
+                        <div id="lineChart" style="width: 100%; height: 300px;"></div>
+                    </div>
+                </div>
+                <div class="p-1 bg-light rounded-3 flex-fill">
+                    <div class="container-fluid py-2 chart-container">
+                        <canvas id="barChart" style="width: 100%; height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
     </div>
 
     <!-- Footer placeholder -->
@@ -81,3 +129,38 @@
 </body>
 
 </html>
+
+
+ <!--
+
+Second Row: Charts 
+<div class="row mt-3">
+<div class="col-lg-6 col-md-6 d-flex flex-column">
+     Pie Chart 
+    <div class="p-1 bg-light rounded-3 flex-fill">
+        <div class="container-fluid py-2 chart-container pie-chart-container">
+            <canvas id="pieChart"></canvas>
+        </div>
+        <select id="statusSelect" class="form-select mt-2">  Moved the dropdown here 
+            <option value="Returned">Returned</option>
+            <option value="Found">Found</option>
+        </select>
+    </div>
+</div>
+
+
+<div class="col-lg-6 col-md-6 d-flex flex-column">
+     Stacked Line and Bar Charts 
+    <div class="p-1 bg-light rounded-3 flex-fill">
+        <div class="container-fluid py-2 chart-container">
+            <div id="lineChart" style="width: 100%; height: 300px;"></div>
+        </div>
+    </div>
+    <div class="p-1 bg-light rounded-3 flex-fill">
+        <div class="container-fluid py-2 chart-container">
+            <div id="barChart" style="width: 100%; height: 300px;"></div>
+        </div>
+    </div>
+</div>
+</div>
+</div>-->

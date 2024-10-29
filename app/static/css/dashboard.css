@@ -81,3 +81,8 @@ span {
     text-align: center;
     font-size: 2em;
 }
+
+#boldNumber{
+    font-weight: bold;
+    font-size: 30px;
+}
