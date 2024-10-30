@@ -76,7 +76,18 @@
     z-index: 1050; 
 }
 
-.round{
-    border-radius: 12px;
-    width: 100px;
+.points-display {
+    display: flex; 
+    align-items: center; 
+    margin-left: 15px; 
+    border-radius: 5px; 
+    padding: 5px;
+    color: black; 
+    font-size: 14px;
+}
+
+.points-icon {
+    width: 20px; /* Adjust icon size */
+    height: 20px; /* Adjust icon size */
+    margin-right: 5px; /* Space between icon and text */
 }
