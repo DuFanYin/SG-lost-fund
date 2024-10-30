@@ -1,3 +1,4 @@
+import {db} from '../js/firebaseConfig.js'; // Adjust the path according to your structure
 const app = Vue.createApp({
     data() {
         return {
@@ -37,6 +38,8 @@ const app = Vue.createApp({
                         console.log("Received updated data:", userData);
                         sessionStorage.setItem('points', userData.points);
                         this.points = userData.points;
+                        sessionStorage.setItem('username', userData.username);
+                        this.username = userData.username;
                     } else {
                         console.error("Document does not exist");
                     }
@@ -69,6 +72,12 @@ const app = Vue.createApp({
         if (this.isLoggedIn) {
             this.setupRealTimeListener(); // Automatically call it here when the component mounts
         }
+
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'username') {
+                this.username = event.newValue;
+            }
+        });
     }
 });
 

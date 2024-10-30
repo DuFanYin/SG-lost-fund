@@ -118,6 +118,7 @@ Vue.createApp({
                     username: this.username,
                     email: this.email,
                     points: 200,
+                    profiledesc: '',
                 });
 
                 const modal = new bootstrap.Modal(document.getElementById('successModal'));
