@@ -47,27 +47,35 @@
     <!-- Navbar placeholder -->
     <div id="navbar-placeholder"></div>
 
+
+    <!-- Navbar placeholder -->
+    <div id="navbar-placeholder"></div>
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-10 profileborder bg1">
+
                 <div class="row profile">
                     <div class="col-3">
-                        <img class="profle-img" src="{{ url_for('static', filename='img/icon_watch.png') }}"
-                            alt="Profile Picture">
+                        <img class="profle-img" src="" alt="">
                     </div>
                     <div class="col-6">
-                        <div class="profile_name" v-text="username"></div>
-                        <div class="profile_username" v-text="username"></div>
-                        <div v-text="profileDescription"></div>
+                        <div class="profile_name">Editable Name</div>
+                        <div class="profile_username">@username</div>
+                        <div>Profile Description</div>
+
+
                     </div>
                     <div class="col-3">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#editProfileModal">
                             Edit Profile
                         </button>
-                        <div v-text="contactNumber"></div>
+                        <div>Contact information</div>
                     </div>
                 </div>
+
+
             </div>
         </div>
 
@@ -120,28 +128,49 @@
                     </div>
                     <div class="modal-body">
                         <!-- Profile Editing Form -->
-                        <form @submit.prevent="updateProfile">
+                        <form>
                             <div class="mb-3">
                                 <label for="profileName" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="profileName" v-model="username">
+                                <input type="text" class="form-control" id="profileName" value="Editable Name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="profileUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="profileUsername" value="@username">
                             </div>
                             <div class="mb-3">
                                 <label for="profileDescription" class="form-label">Description</label>
-                                <textarea class="form-control" id="profileDescription" rows="3"
-                                    v-model="profileDescription"></textarea>
+                                <textarea class="form-control" id="profileDescription"
+                                    rows="3">Profile Description</textarea>
                             </div>
-                            <div class="mb-3">
-                                <label for="contactNumber" class="form-label">Contact Number</label>
-                                <input type="text" class="form-control" id="contactNumber" v-model="contactNumber">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
         <!-- Footer placeholder -->
         <div id="footer-placeholder"></div>
+
+        <script>
+            // Check if the user is logged in by verifying session storage
+            if (sessionStorage.getItem('loggedIn') !== 'true') {
+                window.location.href = '/login'; // Redirect to login if not logged in
+            }
+
+        </script>
+
+        <!-- Load the JavaScript to include the footer -->
+        <script src="../static/js/footer.js"></script>
+
+        <!-- Load the JavaScript to include the Navbar -->
+        <script src="../static/js/navbar.js"></script>
+
+        <!-- userprofile.js-->
+        <!-- <script src="../static/js/userprofile.js"></script> -->
 
     
 
