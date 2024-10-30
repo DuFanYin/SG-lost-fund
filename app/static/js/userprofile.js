@@ -1,46 +1,32 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const profile = Vue.createApp({
-        data() {
-            return {
-                username: sessionStorage.getItem('username') || '',
-                profileDescription: sessionStorage.getItem('profiledesc') || 'No Description',
-                uid: sessionStorage.getItem('uid') || 0,
-                contactNumber: sessionStorage.getItem('contactnum') || 'No contact information',
-            };
-        },
-        methods: {
-            async updateProfile() {
-                try {
-                    // Ensure the uid is set in the session storage
-                    const uid = this.uid;
-                    if (!uid) {
-                        console.error("User UID not found.");
-                        return;
-                    }
+const firebaseConfig = {
+    apiKey: "AIzaSyAUZYEkqQSsEVM7rMCLqaEKoibGPiP_YJI",
+    authDomain: "wad2project-db69b.firebaseapp.com",
+    projectId: "wad2project-db69b",
+    storageBucket: "wad2project-db69b.appspot.com",
+    messagingSenderId: "262163048895",
+    appId: "1:262163048895:web:5ab7dd89cf3bc6daaad90a",
+};
 
-                    // Reference to the Firestore document for this user
-                    const userDocRef = firebase.firestore().collection('users').doc(uid);
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-                    // Update the document with the latest data
-                    await userDocRef.set({
-                        username: this.username,
-                        profileDescription: this.profileDescription,
-                        contactNumber: this.contactNumber
-                    }, { merge: true });
-
-                    // Update session storage with new values
-                    sessionStorage.setItem('username', this.username);
-                    sessionStorage.setItem('profiledesc', this.profileDescription);
-                    sessionStorage.setItem('contactnum', this.contactNumber);
-
-                    alert("Profile updated successfully!");
-                } catch (error) {
-                    console.error("Error updating profile:", error);
-                }
-            }
+const profile = Vue.createApp({
+    data() {
+        return {
+            username: '',
+            profiledesc: '',
+            contactNumber: '',
+            email: '',
         }
-    });
-
-    // Mount the Vue app to the "profile" ID
-    profile.mount('#profile');
+    },
+    created() {
+        // Fetch data from sessionStorage and assign to Vue data properties
+        this.username = sessionStorage.getItem('username') || 'username';
+        this.profiledesc = sessionStorage.getItem('profiledesc') || 'Profile Description';
+        this.contactNumber = sessionStorage.getItem('contantnum') || 'Contact information';
+        this.email = sessionStorage.getItem('email') || 'email';
+    }
 });
+
+profile.mount('#profile');

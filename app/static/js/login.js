@@ -50,6 +50,7 @@ Vue.createApp({
                     sessionStorage.setItem('uid', userData.uid);  // Ensure this line is executed
                     sessionStorage.setItem('profiledesc', userData.profiledesc);  // Ensure this line is executed
                     sessionStorage.setItem('contantnum', userData.contantnum);  // Ensure this line is executed
+                    sessionStorage.setItem('email', userData.email); // Ensure this line is executed
                 }
 
                 // Redirect to dashboard or other page
