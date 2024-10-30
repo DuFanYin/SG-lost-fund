@@ -132,6 +132,20 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* Success Modal */
+        #successModal .modal-content {
+            border-radius: 10px;
+        }
+
+        #successModal .modal-body p {
+            color: #333;
+        }
+
+        #successModal .modal-header h5 {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 
@@ -156,7 +170,7 @@
                 <div class="card-body p-4">
                     <h1 class="text-center mb-4">Login</h1>
 
-                    <form @submit.prevent="logIn">
+                    <form @submit.prevent="logIn" novalidate>
                         <!-- Email -->
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bx bxs-envelope"></i></span>
@@ -171,7 +185,11 @@
                         </div>
 
                         <!-- Error message -->
-                        <div v-if="errorMessage" class="errorMessage">{{ errorMessage }}</div>
+                        <!-- <div v-if="errorMessage" class="errorMessage">{{ errorMessage }}</div> -->
+
+
+                        <!-- Error message displayed in red -->
+                        <div v-if="errorMessage" class="text-danger text-center mb-3" v-text="errorMessage"></div>
 
                         <!-- Login button -->
                         <div class="d-flex justify-content-center">
@@ -202,6 +220,25 @@
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-white" style="background-color: green;">
+                    <h5 class="modal-title" id="successModalLabel">
+                        <i class="fas fa-check-circle me-2"></i> Success!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-0" style="font-size: 1.1rem;">Login successful! Redirecting you to the home page...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     <!-- Footer placeholder -->
     <div id="footer-placeholder"></div>
@@ -213,7 +250,7 @@
     <script src="../static/js/footer.js"></script>
 
     <!-- Load the Javascript to include signup.js -->
-    <script src="../static/js/login.js"></script>
+    <script type="module" src="../static/js/login.js"></script>
 
     <!-- Load the JavaScript to include the Navbar -->
     <script src="../static/js/navbar.js"></script>
