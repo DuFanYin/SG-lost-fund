@@ -42,7 +42,7 @@ const app = Vue.createApp({
                     }
                 }); // Close onSnapshot correctly here
         },
-        setActiveTabWithEvent(tab, event) {  // Renamed to avoid conflict with the existing setActiveTab
+        setActiveTab(tab, event) {  // Renamed to avoid conflict with the existing setActiveTab
             if (tab === 'listing' && !this.isLoggedIn) {
                 event.preventDefault(); // Prevent default navigation behavior
                 // Show the modal if the user is not logged in
