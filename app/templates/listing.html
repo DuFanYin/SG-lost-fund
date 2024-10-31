@@ -147,28 +147,6 @@
                                     placeholder="Enter Item Name" required>
                             </div>
 
-                            <!-- Report Type -->
-                            <div class="mb-3">
-                                <label for="report_type" class="form-label">Report Type: <span
-                                        style="color: red;">*</span></label>
-                                <select v-model="formData.report_type" class="form-select" id="report_type" required>
-                                    <option value="" disabled>Select Report Type</option>
-                                    <option value="Lost">Lost</option>
-                                    <option value="Found">Found</option>
-                                </select>
-                            </div>
-
-                            <!-- Transaction Status -->
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Transaction Status: <span
-                                        style="color: red;">*</span></label>
-                                <select v-model="formData.status" class="form-select" id="status" required>
-                                    <option value="" disabled>Select Status</option>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Successful" disabled>Successful</option> <!-- Initially disabled -->
-                                </select>
-                            </div>
-
                             <!-- Location Found -->
                             <div class="mb-3">
                                 <label for="location" class="form-label">Location Found: <span
