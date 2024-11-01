@@ -87,7 +87,15 @@
 }
 
 .points-icon {
-    width: 20px; /* Adjust icon size */
-    height: 20px; /* Adjust icon size */
-    margin-right: 5px; /* Space between icon and text */
+    width: 20px; 
+    height: 20px; 
+    margin-right: 5px; 
+}
+
+.logo-img {
+    width: 40px;  
+    height: 40px; 
+    border: 2px solid black;
+    border-radius: 50%; 
+    object-fit: cover; 
 }
