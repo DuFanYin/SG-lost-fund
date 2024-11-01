@@ -44,7 +44,7 @@ html, body {
     margin-bottom: 10px;
 }
 
-.leaderboard {
+/* .leaderboard {
     background-color: #6698FF;
     color: white;
     border-radius: 10px;
@@ -80,9 +80,71 @@ span {
 .leaderboard h2 {
     text-align: center;
     font-size: 2em;
+} */
+
+
+
+
+
+.current-user {
+    background-color: #ffc107; /* Gold background color for the current user */
+    color: #000; /* Dark text color for contrast */
+    font-weight: bold; /* Bold text for emphasis */
+}
+.leaderboard {
+    background-color: #6698FF;
+    border-radius: 12px; /* Rounded corners */
+    padding: 20px; /* Padding for inner spacing */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Subtle shadow for depth */
+}
+
+.leaderboard h2 {
+    color: #f8f9fa; /* Light color for the title */
+    font-weight: 600; /* Bold title */
+    font-size: 1.8rem; /* Larger font size for title */
+}
+
+.table {
+    border-collapse: collapse; /* Collapse table borders for cleaner look */
+    width: 100%; /* Full-width table */
+}
+
+.table th, .table td {
+    padding: 12px; /* Space inside table cells */
+    text-align: center; /* Center align text */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Light border for rows */
+}
+
+.table th {
+    color: #ffffff; /* White text for header */
+    font-weight: bold;
+    text-transform: uppercase; /* Uppercase header text */
+}
+
+.table tbody tr {
+    transition: background-color 0.2s; /* Smooth transition for hover */
+}
+
+.table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Hover effect */
+}
+
+.table td {
+    color: #f8f9fa; /* Light color for readability */
+    font-size: 1rem; /* Standard font size */
+}
+
+/* Style for "You" to stand out */
+.table td:contains("(You)") {
+    font-weight: bold; /* Bold text for emphasis */
+    color: #ffc107; /* Gold color for highlighting */
+}
+
+.leaderboard tr:nth-child(even) td {
+    background-color: #60A5FA;
 }
 
 #boldNumber{
     font-weight: bold;
     font-size: 30px;
-}
+} 
