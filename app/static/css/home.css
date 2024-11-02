@@ -140,7 +140,7 @@ p {
 
 
 /* FILTER CONTAINER */
-#filter-container{
+#filter-container, filter-status-container{
     margin: 10px 18px;
 }
 

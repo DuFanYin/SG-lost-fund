@@ -9,7 +9,7 @@ async function exportListings() {
         const timestamp = data.found_timestamp;
         const milliseconds = (timestamp.seconds * 1000) + (timestamp.nanoseconds / 1_000_000);
         const date = new Date(milliseconds);
-
+        console.log(data);
         if (!data.archived) {
             const geoJsonFeature = {
                 type: "Feature",
@@ -65,6 +65,7 @@ var currentInfoWindow = null;
 var infoPane = document.getElementById('panel');
 var uniqueCategories = new Set();
 var userPos = null;
+let uniqueStatuses = new Set();
 
 //Prevents XSS
 function sanitizeHTML(strings) {
@@ -125,6 +126,12 @@ async function renderMapWithFeatures(centerPosition) {
             if (item_type) {
                 uniqueCategories.add(item_type);
             }
+
+            const report_type = event.feature.getProperty('report_type');
+            if (report_type) {
+                uniqueStatuses.add(report_type);
+            }
+
         }
     });
 
@@ -151,21 +158,6 @@ async function renderMapWithFeatures(centerPosition) {
             document.getElementById('arrow').src = "../static/img//arrow_left.png"
         }
     });
-
-    // map.data.addListener('addfeature', () => {
-    //     map.fitBounds(bounds);
-
-    //     const items = [];
-    //     map.data.forEach((feature) => {
-    //         const itemID = feature.getProperty("file");
-    //         if (file) {
-    //             items.push({
-    //                 itemid: file,
-    //             });
-    //         }
-    //         console.log(items);
-    //     });
-    // });
 
     // Show the information for a store when its marker is clicked.
     map.data.addListener('click', async (event) => {
@@ -254,7 +246,7 @@ async function renderMapWithFeatures(centerPosition) {
         originMarker.setVisible(true);
         // Use the selected address as the origin to calculate distances to each of the store locations
         const rankedItems = await calculateDistances(map.data, originLocation);
-        showItemsList(map.data, rankedItems, Array.from(uniqueCategories));
+        showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses));
     });
 }
 window.renderMapWithFeatures = renderMapWithFeatures;
@@ -350,7 +342,7 @@ async function calculateDistances(data, origin) {
     return distancesList;
 }
 window.calculateDistances = calculateDistances;
-function showItemsList(data, items, categoryArray) {
+function showItemsList(data, items, categoryArray, statusArray) {
     const panel = document.getElementById('panel');
 
     if (!panel) {
@@ -359,7 +351,7 @@ function showItemsList(data, items, categoryArray) {
     }
 
     const totalElementChildren = panel.children.length;
-    for (let i = panel.children.length - 1; i >= 2; i--) {
+    for (let i = panel.children.length - 1; i >= 4; i--) {
         panel.removeChild(panel.children[i]);
     }
 
@@ -375,7 +367,23 @@ function showItemsList(data, items, categoryArray) {
         categoryFilter.appendChild(option);
     });
     categoryFilter.addEventListener('change', () => {
-        applyCategoryFilter(panel, data);
+        applyFilters(panel, data);
+    });
+
+    const statusFilter = document.getElementById('status-filter');
+    statusFilter.innerHTML = '';
+    const allStatusOption = document.createElement('option');
+    allStatusOption.value = 'all';
+    allStatusOption.textContent = 'All';
+    statusFilter.appendChild(allStatusOption);
+    statusArray.forEach((status) => {
+        const option = document.createElement('option');
+        option.value = status;
+        option.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        statusFilter.appendChild(option);
+    });
+    statusFilter.addEventListener('change', () => {
+        applyFilters(panel, data);
     });
 
     panel.originalItems = items;
@@ -496,20 +504,28 @@ function adjustPanelsForScreenSize() {
 }
 window.adjustPanelsForScreenSize = adjustPanelsForScreenSize;
 window.addEventListener('resize', adjustPanelsForScreenSize);
-function applyCategoryFilter(panel, data) {
+function applyFilters(panel, data) {
     card.style.zIndex = 2;
 
     const selectedCategory = document.getElementById('category-filter').value;
+    const selectedStatus = document.getElementById('status-filter').value;
     let filteredItems = panel.originalItems;
 
     if (selectedCategory !== 'all') {
-        filteredItems = panel.originalItems.filter((item) => {
+        filteredItems = filteredItems.filter((item) => {
             const feature = data.getFeatureById(item.itemid);
             return feature.getProperty('item_type') === selectedCategory;
         });
     }
 
-    while (panel.childNodes.length > 5) {
+    if (selectedStatus !== 'all') {
+        filteredItems = filteredItems.filter((item) => {
+            const feature = data.getFeatureById(item.itemid);
+            return feature.getProperty('report_type') === selectedStatus;
+        });
+    }
+
+    while (panel.childNodes.length > 7) {
         panel.removeChild(panel.lastChild);
     }
 
@@ -517,20 +533,29 @@ function applyCategoryFilter(panel, data) {
         addCards(data, item);
     });
 
-    applyCategoryFilterToMap(data);
+    applyFiltersToMap(data);
 }
-window.applyCategoryFilter = applyCategoryFilter;
-function applyCategoryFilterToMap(data) {
+window.applyFilters = applyFilters;
+function applyFiltersToMap(data) {
     const selectedCategory = document.getElementById('category-filter').value;
+    const selectedStatus = document.getElementById('status-filter').value;
 
     data.forEach((feature) => {
         const item_type = feature.getProperty('item_type');
-        if (selectedCategory === 'all' || item_type === selectedCategory) {
-            data.overrideStyle(feature, { visible: true });
-        } else {
-            data.overrideStyle(feature, { visible: false });
+        const report_type = feature.getProperty('report_type');
+
+        let visible = true;
+
+        if (selectedCategory !== 'all' && item_type !== selectedCategory) {
+            visible = false;
         }
+
+        if (selectedStatus !== 'all' && report_type !== selectedStatus) {
+            visible = false;
+        }
+
+        data.overrideStyle(feature, { visible: visible });
     });
 }
-window.applyCategoryFilterToMap = applyCategoryFilterToMap;
+window.applyFiltersToMap = applyFiltersToMap;
 
