@@ -397,7 +397,7 @@ function addCards(data, item) {
 
     const currentItem = data.getFeatureById(item.itemid);
     const item_name = document.createElement('p');
-    item_name.classList.add('place');
+    item_name.classList.add('itemTypeText');
     item_name.textContent = currentItem.getProperty('item_name');
     tempBody.appendChild(item_name);
 
@@ -450,9 +450,10 @@ function addCards(data, item) {
         infoPanel.innerHTML = content;
         infoPanel.style.display = 'block';
         infoPanel.style.position = 'absolute';
-        infoPanel.style.left = 'calc(22% + 20px)';
+        infoPanel.style.left = ' max(225px, calc(22% + 20px))';
         infoPanel.style.height = '100%';
         infoPanel.style.width = 'calc(22% + 20px)';
+        infoPanel.style.minWidth = '225px';
         infoPanel.style.backgroundColor = '#fff';
         infoPanel.style.boxShadow = '-2px 0px 5px rgba(0, 0, 0, 0.3)';
         infoPanel.style.overflowY = 'auto';
@@ -467,7 +468,6 @@ function addCards(data, item) {
         closeButton.addEventListener('click', () => {
             infoPanel.style.display = 'none';
             document.getElementById('toggle-panel-button').classList.remove('hidden');
-
         });
         infoPanel.appendChild(closeButton);
 

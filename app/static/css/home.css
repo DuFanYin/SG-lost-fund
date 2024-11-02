@@ -46,7 +46,15 @@ body {
     display: none;
 }
 
-.place {
+p {
+    max-width: 100%;
+    /* overflow: hidden; */
+    white-space: normal; /* Avoid overflowing text */
+    text-overflow: ellipsis; /* Adds "..." for overflowed text */
+    overflow: hidden; /* Prevent content overflow */
+    word-wrap: break-word; /* Break long words */
+}
+.itemTypeText {
     font-family: 'open sans', arial, sans-serif;
     font-size: 1.2em;
     font-weight: 500;
@@ -65,6 +73,7 @@ body {
 }
 
 #panel {
+    min-width: 225px;
     position: absolute;
     z-index: 1;
     left: 0;
@@ -96,7 +105,8 @@ body {
     height:48px;
 }
 #panel.open ~ .toggle-panel-button {
-    left: calc(22% + 20px); /* Button position when panel is open */
+    
+    left: max(225px, calc(22% + 20px)); /* Button position when panel is open */
 }
 
 #arrow{
@@ -111,7 +121,7 @@ body {
     height: 100px;
     width: calc(22% + 20px);
     background-color: white; 
-    
+    min-width: 225px;
 }
 
 /* a. SCROLLBAR */
