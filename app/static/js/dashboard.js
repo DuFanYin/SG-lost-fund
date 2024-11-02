@@ -20,6 +20,7 @@ const dashboardApp = Vue.createApp({
                 const usersRef = db.collection("users");
                 const snapshot = await usersRef.get();
                 this.totalUsers = snapshot.size;
+                console.log("Total number of users :", this.totalUsers);
             } catch (error) {
                 console.error("Error counting users:", error);
             }
@@ -29,38 +30,49 @@ const dashboardApp = Vue.createApp({
                 const reportsRef = db.collection("listings");
                 const snapshot = await reportsRef.where("report_type", "==", "Lost").get();
                 this.lostItemReports = snapshot.size;
+                console.log("Total number of lost item reports :", this.lostItemReports);
             } catch (error) {
                 console.error("Error counting lost item reports:", error);
+            }
+        },
+        async countRecoveredItems() {
+            try {
+                const recoveredRef = db.collection("listings");
+                const snapshot = await recoveredRef.where("archived", "==", true).get();
+                this.recoveredItems = snapshot.size;
+                console.log("Total number of recovered items:", this.recoveredItems);
+            } catch (error) {
+                console.error("Error counting recovered items:", error);
             }
         },
         async loadTopLostItems() {
             try {
                 const listingsRef = db.collection("listings");
                 const snapshot = await listingsRef.where("report_type", "==", "Lost").get();
-        
+
                 const itemCounts = {};
                 snapshot.forEach(doc => {
                     const itemName = doc.data().item_name;
                     itemCounts[itemName] = (itemCounts[itemName] || 0) + 1;
                 });
-        
+
                 const topItems = Object.entries(itemCounts)
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 5);
-        
+
                 const itemNames = topItems.map(item => item[0]);
                 const itemCountsData = topItems.map(item => item[1]);
-        
+
                 const barChartCanvas = document.getElementById("barChart");
                 if (!barChartCanvas) {
                     throw new Error("barChart element not found.");
                 }
-        
+
                 const ctx = barChartCanvas.getContext("2d");
                 if (!ctx) {
                     throw new Error("getContext failed on barChart canvas.");
                 }
-        
+
                 // Create a new bar chart or update the existing one
                 if (this.barChartInstance) {
                     this.barChartInstance.data.labels = itemNames;
@@ -87,7 +99,7 @@ const dashboardApp = Vue.createApp({
                                 tooltip: {
                                     enabled: true,  // Enable tooltips (default is true)
                                     callbacks: {
-                                        label: function(context) {
+                                        label: function (context) {
                                             const label = context.dataset.label || '';
                                             const value = context.raw;
                                             return `${label}: ${value} reports`;
@@ -106,19 +118,112 @@ const dashboardApp = Vue.createApp({
             } catch (error) {
                 console.error("Error loading top lost items:", error);
             }
-        }
+        },
+
+        async fetchAndRankUsers(currentUserId) { // Pass the current user's ID as an argument
+            try {
+                const usersRef = db.collection("users");
+                const snapshot = await usersRef.get();
         
+                const users = [];
+                const listingsRef = db.collection("listings"); // Reference to the listings collection
+        
+                // Create an array of promises for counting items found
+                const itemCountPromises = snapshot.docs.map(async doc => {
+                    const userData = doc.data();
+                    const userId = doc.id; // Get the user ID
+        
+                    // Count items found by this user
+                    const foundSnapshot = await listingsRef.where("uid", "==", userId).where("report_type", "==", "Found").get();
+                    const itemsFound = foundSnapshot.size; // Count of found items
+        
+                    users.push({
+                        username: userData.username,
+                        itemsFound: itemsFound, // Number of items found by the user
+                        points: userData.points,
+                        userId: userId // Store the user ID for later use
+                    });
+                });
+        
+                // Wait for all promises to resolve
+                await Promise.all(itemCountPromises);
+        
+                // Sort users by points
+                users.sort((a, b) => b.points - a.points);
+        
+                // Find the current user
+                const currentUserIndex = users.findIndex(user => user.userId === currentUserId);
+                const startIndex = Math.max(currentUserIndex - 2, 0); // Display 2 users above
+                const endIndex = Math.min(currentUserIndex + 3, users.length); // Display 2 users below + current user
+        
+                // Get the users to display
+                const usersToDisplay = users.slice(startIndex, endIndex);
+        
+                // Display the leaderboard in the HTML
+                const leaderboardDataElement = document.getElementById("leaderboardData");
+                leaderboardDataElement.innerHTML = ""; // Clear existing data
+        
+                usersToDisplay.forEach((user, index) => {
+                    const row = document.createElement("tr");
+        
+                    // Add a special class for the current user
+                    if (user.userId === currentUserId) {
+                        row.classList.add("current-user");
+                    }
+        
+                    row.innerHTML = `
+                        <td>${startIndex + index + 1}</td>
+                        <td>${user.username}${user.userId === currentUserId ? ' (You)' : ''}</td>
+                        <td>${user.itemsFound}</td>
+                        <td>${user.points}</td>
+                    `;
+                    leaderboardDataElement.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Error fetching and ranking users:", error);
+            }
+        },
+        
+        
+
+
+
+        async fetchItemsFoundCount(uid) {
+            const listingsRef = db.collection("listings");
+            const snapshot = await listingsRef.where("uid", "==", uid).where("report_type", "==", "Found").get();
+            return snapshot.size; // Return the count of found items
+        },
+
+        displayLeaderboard(users) {
+            const leaderboardDataElement = document.getElementById('leaderboardData');
+            leaderboardDataElement.innerHTML = ''; // Clear existing data
+
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.rank}</td>
+                    <td>${user.username}</td>
+                    <td>${user.itemsFound}</td>
+                    <td>${user.points}</td>
+                `;
+                leaderboardDataElement.appendChild(row);
+            });
+        },
     },
     mounted() {
         this.countUsers();
         this.countLostItemReports();
         this.loadTopLostItems(); // Load bar chart data when Vue app mounts
+        this.countRecoveredItems();
+        // Get the current user's ID from sessionStorage
+        const currentUserId = sessionStorage.getItem("uid"); // Assuming you store the user's UID in sessionStorage as "uid"
+        this.fetchAndRankUsers(currentUserId);// Call this new method to fetch and display ranked users
+
     },
 });
 
 // Mount the Vue app to #app
 dashboardApp.mount("#app");
-
 
 
 
