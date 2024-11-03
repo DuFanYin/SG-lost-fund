@@ -44,48 +44,6 @@ html, body {
     margin-bottom: 10px;
 }
 
-/* .leaderboard {
-    background-color: #6698FF;
-    color: white;
-    border-radius: 10px;
-    padding: 20px;
-    height: 100%;
-}
-
-.table-hover {
-    width: 100%;
-}
-
-span {
-    text-align: center;
-    font-size: 20px;
-}
-
-.leaderboard table {
-    width: 100%;
-    text-align: left;
-    border-collapse: collapse;
-}
-
-.leaderboard th,
-.leaderboard td {
-    padding: 1% 2%;
-    background-color: #2563EB;
-}
-
-.leaderboard tr:nth-child(even) td {
-    background-color: #60A5FA;
-}
-
-.leaderboard h2 {
-    text-align: center;
-    font-size: 2em;
-} */
-
-
-
-
-
 .current-user {
     background-color: #ffc107; /* Gold background color for the current user */
     color: #000; /* Dark text color for contrast */
@@ -148,3 +106,14 @@ span {
     font-weight: bold;
     font-size: 30px;
 } 
+
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}

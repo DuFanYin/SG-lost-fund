@@ -10,10 +10,14 @@ const dashboardApp = Vue.createApp({
             totalUsers: 0,
             lostItemReports: 0,
             recoveredItems: 0,
-            selectedReportType: "Found",
+            selectedReportType: '',
             barChartInstance: null, // Store the bar chart instance
+            pieChartInstance: null, // Tracks the pie chart instance
+            lineChartInstance: null,
+
         };
     },
+
     methods: {
         async countUsers() {
             try {
@@ -56,12 +60,22 @@ const dashboardApp = Vue.createApp({
                     itemCounts[itemName] = (itemCounts[itemName] || 0) + 1;
                 });
 
+                // Log the counts for each item
+                console.log("Item Counts:", itemCounts);
+
                 const topItems = Object.entries(itemCounts)
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 5);
 
+                // Log the top items and their counts
+                console.log("Top Items:", topItems);
+
                 const itemNames = topItems.map(item => item[0]);
                 const itemCountsData = topItems.map(item => item[1]);
+
+                // Log the processed item names and counts
+                console.log("Item Names:", itemNames);
+                console.log("Item Counts Data:", itemCountsData);
 
                 const barChartCanvas = document.getElementById("barChart");
                 if (!barChartCanvas) {
@@ -151,13 +165,31 @@ const dashboardApp = Vue.createApp({
                 // Sort users by points
                 users.sort((a, b) => b.points - a.points);
         
-                // Find the current user
+                // Find the current user index
                 const currentUserIndex = users.findIndex(user => user.userId === currentUserId);
-                const startIndex = Math.max(currentUserIndex - 2, 0); // Display 2 users above
-                const endIndex = Math.min(currentUserIndex + 3, users.length); // Display 2 users below + current user
         
-                // Get the users to display
-                const usersToDisplay = users.slice(startIndex, endIndex);
+                let usersToDisplay;
+        
+                // Logic to determine which users to display
+                if (currentUserIndex <= 4) {
+                    // If user is in the top 5, show the first 5 users
+                    usersToDisplay = users.slice(0, 5);
+                } else {
+                    // If user is beyond 5th place, show the user in the third position
+                    const startIndex = currentUserIndex - 2; // 2 users above
+                    const endIndex = currentUserIndex + 3;   // 2 users below
+        
+                    // Adjust indices to prevent going out of bounds
+                    if (startIndex < 0) {
+                        // If too high, adjust to start at 0
+                        usersToDisplay = users.slice(0, 5);
+                    } else if (endIndex > users.length) {
+                        // If too low, adjust to show the last 5 users
+                        usersToDisplay = users.slice(users.length - 5);
+                    } else {
+                        usersToDisplay = users.slice(startIndex, endIndex);
+                    }
+                }
         
                 // Display the leaderboard in the HTML
                 const leaderboardDataElement = document.getElementById("leaderboardData");
@@ -172,7 +204,7 @@ const dashboardApp = Vue.createApp({
                     }
         
                     row.innerHTML = `
-                        <td>${startIndex + index + 1}</td>
+                        <td>${index + 1}</td>
                         <td>${user.username}${user.userId === currentUserId ? ' (You)' : ''}</td>
                         <td>${user.itemsFound}</td>
                         <td>${user.points}</td>
@@ -184,15 +216,6 @@ const dashboardApp = Vue.createApp({
             }
         },
         
-        
-
-
-
-        async fetchItemsFoundCount(uid) {
-            const listingsRef = db.collection("listings");
-            const snapshot = await listingsRef.where("uid", "==", uid).where("report_type", "==", "Found").get();
-            return snapshot.size; // Return the count of found items
-        },
 
         displayLeaderboard(users) {
             const leaderboardDataElement = document.getElementById('leaderboardData');
@@ -209,25 +232,253 @@ const dashboardApp = Vue.createApp({
                 leaderboardDataElement.appendChild(row);
             });
         },
+        async fetchItemsFoundCount(uid) {
+            const listingsRef = db.collection("listings");
+            const snapshot = await listingsRef.where("uid", "==", uid).where("report_type", "==", "Found").get();
+            return snapshot.size; // Return the count of found items
+        },
+
+        updatePieChart() {
+            console.log("Selected report type changed to:", this.selectedReportType);
+            this.renderPieChart(); // Call to re-render the chart
+        },
+
+        async fetchDataForPieChart(reportType) {
+            try {
+                const listingsRef = db.collection("listings");
+                const snapshot = await listingsRef.where("report_type", "==", reportType).get();
+
+                const totalCount = snapshot.size; // Total items for the selected report type
+                console.log("Total Count for report type", reportType, ":", totalCount);
+
+                let successCount = 0; // Initialize success count
+
+                // Count how many of these items are archived (successful recoveries)
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.archived === true) { // Assuming archived means successful recovery
+                        successCount++;
+                    }
+                });
+
+                console.log("Success Count for report type", reportType, ":", successCount);
+                const successRate = (totalCount > 0) ? (successCount / totalCount) * 100 : 0;
+                console.log("Calculated Success Rate for report type", reportType, ":", successRate);
+
+                return {
+                    successRate: successRate,
+                    totalCount: totalCount
+                };
+            } catch (error) {
+                console.error("Error fetching data for pie chart:", error);
+                return null;
+            }
+        },
+
+        async renderPieChart() {
+            const ctx = document.getElementById('pieChart')?.getContext('2d');
+            if (!ctx) {
+                console.error("Canvas element not found or getContext failed.");
+                return;
+            }
+
+            console.log(`Rendering pie chart for report type: ${this.selectedReportType}`);
+
+            try {
+                const data = await this.fetchDataForPieChart(this.selectedReportType);
+                if (!data) {
+                    console.error("No data returned for the pie chart.");
+                    return;
+                }
+
+                // Destroy the previous chart instance if it exists
+                if (this.pieChartInstance) {
+                    this.pieChartInstance.destroy();
+                    console.log("Destroyed previous pie chart instance.");
+                }
+
+                // Create a new pie chart instance
+                this.pieChartInstance = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Success Rate', 'Failure Rate'],
+                        datasets: [{
+                            data: [data.successRate, 100 - data.successRate],
+                            backgroundColor: ['#36a2eb', '#ff6384'],
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            },
+                            title: {
+                                display: true,
+                                text: `Success Rate for ${this.selectedReportType} Items`
+                            }
+                        }
+                    }
+                });
+
+                console.log("Pie chart rendered successfully with data:", data);
+            } catch (error) {
+                console.error("Error rendering pie chart:", error);
+            }
+        },
+
+        async lineChart() {
+            try {
+                const currentUserId = sessionStorage.getItem("uid");
+                const listingsRef = db.collection("listings");
+
+                const now = new Date();
+                const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+                const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+                const foundCounts = Array(4).fill(0);
+                const lostCounts = Array(4).fill(0);
+
+                const foundSnapshot = await listingsRef
+                    .where("uid", "==", currentUserId)
+                    .where("report_type", "==", "Found")
+                    .where("found_timestamp", ">=", startOfMonth)
+                    .where("found_timestamp", "<=", endOfMonth)
+                    .get();
+
+                const lostSnapshot = await listingsRef
+                    .where("uid", "==", currentUserId)
+                    .where("report_type", "==", "Lost")
+                    .where("found_timestamp", ">=", startOfMonth)
+                    .where("found_timestamp", "<=", endOfMonth)
+                    .get();
+
+                foundSnapshot.forEach(doc => {
+                    const foundDate = doc.data().found_timestamp.toDate();
+                    const weekIndex = Math.floor(foundDate.getDate() / 7);
+                    if (weekIndex < 4) {
+                        foundCounts[weekIndex]++;
+                    }
+                });
+
+                lostSnapshot.forEach(doc => {
+                    const lostDate = doc.data().found_timestamp.toDate();
+                    const weekIndex = Math.floor(lostDate.getDate() / 7);
+                    if (weekIndex < 4) {
+                        lostCounts[weekIndex]++;
+                    }
+                });
+
+                // Prepare data for the line chart
+                const data = {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [
+                        {
+                            label: 'Items Found',
+                            data: foundCounts,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            fill: false,
+                        },
+                        {
+                            label: 'Items Lost',
+                            data: lostCounts,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            fill: false,
+                        },
+                    ]
+                };
+                console.log("Line Chart Data:", data); // Log the data for the line chart
+
+                function getMonthName() {
+                    const monthNames = [
+                        "January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"
+                    ];
+                    const date = new Date();
+                    return monthNames[date.getMonth()]; // Returns the current month name
+                }
+
+                const ctx = document.getElementById('lineChart')?.getContext('2d');
+                if (!ctx) {
+                    console.error("Canvas element not found for line chart.");
+                    return;
+                }
+
+                // Destroy previous instance if it exists
+                if (this.lineChartInstance) {
+                    this.lineChartInstance.destroy();
+                }
+
+                // Create the line chart
+                this.lineChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        scales: {
+                            y: {
+                                ticks: {
+                                    precision: 0 // This removes the decimal points
+                                }
+                            }
+                        },
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                enabled: true, // Enable tooltips
+                                mode: 'index', // You can set this to 'nearest' or other options based on your preference
+                                intersect: false // Allows tooltips to show even if not directly hovering over a point
+                            },
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            },
+                            title: {
+                                display: true,
+                                text: `Items FOUND vs Items LOST in ${getMonthName()}`,
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Error rendering line chart:", error);
+            }
+        }
     },
-    mounted() {
-        this.countUsers();
-        this.countLostItemReports();
-        this.loadTopLostItems(); // Load bar chart data when Vue app mounts
-        this.countRecoveredItems();
-        // Get the current user's ID from sessionStorage
-        const currentUserId = sessionStorage.getItem("uid"); // Assuming you store the user's UID in sessionStorage as "uid"
-        this.fetchAndRankUsers(currentUserId);// Call this new method to fetch and display ranked users
 
+    watch: {
+        selectedReportType(newValue) {
+            console.log("selectedReportType changed to:", newValue);
+            this.renderPieChart(); // This will trigger the chart to render again
+        }
     },
-});
-
-// Mount the Vue app to #app
-dashboardApp.mount("#app");
 
 
+    async mounted() {
+        this.selectedReportType = "Found"; // Initial value
+        console.log("Set selectedReportType to 'Found' in mounted.");
 
+        try {
+            await this.countUsers(); // Await if this function returns a promise
+            await this.countLostItemReports();
+            await this.countRecoveredItems();
+            await this.loadTopLostItems();
 
+            const currentUserId = sessionStorage.getItem("uid");
+            if (currentUserId) {
+                await this.fetchAndRankUsers(currentUserId);
+            }
+
+            // Render the pie chart initially
+            await this.renderPieChart();
+            await this.lineChart(); // Call the line chart method here
+        } catch (error) {
+            console.error("Error in mounted lifecycle:", error);
+        }
+    },
+
+}); dashboardApp.mount("#app");// Mount the Vue app to #app
 
 
 

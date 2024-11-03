@@ -90,24 +90,33 @@
         <div class="row mt-3">
             <div class="col-lg-6 col-md-6 d-flex flex-column">
            <!-- Pie Chart-->
-                <div class="p-1 bg-light rounded-3 flex-fill">
-                    <div class="container-fluid py-2 chart-container pie-chart-container">
-                        <canvas id="pieChart"></canvas>
-                    </div>
-                    <select id="statusSelect" class="form-select mt-2" v-model="selectedReportType" @change="updatePieChart">  
-                        <option disabled value="">Select Status</option> 
-                        <option value="Found">Found</option>
-                        <option value="Returned">Returned</option>
-                       
-                    </select>
-                </div>
+           <div class="p-1 bg-light rounded-3 flex-fill">
+            <div class="container-fluid py-2 chart-container pie-chart-container">
+                <!-- Unique ID for the pie chart -->
+                <canvas id="pieChart"></canvas> 
+            </div>
+           <!--  <select class="form-select mt-2" v-model="selectedReportType" @change="handleSelectionChange">  
+                <option disabled value="">Select Status</option> 
+                <option value="Found">Found</option>
+                <option value="Lost">Lost</option>
+            </select>-->
+
+            <select class="form-select mt-2" v-model="selectedReportType" @change="updatePieChart">  
+                <option disabled value="">Select Status</option> 
+                <option value="Found">Found</option>
+                <option value="Lost">Lost</option>
+            </select>
+            
+            
+        </div>
+        
             </div>
             
             <div class="col-lg-6 col-md-6 d-flex flex-column">
                  <!-- Stacked Line and Bar Charts -->
                 <div class="p-1 bg-light rounded-3 flex-fill">
                     <div class="container-fluid py-2 chart-container">
-                        <div id="lineChart" style="width: 100%; height: 300px;"></div>
+                        <canvas id="lineChart" style="width: 100%; height: 300px;"></canvas>
                     </div>
                 </div>
                 <div class="p-1 bg-light rounded-3 flex-fill">
