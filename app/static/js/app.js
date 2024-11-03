@@ -1,5 +1,61 @@
 import { db } from './firebaseConfig.js';
 
+
+function openPopoutPanel(item) {
+    const popoutPanel = document.getElementById('info-popout-panel');
+    const popoutContent = document.getElementById('info-popout-content');
+
+    const { item_name, item_description, handoff_location, report_type, found_timestamp } = item.properties;
+    const date = new Date(found_timestamp.seconds * 1000).toLocaleString();
+
+    // Populate content
+    popoutContent.innerHTML = `
+        <h2>${item_name}</h2>
+        <p><strong>Description:</strong> ${item_description}</p>
+        <p><strong>Location:</strong> ${handoff_location}</p>
+        <p><strong>Status:</strong> ${report_type}</p>
+        <p><strong>Found on:</strong> ${date}</p>
+    `;
+
+    // Display the popout panel
+    popoutPanel.style.display = 'block';
+}
+
+// Close button functionality
+document.getElementById('close-popout-button').addEventListener('click', () => {
+    document.getElementById('info-popout-panel').style.display = 'none';
+});
+
+
+// Modify this function to open the pop-out panel when an item is clicked
+async function displayListings() {
+    const panel = document.getElementById('panel');
+    panel.innerHTML = '';
+
+    const listingsData = await exportListings();
+    listingsData.features.forEach(item => {
+        const temp = document.createElement('div');
+        temp.classList.add('listing-card');
+
+        const { itemid, item_name, item_description, handoff_location, report_type, found_timestamp } = item.properties;
+        const date = new Date(found_timestamp.seconds * 1000).toLocaleString();
+
+        temp.innerHTML = `
+            <h5 class="listing-name">${item_name}</h5>
+            <p class="listing-desc">${item_description}</p>
+            <p class="listing-location">Location: ${handoff_location}</p>
+            <p class="listing-status">Status: ${report_type}</p>
+            <p class="listing-timestamp">Found on: ${date}</p>
+        `;
+
+        // Click event to open the detailed pop-out panel
+        temp.addEventListener('click', () => openPopoutPanel(item));
+
+        panel.appendChild(temp);
+    });
+}
+window.onload = displayListings;
+
 async function exportListings() {
     const listings = [];
     const snapshot = await db.collection('listings').get();

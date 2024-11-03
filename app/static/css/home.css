@@ -1,3 +1,31 @@
+/* Adjusted styling for the popout panel */
+#info-popout-panel {
+    position: absolute;
+    top: 70px; /* Adjust this to be right below the navbar */
+    left: 500px; /* Adjust this value to position it more to the right */
+    width: 280px; /* Adjust width as needed */
+    height: calc(100% - 80px); /* Make it slightly shorter to fit within the screen */
+    background-color: white;
+    border-left: 1px solid #ddd;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    z-index: 3;
+    padding: 20px;
+    display: none; /* Initially hidden */
+}
+
+/* Styling for the close button */
+#info-popout-panel .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+
 #map {
     height: 100%;
     width: 100%;
@@ -14,6 +42,7 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden; /* Prevent scrolling on the page */
 }
 #autocomplete-container {
     display: block;
@@ -71,6 +100,24 @@ p {
     padding-left: 18px;
     padding-right: 18px;
 }
+
+.listing-card {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.listing-name {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.listing-desc, .listing-location, .listing-status, .listing-timestamp {
+    font-size: 0.9em;
+    color: #666;
+}
+
 
 #panel {
     min-width: 225px;
