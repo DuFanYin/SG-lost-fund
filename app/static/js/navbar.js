@@ -1,4 +1,5 @@
 import {db} from '../js/firebaseConfig.js'; // Adjust the path according to your structure
+
 const app = Vue.createApp({
     data() {
         return {

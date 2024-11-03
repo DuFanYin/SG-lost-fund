@@ -34,41 +34,11 @@ Vue.createApp({
         };
     },
     methods: {
-        // validateEmailFormat(email) {
-        //     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        //     return emailPattern.test(email);
-        // },
-
         async logIn() {
             this.errorMessage = ''; // Reset error message
 
-            // Check if email or password fields are empty
-            // if (!this.email) {
-            //     this.errorMessage = "Please enter your email.";
-            //     return;
-            // }
-
-            // // Validate email format
-            // if (!this.validateEmailFormat(this.email)) {
-            //     this.errorMessage = "Please enter a valid email address.";
-            //     return;
-            // }
-
-            // if (!this.password) {
-            //     this.errorMessage = "Please enter your password.";
-            //     return;
-            // }
-
             try {
-                // Check if the email exists in Firestore before trying to log in
-                // const userQuery = await db.collection('users').where("email", "==", this.email).get();
-
-                // if (userQuery.empty) {
-                //     // If no user found with the email in Firestore
-                //     this.errorMessage = "No account found with this email.";
-                //     return;
-                // }
-
+            
                 // Sign in the user with Firebase Authentication
                 const userCredential = await auth.signInWithEmailAndPassword(this.email, this.password);
                 console.log('User logged in successfully:', userCredential.user);
@@ -114,6 +84,61 @@ Vue.createApp({
                     "auth/invalid-login-credentials": "Invalid credentials. Please check your email and password."
                 };
 
+                this.errorMessage = errorMessages[error.code] || "An error occurred. Please try again.";
+            }
+        },
+
+        // Google sign up
+        async signInWithGoogle() {
+            this.errorMessage = ''; // Reset any previous error messages
+
+            // Use GoogleAuthProvider from firebase.auth namespace
+            const provider = new firebase.auth.GoogleAuthProvider();
+
+            try {
+                // Sign in with a popup and Google provider
+                const result = await auth.signInWithPopup(provider);
+
+                // Get or create user document in Firestore
+                const userRef = db.collection('users').doc(result.user.uid);
+                const userDoc = await userRef.get();
+
+                if (!userDoc.exists) {
+                    // Create a new document if it doesn't exist with default fields
+                    await userRef.set({
+                        email: result.user.email,
+                        points: 200, // Default points
+                        profiledesc: "", // Empty profile description
+                        uid: result.user.uid,
+                        username: result.user.displayName || result.user.email.split('@')[0] // Use display name or derive from email
+                    });
+                }
+
+                // Retrieve data from Firestore after creation or verification
+                const userData = (await userRef.get()).data();
+
+                // Store user data in sessionStorage
+                sessionStorage.setItem('loggedIn', 'true');
+                sessionStorage.setItem('username', userData.username);
+                sessionStorage.setItem('points', userData.points);
+                sessionStorage.setItem('uid', userData.uid);
+                sessionStorage.setItem('profiledesc', userData.profiledesc);
+                sessionStorage.setItem('email', userData.email);
+
+                // Show success modal
+                new bootstrap.Modal(document.getElementById('successModal')).show();
+
+                // Redirect after a delay
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+
+            } catch (error) {
+                console.error('Error logging in with Google:', error);
+                const errorMessages = {
+                    "auth/popup-closed-by-user": "The popup was closed before completing the sign-in.",
+                    "auth/cancelled-popup-request": "The popup was cancelled. Please try again.",
+                };
                 this.errorMessage = errorMessages[error.code] || "An error occurred. Please try again.";
             }
         }

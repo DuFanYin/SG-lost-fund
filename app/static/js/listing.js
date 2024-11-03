@@ -5,7 +5,7 @@ Vue.createApp({
         return {
             formData: {
                 type: 'found', // Default type
-                archieved: 'False',
+                archived: 'False',
                 item_name: '',
                 location: '',
                 item_description: '',
@@ -61,7 +61,7 @@ Vue.createApp({
         resetForm() {
             this.formData = {
                 type: 'found', // Reset to default type
-                archieved: 'False',
+                archived: 'False',
                 item_name: '',
                 location: '',
                 item_description: '',

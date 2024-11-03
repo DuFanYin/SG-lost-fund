@@ -4,6 +4,7 @@
     position: absolute;
     z-index: 0;
     display: block;
+    overflow: hidden;
 }
 nav{
     z-index: 1;
@@ -13,9 +14,7 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
-
 }
-
 #autocomplete-container {
     display: block;
     align-items: center;
@@ -23,20 +22,19 @@ body {
     border-radius: 25px; /* Rounded corners */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
     padding: 5px 10px;
-    position: fixed;
+    position: absolute;
     z-index: 3;
-    width:325px;
+    width:20%;
     margin-left: 10px;
     margin-top: 10px;
 }
-
 #autocomplete-input {
     border: none;
     outline: none;
     width: 100%;
     padding: 5px 10px;
     border-radius: 25px;
-    font-size: 16px;
+    font-size: 12px;
     font-family: Arial, sans-serif;
 }
 
@@ -44,12 +42,19 @@ body {
     border-color: #4d90fe;
 }
 
-
 .hidden{
     display: none;
 }
 
-.place {
+p {
+    max-width: 100%;
+    /* overflow: hidden; */
+    white-space: normal; /* Avoid overflowing text */
+    text-overflow: ellipsis; /* Adds "..." for overflowed text */
+    overflow: hidden; /* Prevent content overflow */
+    word-wrap: break-word; /* Break long words */
+}
+.itemTypeText {
     font-family: 'open sans', arial, sans-serif;
     font-size: 1.2em;
     font-weight: 500;
@@ -57,7 +62,6 @@ body {
     padding-left: 18px;
     padding-right: 18px;
 }
-
 .distanceText {
     color: silver;
     font-family: 'open sans', arial, sans-serif;
@@ -69,25 +73,22 @@ body {
 }
 
 #panel {
+    min-width: 225px;
     position: absolute;
     z-index: 1;
     left: 0;
-    margin-top: 100px;
     height: 100%;
-    width: 350px;
+    width: calc(22% + 20px);
     background-color: rgba(255, 255, 255, 1); 
     box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3); /* Adds shadow for better visibility */
-    padding: 20px;
+    padding: 120px 20px 0px 20px;
     overflow: scroll;
     display: none; /* Hidden by default until it needs to be shown */
     transition: left 0.3s ease; /* Smooth transition for panel appearance */
 }
-
 #panel.open {
     display: block; /* Shows the panel when it's open */
 }
-
-
 .toggle-panel-button {
     position: fixed;
     left: 0;
@@ -103,71 +104,62 @@ body {
     width: 20px;
     height:48px;
 }
-
 #panel.open ~ .toggle-panel-button {
-    left: 350px; /* Button position when panel is open */
+    
+    left: max(225px, calc(22% + 20px)); /* Button position when panel is open */
 }
-
-.flipped-horizontal {
-    transform: scaleX(-1);
-}
-
 
 #arrow{
     width: 100%;
 }
 
-
+/* CARD */
 #card, #card-body{
     position: absolute;
     z-index: 0;
-    left: 0;
     display: block;
     height: 100px;
-    width: 350px;
+    width: calc(22% + 20px);
     background-color: white; 
-    /* box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.2); Adds shadow for better visibility */
+    min-width: 225px;
 }
 
-
-/* SCROLLBAR */
+/* a. SCROLLBAR */
 #panel::-webkit-scrollbar {
     width: 5px;
 }
-
 #panel::-webkit-scrollbar-track {
     background-color: #f1f1f1;
 }
-
 #panel::-webkit-scrollbar-thumb {
     background-color: lightgrey;
 }
-
 #panel::-webkit-scrollbar-thumb:hover {
     background-color: darkgrey;
 }
 
+
 /* FILTER CONTAINER */
-#filter-container{
+#filter-container, filter-status-container{
     margin: 10px 18px;
 }
 
 
 
 
+/* INFO PANEL */
 #info-panel {
-    width: 360px;
+    width: 250px;
     height: 100%;
     background-color: rgba(255, 255, 255, 0.9);
     box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3);
     padding: 20px;
     overflow-y: auto;
-    position: absolute;
+    position: fixed;
     transition: transform 0.3s ease;
     display: inline-block;
 }
-
-/* Close button for the info panel */
+/* a. CLOSE BUTTON FOR INFO PANEL */
 .close-button {
     background-color: #ff5c5c;
     border: none;
@@ -179,9 +171,17 @@ body {
     top: 10px;
     right: 10px;
 }
-
 .close-button:hover {
     background-color: #ff2a2a;
 }
 
 
+
+.custom-marker {
+    width: 32px;
+    height: 32px;
+    border: 3px solid red; /* Red border */
+    border-radius: 50%; /* Make it circular */
+    background-size: cover;
+    background-position: center;
+}
