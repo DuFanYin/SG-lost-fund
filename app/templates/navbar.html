@@ -35,13 +35,14 @@
                     </li>
                     <li class="nav-item">
                         <a :class="['nav-link', activeTab === 'listing' ? 'active' : '']" href="/listing"
-                            @click="setActiveTab('listing', $event)">
+                        @click="setActiveTab('listing', $event)"
+                             > 
                             Post Listing
                         </a>
                     </li>
                 </ul>
 
-                <!-- <button class="round" v-if="isLoggedIn" v-text="points"></button> -->
+         <button class="round" v-if="isLoggedIn" v-text="points"></button> 
 
                 <!-- Right-aligned Login or Profile Options -->
                 <ul class="navbar-nav ms-auto mb-2 mb-md-0">

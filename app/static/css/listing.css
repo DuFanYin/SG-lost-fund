@@ -1,0 +1,48 @@
+/* Flexbox to make the body fill the viewport */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f9fc;
+    /* Light background color */
+}
+
+/* Content area to grow and take up remaining space */
+.content {
+    flex-grow: 1;
+    padding: 30px;
+}
+
+.custom-width {
+    max-width: 800px;
+    width: 100%;
+    margin: auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.btn-warning {
+    background-color: #ffcc00;
+    border-color: #ffcc00;
+}
+
+.btn-warning:hover {
+    background-color: #e6b800;
+}
+
+.text-center {
+    margin-bottom: 20px;
+}
+
+hr {
+    border-top: 1px solid #dee2e6;
+    margin: 20px 0;
+}

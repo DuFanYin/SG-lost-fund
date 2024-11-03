@@ -24,57 +24,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <script type="module" src="../static/js/firebaseConfig.js"></script>
+    <link rel="stylesheet" href="static/css/listing.css">
 
-    <style>
-        /* Flexbox to make the body fill the viewport */
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #f7f9fc;
-            /* Light background color */
-        }
-
-        /* Content area to grow and take up remaining space */
-        .content {
-            flex-grow: 1;
-            padding: 30px;
-        }
-
-        .custom-width {
-            max-width: 800px;
-            width: 100%;
-            margin: auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-label {
-            font-weight: bold;
-        }
-
-        .btn-warning {
-            background-color: #ffcc00;
-            border-color: #ffcc00;
-        }
-
-        .btn-warning:hover {
-            background-color: #e6b800;
-        }
-
-        .text-center {
-            margin-bottom: 20px;
-        }
-
-        hr {
-            border-top: 1px solid #dee2e6;
-            margin: 20px 0;
-        }
-    </style>
 </head>
 
 <body>
@@ -84,11 +35,10 @@
     <!-- Header Styling -->
     <h2 class="d-flex justify-content-center align-items-center fs-1 fs-md-2" style="color: black; margin-top: 40px;">
         <i class="fas fa-clipboard me-2" style="font-size: 32px;"></i>
-        <span>Post Found Item</span>
+        <span>Post a new listing</span>
     </h2>
 
-    <hr class="mx-auto" style="border: 5px solid lightskyblue; margin-top: 0; margin-bottom: 10px; width: 100%;" />
-
+    <hr class="mx-auto" style="border: 5px solid rgb(91, 142, 173); margin-top: 0; margin-bottom: 10px; width: 100%;" />
 
     <!-- Form Structure -->
     <div id="temp" class="container my-5 content">
@@ -222,6 +172,11 @@
                                     id="handoff_location" placeholder="Enter Handoff Location" required>
                             </div>
 
+
+
+
+
+
                             <!-- Submit Button -->
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary">POST</button>
@@ -269,6 +224,8 @@
     <!-- Footer placeholder -->
     <div id="footer-placeholder"></div>
 
+
+
     <!-- Vue.js and Axios -->
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -280,7 +237,6 @@
 
     <!-- Load the JavaScript to include the footer -->
     <script src="../static/js/footer.js"></script>
-
 
     <!-- Load the JavaScript to include the Navbar -->
     <script type="module" src="../static/js/navbar.js"></script>
