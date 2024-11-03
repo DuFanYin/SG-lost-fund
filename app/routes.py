@@ -43,62 +43,7 @@ def dash_board():
 
 @main.route('/listing', methods=['POST', 'GET'])
 def listing():
-    if request.method == 'GET':
-        return render_template('listing.html')
     
-    # Handle form data for POST request
-    item_name = request.form.get('item_name')
-    location = request.form.get('location')
-    item_description = request.form.get('item_description')
-    item_type = request.form.get('item_type')
-    handoff_method = request.form.get('handoff_method')
-    handoff_location = request.form.get('handoff_location')
-    report_type = request.form.get('report_type')  # Extract report type from form
-    status = 'Pending'  # Set status to 'Pending' by default
-
-    uid = request.form.get('uid')  # Retrieve the uid from the request
-
-    if not uid:
-        return jsonify({"error": "User ID is required"}), 400
-
-    # Handle file upload
-    if 'file' not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
-
-    file = request.files['file']
-    
-    if file.filename == '':
-        return jsonify({"error": "No file selected"}), 400
-    
-    # Save file
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
-        
-    # Secure the filename and save the file
-    filename = secure_filename(file.filename)
-    file_path = os.path.join(UPLOAD_FOLDER, filename)
-    file.save(file_path)
-
-    # Prepare data to store in Firestore
-    doc_data = {
-        'item_name': item_name,
-        'location': location,
-        'item_description': item_description,
-        'item_type': item_type,
-        'handoff_method': handoff_method,
-        'handoff_location': handoff_location,
-        'file': filename,  # Store the saved filename
-        'report_type': report_type,  # Include report type
-        'status': status,  # Set status to 'Pending'
-        'uid': uid  # Add uid to the Firestore document
-
-    }
-
-    # Add document to Firestore (e.g., in a collection called "listings")
-    db.collection('listings').add(doc_data)
-
-    # Prepare the response data
-    response_data = doc_data
 
     return jsonify(response_data), 200
 

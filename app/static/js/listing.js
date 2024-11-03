@@ -33,12 +33,11 @@ Vue.createApp({
         submitForm() {
             const uid = sessionStorage.getItem('uid');
             if (this.formData.item_name && this.formData.location && this.formData.item_description &&
-                this.formData.item_type && this.formData.handoff_method && this.formData.handoff_location 
-                ) {
+                this.formData.item_type && this.formData.handoff_method && this.formData.handoff_location) {
 
                 db.collection("listings").add({
                     ...this.formData,
-                    uid: uid,
+                    uid: uid,  // Capture and add the user ID to the document
                 })
                 .then(() => {
                     console.log("Form Submitted Successfully to Firestore");
