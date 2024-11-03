@@ -45,7 +45,7 @@ def dash_board():
 def listing():
     
 
-    return jsonify(response_data), 200
+    return render_template('listing.html')
 
 
 
