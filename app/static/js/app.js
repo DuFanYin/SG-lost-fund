@@ -172,9 +172,16 @@ async function renderMapWithFeatures(centerPosition) {
         const targetUid = event.feature.getProperty('uid');
         const data = await exportUsers();
         const user = data.users.find(user => user.uid === targetUid);
+
+        var border = "";
+        if(report_type === "Lost"){
+            border = "red";
+        } else{
+            border = "blue";
+        }
         // Content for InfoWindow
         const content = `
-            <div class="card" style="border: 5px solid red">
+            <div class="card" style="border: 5px solid ${border}">
                 <div class="card-body">
                     <img style="float:left; width:200px; margin-top:30px" src="../static/img/profile-icon.jpg">
                     <div style="margin-left:220px; margin-bottom:20px;">
