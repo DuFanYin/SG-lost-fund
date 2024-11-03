@@ -54,8 +54,8 @@
 }
 
 .dropdown-item:hover {
-    background-color: #f1f1f1;
-    color: red;
+    background-color: #f1f1f1 !important;
+    color: red !important;
 }
 
 .navbar-nav .nav-item .nav-link i {
