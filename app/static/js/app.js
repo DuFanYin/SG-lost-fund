@@ -59,8 +59,6 @@ let defaultZoomLevel = 11;
 let zoomedInLevel = 15;
 var map = null;
 var bounds = null;
-var infoWindow = null;
-var currentInfoWindow = null;
 var infoPane = document.getElementById('panel');
 var uniqueCategories = new Set();
 var userPos = null;
@@ -116,8 +114,6 @@ async function renderMapWithFeatures(centerPosition) {
     });
 
     bounds = new google.maps.LatLngBounds();
-    infoWindow = new google.maps.InfoWindow();
-    currentInfoWindow = infoWindow;
 
     map.data.addListener('addfeature', (event) => {
         if (event.feature.getGeometry().getType() === 'Point') {
@@ -157,9 +153,6 @@ async function renderMapWithFeatures(centerPosition) {
             panel.classList.add('open');
             document.getElementById('arrow').src = "../static/img/arrow_left.png"
             isSidebarOpen = true;
-            if (currentInfoWindow) {
-                currentInfoWindow.close();
-            }
         }
         
     });
@@ -226,19 +219,11 @@ async function renderMapWithFeatures(centerPosition) {
             document.getElementById('toggle-panel-button').classList.remove('hidden');
         });
         infoPanel.appendChild(closeButton);
-        if (currentInfoWindow) {
-            currentInfoWindow.close();
-        }
-        infoWindow.open(map);
-        currentInfoWindow = infoWindow;
 
         // Zoom in to the selected marker
         map.setZoom(zoomedInLevel);
         map.setCenter(position);
 
-        google.maps.event.addListener(infoWindow, 'closeclick', () => {
-            map.setZoom(defaultZoomLevel);
-        });
     });
 
     // Autocomplete location search bar
@@ -459,7 +444,7 @@ function addCards(data, item) {
     `;
     temp.appendChild(tempBody);
 
-    // Add click event listener to show the InfoWindow when the card is clicked
+    // Add click event listener to show the InfoPanel when the card is clicked
     temp.addEventListener('click', async () => {
         const data = await exportUsers();
         const user = data.users.find(user => user.uid === targetUid);
