@@ -42,7 +42,6 @@
                     </li>
                 </ul>
 
-         <button class="round" v-if="isLoggedIn" v-text="points"></button> 
 
                 <!-- Right-aligned Login or Profile Options -->
                 <ul class="navbar-nav ms-auto mb-2 mb-md-0">
@@ -103,5 +102,91 @@
 <div v-if="showSpinner" class="overlay">
     <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="static/css/pointshop.css">
+
+<div class="modal fade" id="pointShopModal" tabindex="-1" aria-labelledby="pointShopModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pointShopModalLabel">Point Shop</h5>
+                <div class="points-display" v-if="isLoggedIn" @click="showPointShop" style="cursor: pointer;">
+                    <img src="../static/img/points-icon.png" alt="Points Icon" class="points-icon">
+                    <span class="points" v-text="points + ' Points'"></span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Tabs for Border Shop and Background Shop -->
+                <ul class="nav nav-tabs" id="shopTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="border-tab" data-bs-toggle="tab"
+                            data-bs-target="#borderShop" type="button" role="tab" aria-controls="borderShop"
+                            aria-selected="true">Border Shop</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="background-tab" data-bs-toggle="tab"
+                            data-bs-target="#backgroundShop" type="button" role="tab" aria-controls="backgroundShop"
+                            aria-selected="false">Background Shop</button>
+                    </li>
+                </ul>
+
+                <!-- Tab Content for Border and Background Shop -->
+                <div class="tab-content mt-3" id="shopTabContent">
+                    <!-- Border Shop Tab Content -->
+                    <div class="tab-pane fade show active" id="borderShop" role="tabpanel" aria-labelledby="border-tab">
+                        <div class="row g-4 shop-section border-shop" id="border-shop">
+                            <div class="col-md-4" v-for="item in borderItems" :key="item.name">
+                                <div class="card border-primary">
+                                    <img :src="item.image" class="card-img-top item-img" :alt="item.name">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title" v-text="item.name"></h5>
+                                        <p class="card-text" v-text="item.points + ' Points'"></p>
+                                        <!-- Conditionally render buttons based on purchase status -->
+                                        <button v-if="!item.purchased" class="btn btn-primary"
+                                            @click="purchaseItem(item)">
+                                            Buy Now
+                                        </button>
+                                        <button v-else class="btn"
+                                            :class="item.selected ? 'btn-warning' : 'btn-success'"
+                                            @click="selectItem(item)" v-text="item.selected ? 'Selected' : 'Select'">
+                                        </button>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Background Shop Tab Content -->
+                    <div class="tab-pane fade" id="backgroundShop" role="tabpanel" aria-labelledby="background-tab">
+                        <div class="row g-4 shop-section background-shop" id="background-shop">
+                            <div class="col-md-4" v-for="item in backgroundItems" :key="item.name">
+                                <div class="card border-primary">
+                                    <img :src="item.image" class="card-img-top item-img" :alt="item.name">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title" v-text="item.name"></h5>
+                                        <p class="card-text" v-text="item.points + ' Points'"></p>
+                                        <!-- Conditionally render buttons based on purchase status -->
+                                        <button v-if="!item.purchased" class="btn btn-primary"
+                                            @click="purchaseItem(item)">
+                                            Buy Now
+                                        </button>
+                                        <button v-else class="btn"
+                                            :class="item.selected ? 'btn-warning' : 'btn-success'"
+                                            @click="selectItem(item)" v-text="item.selected ? 'Selected' : 'Select'">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

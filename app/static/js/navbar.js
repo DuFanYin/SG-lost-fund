@@ -7,7 +7,16 @@ const app = Vue.createApp({
             username: sessionStorage.getItem('username') || '', // Get username from sessionStorage
             points: sessionStorage.getItem('points') || 0,
             uid: sessionStorage.getItem('uid') || 0,
-            showSpinner: false // Control visibility of the loading spinner overlay
+            showSpinner: false, // Control visibility of the loading spinner overlay
+            userItems: {}, // Store the user's purchase status
+            borderItems: [
+                { name: 'Border 1', points: 100, image: '../static/img/border1.png', field: 'border1', selected: false },
+                { name: 'Border 2', points: 100, image: '../static/img/border2.png', field: 'border2', selected: false }
+            ],
+            backgroundItems: [
+                { name: 'Background 1', points: 200, image: '../static/img/background1.webp', field: 'background1', selected: false },
+                { name: 'Background 2', points: 200, image: '../static/img/background2.webp', field: 'background1', selected: false }
+            ]
         };
     },
     computed: {
@@ -62,6 +71,119 @@ const app = Vue.createApp({
         },
         redirectToLogin() {
             window.location.href = '/login'; // Redirect to login page
+        },
+        async fetchUserItems() {
+            const userId = sessionStorage.getItem('uid'); // Assuming user ID is stored in session storage
+            if (!userId) return;
+        
+            try {
+                const userDoc = await db.collection('users').doc(userId).get();
+                if (userDoc.exists) {
+                    this.userItems = userDoc.data();
+        
+                    // Set the purchased status for each item
+                    this.borderItems.forEach(item => {
+                        item.purchased = this.userItems[item.field] || false;
+                    });
+                    this.backgroundItems.forEach(item => {
+                        item.purchased = this.userItems[item.field] || false;
+                    });
+        
+                    // Check if selectedborder exists and set the selected item
+                    if (this.userItems.selectedborder) {
+                        const selectedBorderImage = this.userItems.selectedborder;
+                        this.borderItems.forEach(item => {
+                            if (item.image === selectedBorderImage) {
+                                item.selected = true; // Set the selected property to true
+                            }
+                        });
+                    }
+        
+                    // Similarly, check for selectedbackground if needed
+                    if (this.userItems.selectedbackground) {
+                        const selectedBackgroundImage = this.userItems.selectedbackground;
+                        this.backgroundItems.forEach(item => {
+                            if (item.image === selectedBackgroundImage) {
+                                item.selected = true; // Set the selected property to true
+                            }
+                        });
+                    }
+        
+                }
+            } catch (error) {
+                console.error("Error fetching user items:", error);
+            }
+        },
+        
+        async purchaseItem(item) {
+            const userId = sessionStorage.getItem('uid');
+            
+            if (this.points >= item.points && !item.purchased) {
+                // Deduct points and mark the item as purchased in Vue data
+                this.points -= item.points;
+                item.purchased = true;
+        
+                // Update Firestore to mark the item as purchased
+                try {
+                    await db.collection('users').doc(userId).set({
+                        [item.field]: true,
+                        points: this.points  // Save the updated points back to Firestore
+                    }, { merge: true });
+        
+                    // Update session storage with the new points value
+                    sessionStorage.setItem('points', this.points);
+        
+                    console.log(`Purchased ${item.name} for ${item.points} points`);
+                } catch (error) {
+                    console.error("Error updating Firestore:", error);
+                }
+            } else if (item.purchased) {
+                console.log(`Selected ${item.name}`);
+            } else {
+                console.log("Not enough points to purchase this item");
+            }
+        },
+        async selectItem(item) {
+            const userId = sessionStorage.getItem('uid');
+            if (!userId) {
+                console.error("User ID not found in session storage");
+                return;
+            }
+        
+            // Determine if it's a border or background selection
+            const updateField = this.borderItems.includes(item) ? 'selectedborder' : 'selectedbackground';
+        
+            try {
+                // Update Firestore with the selected item image source
+                await db.collection('users').doc(userId).set({
+                    [updateField]: item.image
+                }, { merge: true });
+        
+                console.log(`Selected ${item.name} as ${updateField} with image ${item.image}`);
+        
+                // Update the selected status in Vue data
+                if (updateField === 'selectedborder') {
+                    // Set the selected state only for the chosen border
+                    this.borderItems.forEach(borderItem => {
+                        borderItem.selected = (borderItem === item);
+                    });
+                } else if (updateField === 'selectedbackground') {
+                    // Set the selected state only for the chosen background
+                    this.backgroundItems.forEach(backgroundItem => {
+                        backgroundItem.selected = (backgroundItem === item);
+                    });
+                }
+        
+            } catch (error) {
+                console.error("Error updating selected item in Firestore:", error);
+            }
+        },
+        
+        
+        showPointShop() {
+            const modalElement = document.getElementById('pointShopModal');
+            const pointShopModal = new bootstrap.Modal(modalElement);
+            pointShopModal.show();
         }
     },
     mounted() {
@@ -69,6 +191,12 @@ const app = Vue.createApp({
         console.log("Username:", this.username); 
         console.log("Points:", this.points)
         console.log("uid:", this.uid)
+        console.log("Border Items:", this.borderItems);
+        console.log("Background Items:", this.backgroundItems);
+
+        this.fetchUserItems(); // Fetch purchase status when component is mounted
+
+        
 
         if (this.isLoggedIn) {
             this.setupRealTimeListener(); // Automatically call it here when the component mounts

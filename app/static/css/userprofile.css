@@ -1,24 +1,20 @@
 .profileborder {
-    border: 5px solid black;
     padding: 20px 30px;
     margin-top: 20px;
     min-height: 20vh;
 }
 
 .listborder {
-    border: 5px solid black;
     border-top: 0;
     min-height: 80vh;
     margin-bottom: -60px;
 }
 
 .profile-img {
-    border: 3px solid black;
     width: 50vw;
     max-width: 150px;
     height: auto;
-    padding: 0;
-    margin: 0 auto;
+    z-index: 1;
 }
 
 .profile {
@@ -39,11 +35,11 @@
 }
 
 .bg1 {
-    background-color: yellow;
+    background-color: #EA2F2F;
 }
 
 .bg2 {
-    background-color: lightgreen;
+    background-color: #EAE7E6;
 }
 
 .modal-backdrop {
@@ -51,7 +47,10 @@
 }
 
 .bg3 {
-    background-color: rgb(165, 66, 66);
+    background-color: #000000; /* Fallback color */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 @media (max-width: 576px) {
@@ -111,3 +110,18 @@
     }
 }
 
+.profile-image-container {
+    position: relative;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.border-overlay {
+    position: absolute;
+    top: -15px; /* Adjust to increase space above the profile image */
+    left: -15px; /* Adjust to increase space to the left */
+    width: calc(100% + 30px); /* Increase width beyond the container */
+    height: calc(100% + 30px); /* Increase height beyond the container */
+    z-index: 2;
+    pointer-events: none;
+}

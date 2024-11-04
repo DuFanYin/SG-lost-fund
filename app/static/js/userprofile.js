@@ -15,7 +15,11 @@ const profile = Vue.createApp({
             lostItems: [], // Array for lost items
             currentPage: 1, // Current page for pagination
             itemsPerPage: 6, // Number of items to display per page
-            currentPageLost: 1 // Current page for pagination of lost items
+            currentPageLost: 1 ,// Current page for pagination of lost items
+            selectedBorder: '', // New property to store the selected border URL
+            // Temporary properties for the modal form
+            selectedBackground: '', // Property to hold the background image URL
+            // Temporary properties for the modal form
         };
     },
     created() {
@@ -97,8 +101,12 @@ const profile = Vue.createApp({
             userRef.onSnapshot((doc) => {
                 if (doc.exists) {
                     const data = doc.data();
+                    console.log("Real-time listener data:", data);
                     this.username = data.username || 'username';
                     this.profiledesc = data.profiledesc || 'No Description';
+                    this.selectedBorder = data.selectedborder || ''; // Update the selected border
+                    this.selectedBackground = data.selectedbackground || ''; // Set background image URL
+
 
                     // Cache updated data in sessionStorage
                     sessionStorage.setItem('username', this.username);
@@ -136,6 +144,8 @@ const profile = Vue.createApp({
         openEditModal() {
             this.tempUsername = this.username;
             this.tempProfiledesc = this.profiledesc;
+            console.log("Temp Username in Modal:", this.tempUsername);
+            console.log("Temp Profile Description in Modal:", this.tempProfiledesc);
         },
         saveChanges() {
             this.username = this.tempUsername;
@@ -159,7 +169,18 @@ const profile = Vue.createApp({
                     console.error("Error updating profile: ", error);
                 });
         }
-    }
+    },
+    watch: {
+        selectedBackground(newBackground) {
+            if (newBackground) {
+                document.body.style.backgroundImage = `url(${newBackground})`;
+                document.body.style.backgroundSize = "cover";
+                document.body.style.backgroundPosition = "center";
+            } else {
+                document.body.style.backgroundImage = "";
+            }
+        }
+    },
 });
 
 // Mount the Vue instance to #profile
