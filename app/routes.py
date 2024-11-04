@@ -61,11 +61,10 @@ def listing():
 
         # Check if the file is allowed
         if file and allowed_file(file.filename):
-            # Generate a unique filename with timestamp and user ID
-            user_id = session.get('user_id')  # Assuming you have user ID in the session
+            # Generate a unique filename with timestamp
             filename = secure_filename(file.filename)
             timestamp = datetime.now().strftime('%Y%m%d%H%M%S')  # Get current timestamp
-            new_filename = f"{user_id}_{timestamp}_{filename}"
+            new_filename = f"{timestamp}_{filename}"
             file_path = os.path.join(UPLOAD_FOLDER, new_filename)
             file.save(file_path)
 
