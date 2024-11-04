@@ -457,9 +457,9 @@ function addItemInfo(data, item) {
         <p>${item_description}</br>
         Location: ${handoff_location}</br>
         ${report_type} on: ${found_timestamp}</br>
-        <hr>
     `;
     temp.appendChild(tempBody);
+    temp.style.paddingLeft = "10px";
 
     // Add click event listener to show the InfoPanel when the card is clicked
     temp.addEventListener('click', async () => {
@@ -521,6 +521,8 @@ function addItemInfo(data, item) {
 
 
     panel.appendChild(temp);
+    const hrElement = document.createElement("hr");
+    panel.appendChild(hrElement);
 }
 window.addItemInfo = addItemInfo;
 function adjustPanelsForScreenSize() {
@@ -578,16 +580,13 @@ function applyFiltersToMap(data) {
     const selectedStatus = document.getElementById('status-filter').value;
 
     data.forEach((feature) => {
-        console.log(feature);
         const item_type = feature.getProperty('item_type');
         const report_type = feature.getProperty('report_type');
 
         let visible = true;
-
         if (selectedCategory !== 'all' && item_type !== selectedCategory) {
             visible = false;
         }
-
         if (selectedStatus !== 'all' && report_type !== selectedStatus) {
             visible = false;
         }

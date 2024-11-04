@@ -68,7 +68,7 @@ p {
     width: calc(20% + 20px);
     background-color: rgba(255, 255, 255, 1); 
     box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3); /* Adds shadow for better visibility */
-    padding: 60px 20px 60px 20px;
+    padding: 70px 0px 60px 0px;
     overflow: scroll;
     display: none; /* Hidden by default until it needs to be shown */
     transition: left 0.3s ease; /* Smooth transition for panel appearance */
@@ -92,7 +92,6 @@ p {
     height:48px;
 }
 #panel.open ~ .toggle-panel-button {
-    
     left: max(225px, calc(20% + 20px)); /* Button position when panel is open */
 }
 
@@ -129,9 +128,15 @@ p {
 #filter-container, #filter-status-container{
     display: inline-block;
 }
+#filter-container{
+    padding-left: 10px;
+}
+#filter-status-container{
+    padding-left: 5px;
+}
 
 #category-filter, #status-filter{
-    width: 20px;
+    width: 50px;
 }
 /* INFO PANEL */
 #info-panel {
@@ -161,8 +166,6 @@ p {
     background-color: #ff2a2a;
 }
 
-
-
 .custom-marker {
     width: 32px;
     height: 32px;
@@ -171,3 +174,5 @@ p {
     background-size: cover;
     background-position: center;
 }
+
+
