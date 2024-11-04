@@ -187,44 +187,46 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal Structure -->
-    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editProfileModalLabel">
-                        <i class="bi bi-person"></i> Edit Profile
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+        <!-- Modal Structure -->
+        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editProfileModalLabel">
+                            <i class="bi bi-person"></i> Edit Profile
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
 
-                    <!-- Profile Editing Form -->
-                    <form>
-                        <div class="mb-3">
-                            <label for="profileName" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="profileName" v-model="tempUsername">
-                        </div>
-                        <div class="mb-3">
-                            <label for="profileDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="profileDescription" rows="3"
-                                v-model="tempProfiledesc"></textarea>
-                        </div>
-                    </form>
+                        <!-- Profile Editing Form -->
+                        <form>
+                            <div class="mb-3">
+                                <label for="profileName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="profileName" v-model="tempUsername">
+                            </div>
+                            <div class="mb-3">
+                                <label for="profileDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="profileDescription" rows="3"
+                                    v-model="tempProfiledesc"></textarea>
+                            </div>
+                        </form>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @click="saveChanges" data-bs-dismiss="modal">Save
-                        changes</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="saveChanges" data-bs-dismiss="modal">Save
+                            changes</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
+
+
+
 
     <!-- Footer placeholder -->
     <div id="footer-placeholder"></div>
