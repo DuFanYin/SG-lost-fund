@@ -65,6 +65,7 @@ var infoPane = document.getElementById('panel');
 var uniqueCategories = new Set();
 var userPos = null;
 let uniqueStatuses = new Set();
+let isSidebarOpen = false;
 
 //Prevents XSS
 function sanitizeHTML(strings) {
@@ -132,7 +133,6 @@ async function renderMapWithFeatures(centerPosition) {
             if (report_type) {
                 uniqueStatuses.add(report_type);
             }
-
         }
     });
 
@@ -152,16 +152,27 @@ async function renderMapWithFeatures(centerPosition) {
             card.style.zIndex = 0;
             panel.classList.remove('open');
             document.getElementById('arrow').src = "../static/img/arrow_right.png"
-
+            isSidebarOpen = false;
         } else {
             card.style.zIndex = 2;
             panel.classList.add('open');
             document.getElementById('arrow').src = "../static/img/arrow_left.png"
+            isSidebarOpen = true;
+            if (currentInfoWindow) {
+                currentInfoWindow.close();
+            }
         }
+        
     });
 
     // Show the information for a store when its marker is clicked.
     map.data.addListener('click', async (event) => {
+        if (isSidebarOpen) {
+            if (currentInfoWindow) {
+                currentInfoWindow.close();
+            }
+            return; // Don't open InfoWindow if the sidebar is open
+        }
         const item_name = event.feature.getProperty('item_name');
         const item_description = event.feature.getProperty('item_description');
         const found_timestamp = event.feature.getProperty('found_timestamp');
@@ -436,6 +447,10 @@ function addCards(data, item) {
         const data = await exportUsers();
         const user = data.users.find(user => user.uid === targetUid);
 
+        if (currentInfoWindow) {
+            currentInfoWindow.close();
+        }
+
         let infoPanel = document.getElementById('info-panel');
         if (!infoPanel) {
             infoPanel = document.createElement('div');
@@ -459,6 +474,9 @@ function addCards(data, item) {
                     </div>
             </div>`;
 
+        if(document.getElementById('smallInfoWindow')){
+            document.getElementById('smallInfoWindow').style.display = 'none';
+        }
         infoPanel.innerHTML = content;
         infoPanel.style.display = 'block';
         infoPanel.style.position = 'absolute';
@@ -471,6 +489,7 @@ function addCards(data, item) {
         infoPanel.style.overflowY = 'auto';
         infoPanel.style.zIndex = '3';
 
+        
         const closeButton = document.createElement('button');
         closeButton.textContent = 'Close';
         closeButton.classList.add('close-button');
