@@ -14,6 +14,7 @@ const dashboardApp = Vue.createApp({
             barChartInstance: null, // Store the bar chart instance
             pieChartInstance: null, // Tracks the pie chart instance
             lineChartInstance: null,
+            isLoggedIn: sessionStorage.getItem("uid") !== null // Initialize based on session storage
 
         };
     },
