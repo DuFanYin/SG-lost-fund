@@ -22,6 +22,10 @@ db = firestore.client()
 UPLOAD_FOLDER = 'uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+# Ensure the upload folder exists
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -43,9 +47,30 @@ def dash_board():
 
 @main.route('/listing', methods=['POST', 'GET'])
 def listing():
-    
+    if request.method == "POST":
+        # Check if the file is part of the request
+        if 'file' not in request.files:
+            return jsonify({"error": "No file part in the request"}), 400
 
-    return render_template('listing.html')
+        file = request.files['file']
+        
+        # If no file is selected
+        if file.filename == '':
+            return jsonify({"error": "No file selected"}), 400
+
+        # Check if the file is allowed
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(UPLOAD_FOLDER, filename)
+            file.save(file_path)
+
+            # Return the file path to be stored in Firestore
+            return jsonify({"filePath": f"/{UPLOAD_FOLDER}{filename}"}), 200
+        else:
+            return jsonify({"error": "File type not allowed"}), 400
+    else:
+        return render_template('listing.html')
+
 
 
 

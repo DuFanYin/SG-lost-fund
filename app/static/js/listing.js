@@ -13,6 +13,9 @@ Vue.createApp({
                 handoff_method: '',
                 handoff_location: '',
                 file: null,
+                date_time: '', // New date and time field
+                latitude: '',
+                longitude: ''
             },
             characterCount: 0,
             formSubmitted: false
@@ -20,7 +23,7 @@ Vue.createApp({
     },
     methods: {
         setType(type) {
-            this.formData.type = type; // This updates the type
+            this.formData.type = type;
         },
         checkCharacterCount() {
             this.characterCount = this.formData.item_description.length;
@@ -30,26 +33,58 @@ Vue.createApp({
                 this.characterCount = 200;
             }
         },
-        submitForm() {
+        async submitForm() {
             const uid = sessionStorage.getItem('uid');
-            if (this.formData.item_name && this.formData.location && this.formData.item_description &&
-                this.formData.item_type && this.formData.handoff_method && this.formData.handoff_location) {
 
-                db.collection("listings").add({
-                    ...this.formData,
-                    uid: uid,  // Capture and add the user ID to the document
-                })
-                .then(() => {
+            if (this.formData.item_name && this.formData.location && this.formData.item_description &&
+                this.formData.item_type && this.formData.handoff_method && this.formData.handoff_location &&
+                this.formData.date_time && this.formData.latitude && this.formData.longitude) {
+
+                try {
+                    // Upload the file to the server if it exists
+                    let fileLocation = '';
+                    if (this.formData.file) {
+                        fileLocation = await this.uploadFileToServer(this.formData.file);
+                    }
+
+                    // Submit form data to Firestore
+                    await db.collection("listings").add({
+                        ...this.formData,
+                        uid: uid,
+                        file_location: fileLocation
+                    });
+
                     console.log("Form Submitted Successfully to Firestore");
                     this.formSubmitted = true;
                     this.resetForm();
-                })
-                .catch((error) => {
-                    console.error("Error submitting the form to Firestore:", error);
+                } catch (error) {
+                    console.error("Error submitting the form:", error);
                     alert('There was an error submitting the form.');
-                });
+                }
             } else {
                 alert("Please fill in all fields.");
+            }
+        },
+        async uploadFileToServer(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error("Failed to upload the file.");
+                }
+
+                const result = await response.json();
+                return result.filePath; // Assuming server returns { filePath: "/uploads/filename" }
+            } catch (error) {
+                console.error("Error uploading file:", error);
+                alert("Failed to upload the file.");
+                return '';
             }
         },
         handleFileUpload(event) {
@@ -60,7 +95,7 @@ Vue.createApp({
         },
         resetForm() {
             this.formData = {
-                type: 'found', // Reset to default type
+                type: 'found',
                 archived: 'False',
                 item_name: '',
                 location: '',
@@ -69,6 +104,9 @@ Vue.createApp({
                 handoff_method: '',
                 handoff_location: '',
                 file: null,
+                date_time: '',
+                latitude: '',
+                longitude: ''
             };
             this.characterCount = 0;
         }
