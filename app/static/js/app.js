@@ -111,8 +111,6 @@ function userLocation() {
 window.userLocation = userLocation;
 
 async function renderMapWithFeatures(centerPosition) {
-    // const navHeight = document.querySelector("nav").offsetHeight;
-    // document.getElementById("map").style.height = `calc(100vh - ${navHeight}px)`
     const navElement = document.querySelector("nav");
     const navHeight = navElement ? navElement.offsetHeight : 0;
     document.getElementById("map").style.height = `calc(100vh - ${navHeight}px)`;
@@ -212,7 +210,7 @@ async function renderMapWithFeatures(centerPosition) {
         infoPanel.style.left = '0px';
         infoPanel.style.height = '100%';
         infoPanel.style.width = 'calc(20% + 20px)';
-        infoPanel.style.minWidth = '225px';
+        infoPanel.style.minWidth = '250px';
         infoPanel.style.backgroundColor = '#fff';
         infoPanel.style.boxShadow = '-2px 0px 5px rgba(0, 0, 0, 0.3)';
         infoPanel.style.overflowY = 'auto';
@@ -509,10 +507,10 @@ function addItemInfo(data, item) {
         infoPanel.innerHTML = content;
         infoPanel.style.display = 'block';
         infoPanel.style.position = 'absolute';
-        infoPanel.style.left = ' max(225px, calc(20% + 20px))';
+        infoPanel.style.left = ' max(250px, calc(20% + 20px))';
         infoPanel.style.height = '100%';
         infoPanel.style.width = 'calc(20% + 20px)';
-        infoPanel.style.minWidth = '225px';
+        infoPanel.style.minWidth = '250px';
         infoPanel.style.backgroundColor = '#fff';
         infoPanel.style.boxShadow = '-2px 0px 5px rgba(0, 0, 0, 0.3)';
         infoPanel.style.overflowY = 'auto';

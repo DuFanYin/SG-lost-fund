@@ -21,12 +21,13 @@ body {
     background-color: white;
     border-radius: 25px; /* Rounded corners */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
-    padding: 5px 10px;
+    padding: 5px 5px;
     position: absolute;
     z-index: 3;
-    width: max(180px, 20%);
-    margin-left: 10px;
+    width: max(210px, calc(20% - 20px));
+    margin-left: 20px;
     margin-top: 10px;
+    border:5px solid #fff;
 }
 #autocomplete-input {
     border: none;
@@ -38,7 +39,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
-#autocomplete-input:focus {
+#autocomplete-container:hover {
     border-color: #4d90fe;
 }
 
@@ -53,14 +54,9 @@ p {
     overflow: hidden; /* Prevent content overflow */
     word-wrap: break-word; /* Break long words */
 }
-.itemText {
-    font-family: 'open sans', arial, sans-serif;
-    font-size: 1.2em;
-    font-weight: 525;
-}
 
 #panel {
-    min-width: 225px;
+    min-width: 250px;
     position: absolute;
     z-index: 1;
     left: 0;
@@ -68,7 +64,7 @@ p {
     width: calc(20% + 20px);
     background-color: rgba(255, 255, 255, 1); 
     box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3); /* Adds shadow for better visibility */
-    padding: 70px 0px 60px 0px;
+    margin: 60px 0px;
     overflow: scroll;
     display: none; /* Hidden by default until it needs to be shown */
     transition: left 0.3s ease; /* Smooth transition for panel appearance */
@@ -92,7 +88,7 @@ p {
     height:48px;
 }
 #panel.open ~ .toggle-panel-button {
-    left: max(225px, calc(20% + 20px)); /* Button position when panel is open */
+    left: max(250px, calc(20% + 20px)); /* Button position when panel is open */
 }
 
 #arrow{
@@ -107,7 +103,7 @@ p {
     height: 60px;
     width: calc(20% + 20px);
     background-color: white; 
-    min-width: 225px;
+    min-width: 250px;
 }
 
 /* Styling for individual result cards */
@@ -187,17 +183,11 @@ p {
 
 #filter-container, #filter-status-container{
     display: inline-block;
-}
-#filter-container{
-    padding-left: 10px;
-}
-#filter-status-container{
-    padding-left: 5px;
+    padding-left: 15px;
+    width: calc(calc(100% - 18.2px) / 2);
 }
 
-#category-filter, #status-filter{
-    width: 180px;
-}
+
 /* INFO PANEL */
 #info-panel {
     width: 250px;
