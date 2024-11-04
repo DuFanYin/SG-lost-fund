@@ -31,10 +31,19 @@ Vue.createApp({
             passwordvalidation: [],
             isConfirmPasswordInvalid: false,
             isEmailInvalid: false,
-            emailErrorMessage: ''
+            emailErrorMessage: '',
+            showPassword: false,
+            showConfirmPassword: false
         };
     },
     methods: {
+        togglePasswordVisibility() {
+            this.showPassword = !this.showPassword;
+        },
+        toggleConfirmPasswordVisibility() {
+            this.showConfirmPassword = !this.showConfirmPassword;
+        },
+
         checkPasswordCriteria() {
             this.passwordvalidation = [];
             this.isPasswordInvalid = false;
