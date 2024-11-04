@@ -229,6 +229,9 @@ async function renderMapWithFeatures(centerPosition) {
 
     });
 
+    const rankedItems = await calculateDistances(map.data, centerPosition);
+    showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses));
+
     // Autocomplete location search bar
     const container = document.getElementById('sidebar-autocomplete-container');
     const input = document.createElement('input');
