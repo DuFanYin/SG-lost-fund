@@ -42,8 +42,8 @@
             <div class="col-lg-6 d-flex flex-column">
                 <div class="pink-box w-100 mb-3 mt-3">
                     <br> <i class="fas fa-users"></i>
-                    <span>Total Number of Registered Users</span>
-
+                    <span style="font-size: 20px; text-align: center;">Total Number of Registered Users</span>
+        
                     <!-- Direct binding -->
                     <p id="boldNumber" v-text="totalUsers"></p>
                 </div>
@@ -51,22 +51,22 @@
                     <div class="col-md-6 col-lg-6 d-flex align-items-stretch">
                         <div class="yellow-box w-100">
                             <br> <i class="fas fa-book"></i>
-                            <span>Total Lost Item Reports</span>
+                            <span style="font-size: 20px; text-align: center;">Total Lost Item Reports</span>
                             <p id="boldNumber" v-text="lostItemReports"></p>
                         </div>
                     </div>
                     <div class="col-md-6 d-flex align-items-stretch mt-3 mt-md-0"> <!-- Add top margin on small screens -->
                         <div class="green-box w-100">
                             <br> <i class="fas fa-thumbs-up"></i>
-                            <span>Total Number of Recovered Items</span>
+                            <span style="font-size: 20px; text-align: center;">Total Number of Recovered Items</span>
                             <p id="boldNumber" v-text="recoveredItems"></p>
                         </div>
                     </div>
                 </div>
             </div>
             
-             <div class="col-lg-6 col-md-12">
-                <div class="leaderboard mt-3">
+            <div class="col-lg-6 col-md-12 d-flex flex-column"> <!-- Added flex-column here -->
+                <div class="leaderboard mt-3 flex-fill"> <!-- Use flex-fill to grow and fill space -->
                     <h2 class="text-center">Leaderboard</h2>
                     <br>
                     <table class="table table-hover text-white">
@@ -83,8 +83,8 @@
                     </table>
                 </div>
             </div> 
-
-
+        </div>
+        
             </div>
         </div>
         <div class="row mt-3">
@@ -92,15 +92,12 @@
            <!-- Pie Chart-->
            <div class="p-1 bg-light rounded-3 flex-fill">
             <div class="container-fluid py-2 chart-container pie-chart-container">
+                <br> <br> <br> <br>
                 <!-- Unique ID for the pie chart -->
-                <canvas id="pieChart"></canvas> 
+                <canvas id="pieChart" style="width: 100%; height: 100%;"></canvas> 
             </div>
-           <!--  <select class="form-select mt-2" v-model="selectedReportType" @change="handleSelectionChange">  
-                <option disabled value="">Select Status</option> 
-                <option value="Found">Found</option>
-                <option value="Lost">Lost</option>
-            </select>-->
 
+            <br> <br> <br> <br>
             <select class="form-select mt-2" v-model="selectedReportType" @change="updatePieChart">  
                 <option disabled value="">Select Status</option> 
                 <option value="Found">Found</option>
@@ -111,17 +108,16 @@
         </div>
         
             </div>
-            
             <div class="col-lg-6 col-md-6 d-flex flex-column">
                  <!-- Stacked Line and Bar Charts -->
                 <div class="p-1 bg-light rounded-3 flex-fill">
                     <div class="container-fluid py-2 chart-container">
-                        <canvas id="lineChart" style="width: 100%; height: 300px;"></canvas>
+                        <canvas id="lineChart" style="width: 100%; height: 100%;"></canvas>
                     </div>
                 </div>
                 <div class="p-1 bg-light rounded-3 flex-fill">
                     <div class="container-fluid py-2 chart-container">
-                        <canvas id="barChart" style="width: 100%; height: 300px;"></canvas>
+                        <canvas id="barChart" style="width: 100%; height: 100%;"></canvas>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,23 @@
+@media (min-width: 768px) {
+    #pointShopModal .modal-content {
+        min-height: 500px;
+        /* Minimum height for larger screens */
+    }
+}
+
+@media (min-width: 992px) {
+    #pointShopModal .modal-content {
+        min-height: 750px;
+        /* Minimum height for even larger screens */
+    }
+}
+
+.item-img {
+    height: 150px;
+    object-fit: contain;
+}
+
+.card {
+    padding-top: 20px;
+    /* Adjust as needed */
+}

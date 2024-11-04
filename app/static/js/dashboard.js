@@ -109,6 +109,7 @@ const dashboardApp = Vue.createApp({
                         },
                         options: {
                             responsive: true,
+                            maintainAspectRatio: false, // This allows the chart to fill its container
                             plugins: {
                                 tooltip: {
                                     enabled: true,  // Enable tooltips (default is true)
@@ -127,6 +128,7 @@ const dashboardApp = Vue.createApp({
                                 },
                             },
                         },
+                        
                     });
                 }
             } catch (error) {
@@ -216,7 +218,6 @@ const dashboardApp = Vue.createApp({
             }
         },
         
-
         displayLeaderboard(users) {
             const leaderboardDataElement = document.getElementById('leaderboardData');
             leaderboardDataElement.innerHTML = ''; // Clear existing data
@@ -232,27 +233,22 @@ const dashboardApp = Vue.createApp({
                 leaderboardDataElement.appendChild(row);
             });
         },
-        async fetchItemsFoundCount(uid) {
-            const listingsRef = db.collection("listings");
-            const snapshot = await listingsRef.where("uid", "==", uid).where("report_type", "==", "Found").get();
-            return snapshot.size; // Return the count of found items
-        },
 
         updatePieChart() {
             console.log("Selected report type changed to:", this.selectedReportType);
             this.renderPieChart(); // Call to re-render the chart
         },
-
+        
         async fetchDataForPieChart(reportType) {
             try {
                 const listingsRef = db.collection("listings");
                 const snapshot = await listingsRef.where("report_type", "==", reportType).get();
-
+        
                 const totalCount = snapshot.size; // Total items for the selected report type
                 console.log("Total Count for report type", reportType, ":", totalCount);
-
+        
                 let successCount = 0; // Initialize success count
-
+        
                 // Count how many of these items are archived (successful recoveries)
                 snapshot.forEach(doc => {
                     const data = doc.data();
@@ -260,11 +256,11 @@ const dashboardApp = Vue.createApp({
                         successCount++;
                     }
                 });
-
+        
                 console.log("Success Count for report type", reportType, ":", successCount);
                 const successRate = (totalCount > 0) ? (successCount / totalCount) * 100 : 0;
                 console.log("Calculated Success Rate for report type", reportType, ":", successRate);
-
+        
                 return {
                     successRate: successRate,
                     totalCount: totalCount
@@ -274,29 +270,29 @@ const dashboardApp = Vue.createApp({
                 return null;
             }
         },
-
+        
         async renderPieChart() {
             const ctx = document.getElementById('pieChart')?.getContext('2d');
             if (!ctx) {
                 console.error("Canvas element not found or getContext failed.");
                 return;
             }
-
+        
             console.log(`Rendering pie chart for report type: ${this.selectedReportType}`);
-
+        
             try {
                 const data = await this.fetchDataForPieChart(this.selectedReportType);
                 if (!data) {
                     console.error("No data returned for the pie chart.");
                     return;
                 }
-
+        
                 // Destroy the previous chart instance if it exists
                 if (this.pieChartInstance) {
                     this.pieChartInstance.destroy();
                     console.log("Destroyed previous pie chart instance.");
                 }
-
+        
                 // Create a new pie chart instance
                 this.pieChartInstance = new Chart(ctx, {
                     type: 'pie',
@@ -322,39 +318,39 @@ const dashboardApp = Vue.createApp({
                         }
                     }
                 });
-
+        
                 console.log("Pie chart rendered successfully with data:", data);
             } catch (error) {
                 console.error("Error rendering pie chart:", error);
             }
         },
-
+        
         async lineChart() {
             try {
-                const currentUserId = sessionStorage.getItem("uid");
                 const listingsRef = db.collection("listings");
-
+        
                 const now = new Date();
                 const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
                 const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
+        
                 const foundCounts = Array(4).fill(0);
                 const lostCounts = Array(4).fill(0);
-
+        
+                // Fetch all "Found" items within the current month
                 const foundSnapshot = await listingsRef
-                    .where("uid", "==", currentUserId)
                     .where("report_type", "==", "Found")
                     .where("found_timestamp", ">=", startOfMonth)
                     .where("found_timestamp", "<=", endOfMonth)
                     .get();
-
+        
+                // Fetch all "Lost" items within the current month
                 const lostSnapshot = await listingsRef
-                    .where("uid", "==", currentUserId)
                     .where("report_type", "==", "Lost")
                     .where("found_timestamp", ">=", startOfMonth)
                     .where("found_timestamp", "<=", endOfMonth)
                     .get();
-
+        
+                // Count the number of found items per week
                 foundSnapshot.forEach(doc => {
                     const foundDate = doc.data().found_timestamp.toDate();
                     const weekIndex = Math.floor(foundDate.getDate() / 7);
@@ -362,7 +358,8 @@ const dashboardApp = Vue.createApp({
                         foundCounts[weekIndex]++;
                     }
                 });
-
+        
+                // Count the number of lost items per week
                 lostSnapshot.forEach(doc => {
                     const lostDate = doc.data().found_timestamp.toDate();
                     const weekIndex = Math.floor(lostDate.getDate() / 7);
@@ -370,7 +367,7 @@ const dashboardApp = Vue.createApp({
                         lostCounts[weekIndex]++;
                     }
                 });
-
+        
                 // Prepare data for the line chart
                 const data = {
                     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
@@ -390,7 +387,7 @@ const dashboardApp = Vue.createApp({
                     ]
                 };
                 console.log("Line Chart Data:", data); // Log the data for the line chart
-
+        
                 function getMonthName() {
                     const monthNames = [
                         "January", "February", "March", "April", "May", "June",
@@ -399,36 +396,37 @@ const dashboardApp = Vue.createApp({
                     const date = new Date();
                     return monthNames[date.getMonth()]; // Returns the current month name
                 }
-
+        
                 const ctx = document.getElementById('lineChart')?.getContext('2d');
                 if (!ctx) {
                     console.error("Canvas element not found for line chart.");
                     return;
                 }
-
+                
                 // Destroy previous instance if it exists
                 if (this.lineChartInstance) {
                     this.lineChartInstance.destroy();
                 }
-
+                
                 // Create the line chart
                 this.lineChartInstance = new Chart(ctx, {
                     type: 'line',
                     data: data,
                     options: {
+                        responsive: true, // Ensure the chart is responsive
+                        maintainAspectRatio: false, // Allow height to be defined by the container
                         scales: {
                             y: {
                                 ticks: {
-                                    precision: 0 // This removes the decimal points
+                                    precision: 0 // Removes decimal points
                                 }
                             }
                         },
-                        responsive: true,
                         plugins: {
                             tooltip: {
-                                enabled: true, // Enable tooltips
-                                mode: 'index', // You can set this to 'nearest' or other options based on your preference
-                                intersect: false // Allows tooltips to show even if not directly hovering over a point
+                                enabled: true,
+                                mode: 'index',
+                                intersect: false
                             },
                             legend: {
                                 display: true,
@@ -436,15 +434,17 @@ const dashboardApp = Vue.createApp({
                             },
                             title: {
                                 display: true,
-                                text: `Items FOUND vs Items LOST in ${getMonthName()}`,
+                                text: `Monthly Trends: Items Found VS Lost in ${getMonthName()}`,
                             }
                         }
                     }
                 });
+                
             } catch (error) {
                 console.error("Error rendering line chart:", error);
             }
         }
+
     },
 
     watch: {
@@ -454,33 +454,32 @@ const dashboardApp = Vue.createApp({
         }
     },
 
-
     async mounted() {
         this.selectedReportType = "Found"; // Initial value
         console.log("Set selectedReportType to 'Found' in mounted.");
-
+    
         try {
-            await this.countUsers(); // Await if this function returns a promise
-            await this.countLostItemReports();
-            await this.countRecoveredItems();
-            await this.loadTopLostItems();
-
+            await this.countUsers(); // General count of users
+            await this.countLostItemReports(); // General count of lost item reports
+            await this.countRecoveredItems(); // General count of recovered items
+            await this.loadTopLostItems(); // Load top lost items for all users
+    
+            // Fetch and rank users only if a user ID is present
             const currentUserId = sessionStorage.getItem("uid");
             if (currentUserId) {
-                await this.fetchAndRankUsers(currentUserId);
+                await this.fetchAndRankUsers(currentUserId); // This function is uid specific
             }
-
-            // Render the pie chart initially
-            await this.renderPieChart();
-            await this.lineChart(); // Call the line chart method here
+    
+            // Render the pie chart and line chart
+            await this.renderPieChart(); // General pie chart rendering
+            await this.lineChart(); // General line chart rendering
         } catch (error) {
             console.error("Error in mounted lifecycle:", error);
         }
     },
+    
 
 }); dashboardApp.mount("#app");// Mount the Vue app to #app
-
-
 
 // function showData() {
 //     let url = "/static/js/leaderboard.json";

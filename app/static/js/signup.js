@@ -119,7 +119,12 @@ Vue.createApp({
                     email: this.email,
                     points: 200,
                     profiledesc: '',
+                    border1: false,
+                    border2: false,
+                    background1: false,
+                    background2: false,
                 });
+
 
                 const modal = new bootstrap.Modal(document.getElementById('successModal'));
                 modal.show();
