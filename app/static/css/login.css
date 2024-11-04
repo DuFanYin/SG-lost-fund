@@ -1,0 +1,139 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* .background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: url('../img/loginBG.jpg') no-repeat center center fixed;
+    background-size: cover;
+    filter: blur(8px);
+    z-index: -1;
+} */
+
+@keyframes zoomPanBackground {
+    0% {
+        transform: scale(1) translate(0, 0);
+    }
+
+    50% {
+        transform: scale(1.2) translate(-20px, -20px);
+    }
+
+    100% {
+        transform: scale(1) translate(0, 0);
+    }
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: url('../img/loginBG.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(5px);
+    /* Slightly reduced blur to make the image more visible */
+    z-index: -2;
+    animation: zoomPanBackground 30s ease-in-out infinite;
+}
+
+
+
+#app {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    margin-top: 50px;
+}
+
+.login-button {
+    background-color: blue;
+    color: white;
+    border: 1px solid black;
+    display: inline-flex;
+    border-radius: 50px;
+    font-size: 15px;
+    justify-content: center;
+    width: 40%;
+    align-items: center;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.google-login-button {
+    background-color: white;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    font-size: 15px;
+    width: 40%;
+    font-weight: bold;
+    padding: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Success Modal */
+#successModal .modal-content {
+    border-radius: 10px;
+}
+
+#successModal .modal-body p {
+    color: #333;
+}
+
+#successModal .modal-header h5 {
+    display: flex;
+    align-items: center;
+}
+
+/* Regular login button hover effect */
+.login-button:hover {
+    background-color: darkblue;
+    /* Adjust the color as desired */
+    color: white;
+    border-color: darkblue;
+    cursor: pointer;
+}
+
+/* Google login button hover effect */
+.google-login-button:hover {
+    background-color: #f0f0f0;
+    /* Adjust the color as desired */
+    color: #000;
+    border-color: #bbb;
+    cursor: pointer;
+}
+
+/* Email input field focus effect */
+.input-group input[type="email"]:focus {
+    background-color: #f0f0f0;
+    /* Light grey background color */
+    border-color: #ccc;
+    /* Grey border color on focus */
+    outline: none;
+    box-shadow: 0 0 5px #aaa;
+    /* Subtle grey glowing effect */
+}
+
+/* Password input field focus effect */
+.input-group input[type="password"]:focus {
+    background-color: #f0f0f0;
+    /* Light grey background color */
+    border-color: #ccc;
+    /* Grey border color on focus */
+    outline: none;
+    box-shadow: 0 0 5px #aaa;
+    /* Subtle grey glowing effect */
+}

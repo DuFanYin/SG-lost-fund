@@ -30,15 +30,20 @@ Vue.createApp({
         return {
             email: '',
             password: '',
-            errorMessage: ''
+            errorMessage: '',
+            passwordVisible: false
         };
     },
     methods: {
+        togglePasswordVisibility() {
+            this.passwordVisible = !this.passwordVisible;
+        },
+
         async logIn() {
             this.errorMessage = ''; // Reset error message
 
             try {
-            
+
                 // Sign in the user with Firebase Authentication
                 const userCredential = await auth.signInWithEmailAndPassword(this.email, this.password);
                 console.log('User logged in successfully:', userCredential.user);
@@ -54,6 +59,9 @@ Vue.createApp({
                     sessionStorage.setItem('uid', userData.uid);  // Ensure this line is executed
                     sessionStorage.setItem('profiledesc', userData.profiledesc);  // Ensure this line is executed
                     sessionStorage.setItem('email', userData.email); // Ensure this line is executed
+
+                    // Display the username in the success modal
+                    document.getElementById('username-display').textContent = userData.username;
                 }
                 else {
                     this.errorMessage = 'User data not found in Firestore.';
@@ -125,6 +133,9 @@ Vue.createApp({
                 sessionStorage.setItem('profiledesc', userData.profiledesc);
                 sessionStorage.setItem('email', userData.email);
 
+                // Display the username in the success modal
+                document.getElementById('username-display').textContent = userData.username;
+                
                 // Show success modal
                 new bootstrap.Modal(document.getElementById('successModal')).show();
 
