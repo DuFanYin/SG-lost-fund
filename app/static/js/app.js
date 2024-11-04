@@ -145,7 +145,6 @@ async function renderMapWithFeatures(centerPosition) {
     }
 
     addCustomMarker();
-
     const togglePanelButton = document.getElementById('toggle-panel-button');
     togglePanelButton.addEventListener('click', () => {
         if (panel.classList.contains('open')) {
@@ -167,12 +166,7 @@ async function renderMapWithFeatures(centerPosition) {
 
     // Show the information for a store when its marker is clicked.
     map.data.addListener('click', async (event) => {
-        if (isSidebarOpen) {
-            if (currentInfoWindow) {
-                currentInfoWindow.close();
-            }
-            return; // Don't open InfoWindow if the sidebar is open
-        }
+
         const item_name = event.feature.getProperty('item_name');
         const item_description = event.feature.getProperty('item_description');
         const found_timestamp = event.feature.getProperty('found_timestamp');
@@ -185,16 +179,18 @@ async function renderMapWithFeatures(centerPosition) {
         const data = await exportUsers();
         const user = data.users.find(user => user.uid === targetUid);
 
-        var border = "";
-        if (report_type === "Lost") {
-            border = "red";
-        } else {
-            border = "blue";
+        let infoPanel = document.getElementById('info-panel');
+        if (!infoPanel) {
+            infoPanel = document.createElement('div');
+            infoPanel.setAttribute('id', 'info-panel');
+            infoPanel.classList.add('info-panel');
+            document.body.appendChild(infoPanel);
         }
-        // Content for InfoWindow
+
+        infoPanel.innerHTML = '';
         const content = `
-             <div>
-                <img style="width: 150px; height: auto; display: block; margin-left: auto; margin-right: auto;" src="../static/img/profile-icon.jpg">
+            <div class="info-panel-content">
+                <img style="width: 100%; height: auto;" src="../static/img/profile-icon.jpg">
                     <div style="padding: 20px;">
                         <h2>${item_name}</h2><p>${item_description}</p>
                         <p>
@@ -206,9 +202,30 @@ async function renderMapWithFeatures(centerPosition) {
                     </div>
             </div>`;
 
-        infoWindow.setContent(content);
-        infoWindow.setPosition(position);
-        infoWindow.setOptions({ pixelOffset: new google.maps.Size(0, -30) });
+        infoPanel.innerHTML = content;
+        infoPanel.style.display = 'block';
+        infoPanel.style.position = 'absolute';
+        infoPanel.style.left = '0px';
+        infoPanel.style.height = '100%';
+        infoPanel.style.width = 'calc(20% + 20px)';
+        infoPanel.style.minWidth = '225px';
+        infoPanel.style.backgroundColor = '#fff';
+        infoPanel.style.boxShadow = '-2px 0px 5px rgba(0, 0, 0, 0.3)';
+        infoPanel.style.overflowY = 'auto';
+        infoPanel.style.zIndex = '3';
+
+        
+        const closeButton = document.createElement('button');
+        closeButton.textContent = 'Close';
+        closeButton.classList.add('close-button');
+        closeButton.style.position = 'absolute';
+        closeButton.style.top = '10px';
+        closeButton.style.right = '10px';
+        closeButton.addEventListener('click', () => {
+            infoPanel.style.display = 'none';
+            document.getElementById('toggle-panel-button').classList.remove('hidden');
+        });
+        infoPanel.appendChild(closeButton);
         if (currentInfoWindow) {
             currentInfoWindow.close();
         }
@@ -447,10 +464,6 @@ function addCards(data, item) {
         const data = await exportUsers();
         const user = data.users.find(user => user.uid === targetUid);
 
-        if (currentInfoWindow) {
-            currentInfoWindow.close();
-        }
-
         let infoPanel = document.getElementById('info-panel');
         if (!infoPanel) {
             infoPanel = document.createElement('div');
@@ -474,9 +487,6 @@ function addCards(data, item) {
                     </div>
             </div>`;
 
-        if(document.getElementById('smallInfoWindow')){
-            document.getElementById('smallInfoWindow').style.display = 'none';
-        }
         infoPanel.innerHTML = content;
         infoPanel.style.display = 'block';
         infoPanel.style.position = 'absolute';
