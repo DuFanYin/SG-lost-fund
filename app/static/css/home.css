@@ -110,6 +110,66 @@ p {
     min-width: 225px;
 }
 
+/* Styling for individual result cards */
+#panel > div:not(#filter-container):not(#filter-status-container) {
+    padding: 15px;
+    margin: 10px 15px;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border: 1px solid #e0e0e0;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+}
+
+/* Hover effect for cards */
+#panel > div:not(#filter-container):not(#filter-status-container):hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+    background-color: #f9f9f9;
+}
+
+/* Title styling */
+#panel > div:not(#filter-container):not(#filter-status-container) .itemText {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+/* Styling for description and details */
+#panel > div:not(#filter-container):not(#filter-status-container) p {
+    margin: 4px 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Highlighting specific labels */
+#panel > div:not(#filter-container):not(#filter-status-container) p b {
+    color: #333;
+    font-weight: bold;
+}
+
+/* Styling for item name */
+#panel .itemText {
+    font-size: 30px !important;
+    font-weight: bold !important;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+/* Styling for distance (smaller, italic, on a new line) */
+#panel .distanceText {
+    font-size: 15px !important;
+    font-style: italic;
+    font-weight: bold !important;
+    color: #555;
+    display: block;
+    margin-bottom: 8px;
+}
+
+
 /* a. SCROLLBAR */
 #panel::-webkit-scrollbar {
     width: 5px;
@@ -136,7 +196,7 @@ p {
 }
 
 #category-filter, #status-filter{
-    width: 50px;
+    width: 180px;
 }
 /* INFO PANEL */
 #info-panel {

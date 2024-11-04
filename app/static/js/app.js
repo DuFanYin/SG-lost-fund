@@ -1,5 +1,14 @@
 import { db } from './firebaseConfig.js';
 
+// Added for UI Tooltip
+document.addEventListener("DOMContentLoaded", function () {
+    const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(tooltipTriggerEl => {
+        new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+
+
 async function exportListings() {
     const listings = [];
     const snapshot = await db.collection('listings').get();
@@ -156,7 +165,7 @@ async function renderMapWithFeatures(centerPosition) {
             document.getElementById('arrow').src = "../static/img/arrow_left.png"
             isSidebarOpen = true;
         }
-        
+
     });
 
     // Show the information for a store when its marker is clicked.
@@ -209,7 +218,7 @@ async function renderMapWithFeatures(centerPosition) {
         infoPanel.style.overflowY = 'auto';
         infoPanel.style.zIndex = '3';
 
-        
+
         const closeButton = document.createElement('button');
         closeButton.textContent = 'Close';
         closeButton.classList.add('close-button');
@@ -429,6 +438,7 @@ function showItemsList(data, items, categoryArray, statusArray) {
     document.getElementById('arrow').src = "../static/img/arrow_left.png"
 }
 window.showItemsList = showItemsList;
+
 function addItemInfo(data, item) {
     const temp = document.createElement('div');
     const tempBody = document.createElement('div');
@@ -436,7 +446,7 @@ function addItemInfo(data, item) {
     const distance = item.distanceText;
     const currentItem = data.getFeatureById(item.itemid);
     const panel = document.getElementById('panel');
-    if(distance.split(" ")[0] > 3 && original === false){
+    if (distance.split(" ")[0] > 3 && original === false) {
         return;
     }
     const item_name = currentItem.getProperty('item_name');
@@ -450,8 +460,15 @@ function addItemInfo(data, item) {
 
     const header = document.createElement('p');
     header.classList.add('itemText');
-    header.textContent = item_name + ` (${distance + " away"})`;
+    header.textContent = item_name;
+    // header.textContent = item_name + ` (${distance + " away"})`;
     tempBody.appendChild(header);
+
+    // Add distance in a separate line, with a specific class for styling
+    const distanceElement = document.createElement('span');
+    distanceElement.classList.add('distanceText');
+    distanceElement.textContent = `(${distance} away)`;
+    tempBody.appendChild(distanceElement);
 
     tempBody.innerHTML += `
         <p>${item_description}</br>
@@ -501,7 +518,7 @@ function addItemInfo(data, item) {
         infoPanel.style.overflowY = 'auto';
         infoPanel.style.zIndex = '3';
 
-        
+
         const closeButton = document.createElement('button');
         closeButton.textContent = 'Close';
         closeButton.classList.add('close-button');
@@ -536,7 +553,7 @@ function adjustPanelsForScreenSize() {
 
     } else {
         infoPanel.style.left = 0;
-        if(!infoPanel.classList.contains("hidden")){
+        if (!infoPanel.classList.contains("hidden")) {
             document.getElementById('toggle-panel-button').classList.add('hidden');
         }
     }

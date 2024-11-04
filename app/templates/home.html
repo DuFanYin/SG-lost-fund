@@ -39,15 +39,21 @@
         <div class="container" id="cardBody">
         </div>
     </div>
+
     <div id="panel" class="sidebar">
         <div id="filter-container">
-            Filter: <select id="category-filter"></select>
+            <h3>Results
+                <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                    title="When you search for items, you can filter by the category and status to show you the most relevant results."></i>
+            </h3>
+            <br>
+            Filter: <select id="category-filter" class="form-select"></select>
         </div>
         <div id="filter-status-container">
-            Status: <select id="status-filter"></select>
+            Status: <select id="status-filter" class="form-select"></select>
         </div>
-        
     </div>
+    
     <button id="toggle-panel-button" class="toggle-panel-button">
         <img src="../static/img/arrow_right.png" id="arrow">
     </button>
