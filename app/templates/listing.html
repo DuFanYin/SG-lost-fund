@@ -54,11 +54,7 @@
 
                         <form @submit.prevent="submitForm">
 
-                            <!-- Date and Time Field -->
-                            <div class="mb-3">
-                                <label for="date_time" class="form-label">Date and Time: <span style="color: red;">*</span></label>
-                                <input type="datetime-local" v-model="formData.date_time" class="form-control" id="date_time" required>
-                            </div>
+                            
 
  
                             <!-- Item Name -->
@@ -70,19 +66,12 @@
                             </div>
 
                             <!-- Date and Time Field -->
-                            
-                            <div v-if="formData.type === 'found' ">
-                                <div class="mb-3">
-                                    <label>Date and Time</label>
-                                    <input type="datetime-local" v-model="formData.date_time">
-
-                                    <label for="location" class="form-label">Location Found at: <span
-                                            style="color: red;">*</span></label>
-                                    <input type="text" v-model="formData.location" class="form-control" id="location"
-                                        placeholder="Enter Location Found" required>
-                                </div>
+                            <div class="mb-3">
+                                <label for="date_time" class="form-label">Date and Time: <span style="color: red;">*</span></label>
+                                <input type="datetime-local" v-model="formData.date_time" class="form-control" id="date_time" required>
                             </div>
-                            
+
+
                             <!-- Location Found -->
                             <div v-if="formData.type === 'found' ">
                                 <div class="mb-3">
