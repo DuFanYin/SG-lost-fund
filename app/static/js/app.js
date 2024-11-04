@@ -103,8 +103,11 @@ function userLocation() {
 window.userLocation = userLocation;
 
 async function renderMapWithFeatures(centerPosition) {
-    const navHeight = document.querySelector("nav").offsetHeight;
-    document.getElementById("map").style.height = `calc(100vh - ${navHeight}px)`
+    // const navHeight = document.querySelector("nav").offsetHeight;
+    // document.getElementById("map").style.height = `calc(100vh - ${navHeight}px)`
+    const navElement = document.querySelector("nav");
+    const navHeight = navElement ? navElement.offsetHeight : 0;
+    document.getElementById("map").style.height = `calc(100vh - ${navHeight}px)`;
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: defaultZoomLevel,
         center: centerPosition,
