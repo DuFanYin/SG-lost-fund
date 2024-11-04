@@ -4,6 +4,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from flask import Flask, jsonify, request, render_template, Blueprint, redirect, url_for, request, session
 from werkzeug.utils import secure_filename
+from datetime import datetime 
 
 from firebase_admin import credentials, auth, firestore
 
@@ -60,12 +61,16 @@ def listing():
 
         # Check if the file is allowed
         if file and allowed_file(file.filename):
+            # Generate a unique filename with timestamp and user ID
+            user_id = session.get('user_id')  # Assuming you have user ID in the session
             filename = secure_filename(file.filename)
-            file_path = os.path.join(UPLOAD_FOLDER, filename)
+            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')  # Get current timestamp
+            new_filename = f"{user_id}_{timestamp}_{filename}"
+            file_path = os.path.join(UPLOAD_FOLDER, new_filename)
             file.save(file_path)
 
             # Return the file path to be stored in Firestore
-            return jsonify({"filePath": f"/{UPLOAD_FOLDER}{filename}"}), 200
+            return jsonify({"filePath": f"/{UPLOAD_FOLDER}/{new_filename}"}), 200
         else:
             return jsonify({"error": "File type not allowed"}), 400
     else:
