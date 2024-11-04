@@ -1,0 +1,11 @@
+runtime: python310  # Specify the Python runtime version
+entrypoint: gunicorn -b :$PORT main:app  # Specify the entry point to your app
+
+env: standard  # Use the standard environment
+
+env_variables:
+  GOOGLE_APPLICATION_CREDENTIALS: "app/static/js/serviceAccountKey.json"  # Path to your service account key
+
+handlers:
+  - url: /.*
+    script: auto  # Automatically route all requests to the app
