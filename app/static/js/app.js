@@ -59,11 +59,10 @@ let defaultZoomLevel = 11;
 let zoomedInLevel = 15;
 var map = null;
 var bounds = null;
-var infoPane = document.getElementById('panel');
 var uniqueCategories = new Set();
 var userPos = null;
 let uniqueStatuses = new Set();
-let isSidebarOpen = false;
+let original = true;
 
 //Prevents XSS
 function sanitizeHTML(strings) {
@@ -271,8 +270,18 @@ async function renderMapWithFeatures(centerPosition) {
         originMarker.setVisible(true);
         // Use the selected address as the origin to calculate distances to each of the store locations
         const rankedItems = await calculateDistances(map.data, originLocation);
+        original = false;
         showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses));
     });
+
+    input.addEventListener('input', async () => {
+        if (input.value === '') {
+            // Input is empty, reset listings and map
+            original = true;
+            showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses));
+        }
+    });
+
 }
 window.renderMapWithFeatures = renderMapWithFeatures;
 
@@ -386,7 +395,7 @@ function showItemsList(data, items, categoryArray, statusArray) {
     categoryArray.forEach((category) => {
         const option = document.createElement('option');
         option.value = category;
-        option.textContent = category.charAt(0).toUpperCase() + category.slice(1); // Capitalize category name
+        option.textContent = category;
         categoryFilter.appendChild(option);
     });
     categoryFilter.addEventListener('change', () => {
@@ -402,7 +411,7 @@ function showItemsList(data, items, categoryArray, statusArray) {
     statusArray.forEach((status) => {
         const option = document.createElement('option');
         option.value = status;
-        option.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        option.textContent = status;
         statusFilter.appendChild(option);
     });
     statusFilter.addEventListener('change', () => {
@@ -411,7 +420,7 @@ function showItemsList(data, items, categoryArray, statusArray) {
 
     panel.originalItems = items;
     items.forEach((item) => {
-        addCards(data, item);
+        addItemInfo(data, item);
     });
 
     panel.classList.add('open');
@@ -419,13 +428,14 @@ function showItemsList(data, items, categoryArray, statusArray) {
     document.getElementById('arrow').src = "../static/img/arrow_left.png"
 }
 window.showItemsList = showItemsList;
-function addCards(data, item) {
+function addItemInfo(data, item) {
     const temp = document.createElement('div');
     const tempBody = document.createElement('div');
 
     const distance = item.distanceText;
     const currentItem = data.getFeatureById(item.itemid);
-    if(distance.split(" ")[0] > 5){
+    const panel = document.getElementById('panel');
+    if(distance.split(" ")[0] > 3 && original === false){
         return;
     }
     const item_name = currentItem.getProperty('item_name');
@@ -508,10 +518,10 @@ function addCards(data, item) {
         adjustPanelsForScreenSize();
     });
 
-    const panel = document.getElementById('panel');
+
     panel.appendChild(temp);
 }
-window.addCards = addCards;
+window.addItemInfo = addItemInfo;
 function adjustPanelsForScreenSize() {
     const infoPanel = document.getElementById('info-panel');
     const panel = document.getElementById('panel');
