@@ -54,40 +54,40 @@ const dashboardApp = Vue.createApp({
             try {
                 const listingsRef = db.collection("listings");
                 const snapshot = await listingsRef.where("report_type", "==", "Lost").get();
-
+        
                 const itemCounts = {};
                 snapshot.forEach(doc => {
                     const itemName = doc.data().item_name;
                     itemCounts[itemName] = (itemCounts[itemName] || 0) + 1;
                 });
-
+        
                 // Log the counts for each item
                 console.log("Item Counts:", itemCounts);
-
+        
                 const topItems = Object.entries(itemCounts)
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 5);
-
+        
                 // Log the top items and their counts
                 console.log("Top Items:", topItems);
-
+        
                 const itemNames = topItems.map(item => item[0]);
                 const itemCountsData = topItems.map(item => item[1]);
-
+        
                 // Log the processed item names and counts
                 console.log("Item Names:", itemNames);
                 console.log("Item Counts Data:", itemCountsData);
-
+        
                 const barChartCanvas = document.getElementById("barChart");
                 if (!barChartCanvas) {
                     throw new Error("barChart element not found.");
                 }
-
+        
                 const ctx = barChartCanvas.getContext("2d");
                 if (!ctx) {
                     throw new Error("getContext failed on barChart canvas.");
                 }
-
+        
                 // Create a new bar chart or update the existing one
                 if (this.barChartInstance) {
                     this.barChartInstance.data.labels = itemNames;
@@ -113,12 +113,17 @@ const dashboardApp = Vue.createApp({
                             maintainAspectRatio: false, // This allows the chart to fill its container
                             plugins: {
                                 tooltip: {
-                                    enabled: true,  // Enable tooltips (default is true)
+                                    enabled: true,
                                     callbacks: {
                                         label: function (context) {
-                                            const label = context.dataset.label || '';
+                                            const rank = context.dataIndex + 1; // Get the rank (1-based index)
+                                            const labelPrefix = rank === 1 ? "Top most lost item" :
+                                                                rank === 2 ? "Top 2nd most lost item" :
+                                                                rank === 3 ? "Top 3rd most lost item" :
+                                                                `Top ${rank}th most lost item`;
                                             const value = context.raw;
-                                            return `${label}: ${value} reports`;
+                                            const reportLabel = value === 1 ? "report" : "reports";
+                                            return `${labelPrefix}: ${value} ${reportLabel}`;
                                         }
                                     }
                                 }
@@ -126,10 +131,12 @@ const dashboardApp = Vue.createApp({
                             scales: {
                                 y: {
                                     beginAtZero: true,
+                                    ticks: {
+                                        precision: 0 // Remove decimal points by using whole numbers
+                                    }
                                 },
                             },
                         },
-                        
                     });
                 }
             } catch (error) {
@@ -315,6 +322,18 @@ const dashboardApp = Vue.createApp({
                             title: {
                                 display: true,
                                 text: `Success Rate for ${this.selectedReportType} Items`
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        label += context.raw.toFixed(2) + '%';
+                                        return label;
+                                    }
+                                }
                             }
                         }
                     }
@@ -325,6 +344,7 @@ const dashboardApp = Vue.createApp({
                 console.error("Error rendering pie chart:", error);
             }
         },
+        
         
         async lineChart() {
             try {
