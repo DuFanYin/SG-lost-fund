@@ -388,6 +388,7 @@ function showItemsList(data, items, categoryArray, statusArray) {
     }
 
     const categoryFilter = document.getElementById('category-filter');
+    categoryFilter.innerHTML = '';
     const allOption = document.createElement('option');
     allOption.value = 'all';
     allOption.textContent = 'All';
@@ -566,7 +567,7 @@ function applyFilters(panel, data) {
     }
 
     filteredItems.forEach((item) => {
-        addCards(data, item);
+        addItemInfo(data, item);
     });
 
     applyFiltersToMap(data);
