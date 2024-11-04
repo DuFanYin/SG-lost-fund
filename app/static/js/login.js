@@ -1,26 +1,6 @@
 // Clear session storage on login page load to start fresh
 sessionStorage.clear();
 
-// // Firebase Configuration
-// const firebaseConfig = {
-//     apiKey: "AIzaSyAUZYEkqQSsEVM7rMCLqaEKoibGPiP_YJI",
-//     authDomain: "wad2project-db69b.firebaseapp.com",
-//     databaseURL: "https://wad2project-db69b-default-rtdb.asia-southeast1.firebasedatabase.app",
-//     projectId: "wad2project-db69b",
-//     storageBucket: "wad2project-db69b.appspot.com",
-//     messagingSenderId: "262163048895",
-//     appId: "1:262163048895:web:5ab7dd89cf3bc6daaad90a",
-//     measurementId: "G-PKT1RMGB01"
-// };
-
-// // Initialize Firebase app
-// firebase.initializeApp(firebaseConfig);
-
-// // Initialize Firebase Authentication
-// const auth = firebase.auth();
-
-// // Initialize Firestore
-// const db = firebase.firestore();  // Add this line to initialize Firestore
 
 import { app, auth, db } from '../js/firebaseConfig.js'; // Adjust the path according to your file structure
 
@@ -59,6 +39,10 @@ Vue.createApp({
                     sessionStorage.setItem('uid', userData.uid);  // Ensure this line is executed
                     sessionStorage.setItem('profiledesc', userData.profiledesc);  // Ensure this line is executed
                     sessionStorage.setItem('email', userData.email); // Ensure this line is executed
+
+                       // Cache selectedBorder and selectedBackground in localStorage
+                    localStorage.setItem('selectedBorder', userData.selectedborder || '');
+                    localStorage.setItem('selectedBackground', userData.selectedbackground || '');
 
                     // Display the username in the success modal
                     document.getElementById('username-display').textContent = userData.username;

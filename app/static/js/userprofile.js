@@ -15,19 +15,37 @@ const profile = Vue.createApp({
             lostItems: [], // Array for lost items
             currentPage: 1, // Current page for pagination
             itemsPerPage: 6, // Number of items to display per page
-            currentPageLost: 1 ,// Current page for pagination of lost items
-            selectedBorder: '', // New property to store the selected border URL
-            // Temporary properties for the modal form
-            selectedBackground: '', // Property to hold the background image URL
-            // Temporary properties for the modal form
+            currentPageLost: 1,// Current page for pagination of lost items
+            selectedBorder: localStorage.getItem('selectedBorder') || '',  // Use cached value on load
+            selectedBackground: localStorage.getItem('selectedBackground') || ''  // Use cached value on load
         };
     },
     created() {
         this.checkAuthStatus();
     },
+    mounted() {
+        // Apply the initial background when the component mounts
+        this.updateBodyBackground();
+    },
+    beforeUnmount() {
+        // Reset the body background when the component is unmounted, if desired
+        document.body.style.backgroundImage = '';
+    },
+    watch: {
+        selectedBackground() {
+            this.updateBodyBackground();
+        }
+    },
 
     // Pagination Controls
     computed: {
+        backgroundStyle() {
+            return {
+                backgroundImage: this.selectedBackground ? `url(${this.selectedBackground})` : '',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+            };
+        },
         paginatedItems() {
             const start = (this.currentPage - 1) * this.itemsPerPage;
             const end = start + this.itemsPerPage;
@@ -37,10 +55,18 @@ const profile = Vue.createApp({
             const start = (this.currentPageLost - 1) * this.itemsPerPage;
             const end = start + this.itemsPerPage;
             return this.lostItems.slice(start, end);
-        }
+        },
     },
     methods: {
-
+        updateBodyBackground() {
+            if (this.selectedBackground) {
+                document.body.style.backgroundImage = `url(${this.selectedBackground})`;
+                document.body.style.backgroundSize = "cover";
+                document.body.style.backgroundPosition = "center";
+            } else {
+                document.body.style.backgroundImage = '';
+            }
+        },
         // Pagination Controls
         nextPage() {
             if (this.currentPage * this.itemsPerPage < this.foundItems.length) {
@@ -108,6 +134,13 @@ const profile = Vue.createApp({
                     this.selectedBackground = data.selectedbackground || ''; // Set background image URL
 
 
+                    // Cache updated data in localStorage
+                    localStorage.setItem('selectedBorder', this.selectedBorder);
+                    localStorage.setItem('selectedBackground', this.selectedBackground);
+                    console.log(localStorage.getItem('selectedBackground')); // Logs the URL of selectedBackground
+                    console.log(localStorage.getItem('selectedBorder')); // Logs the URL of selectedBorder
+
+
                     // Cache updated data in sessionStorage
                     sessionStorage.setItem('username', this.username);
                     sessionStorage.setItem('profiledesc', this.profiledesc);
@@ -168,17 +201,6 @@ const profile = Vue.createApp({
                 .catch((error) => {
                     console.error("Error updating profile: ", error);
                 });
-        }
-    },
-    watch: {
-        selectedBackground(newBackground) {
-            if (newBackground) {
-                document.body.style.backgroundImage = `url(${newBackground})`;
-                document.body.style.backgroundSize = "cover";
-                document.body.style.backgroundPosition = "center";
-            } else {
-                document.body.style.backgroundImage = "";
-            }
         }
     },
 });

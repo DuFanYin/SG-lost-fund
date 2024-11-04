@@ -130,6 +130,8 @@ Vue.createApp({
                     profiledesc: '',
                     border1: false,
                     border2: false,
+                    border3: false,
+                    border4: false,
                     background1: false,
                     background2: false,
                 });

@@ -53,6 +53,11 @@
     background-position: center;
 }
 
+.main-wrapper {
+    min-height: 100vh; /* Ensure it covers full viewport height */
+    width: 100%;
+}
+
 @media (max-width: 576px) {
     .profile-img {
         max-width: 30px;

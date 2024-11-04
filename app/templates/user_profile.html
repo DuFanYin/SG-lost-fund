@@ -31,201 +31,207 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 
-<body :style="backgroundStyle" class="bg3">
+<body>
     <!-- Navbar placeholder -->
     <div id="navbar-placeholder"></div>
 
     <div id='profile' class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-10 profileborder bg1">
-                <div class="row profile align-items-start">
-                    <div class="col-12 col-sm-3 text-center ps-5">
-                        <div class="profile-image-container">
-                            <!-- Border overlay -->
-                            <img v-if="selectedBorder" :src="selectedBorder" class="border-overlay"
-                                alt="Profile Border">
+        <!-- Vue wrapper with dynamic background -->
+        <div class="main-wrapper">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 profileborder bg1">
+                    <div class="row profile align-items-start">
+                        <div class="col-12 col-sm-3 text-center ps-5">
+                            <div class="profile-image-container">
+                                <!-- Border overlay -->
+                                <img v-if="selectedBorder" :src="selectedBorder" class="border-overlay"
+                                    alt="Profile Border">
 
-                            <!-- Profile image -->
-                            <img class="profile-img img-fluid"
-                                src="{{ url_for('static', filename='img/profile-icon.jpg') }}" alt="Profile Image">
+                                <!-- Profile image -->
+                                <img class="profile-img img-fluid"
+                                    src="{{ url_for('static', filename='img/profile-icon.jpg') }}" alt="Profile Image">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-sm-6 text-center text-sm-start">
-                        <div class="profile_name" v-text="username"></div>
-                        <br>
-                        <div class="profile_username" v-text="email"></div>
+                        <div class="col-12 col-sm-6 text-center text-sm-start">
+                            <div class="profile_name" v-text="username"></div>
+                            <br>
+                            <div class="profile_username" v-text="email"></div>
 
-                        <div v-text="profiledesc"></div>
-                    </div>
-                    <div class="col-12 col-sm-3 text-center">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#editProfileModal" @click="openEditModal" style="border-radius: 30px;">
-                            <i class="bi bi-pencil-fill"></i> Edit Profile
-                        </button>
+                            <div v-text="profiledesc"></div>
+                        </div>
+                        <div class="col-12 col-sm-3 text-center">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#editProfileModal" @click="openEditModal" style="border-radius: 30px;">
+                                <i class="bi bi-pencil-fill"></i> Edit Profile
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-10 listborder bg2">
-                <div class="row">
-                    <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="found-items-tab" data-bs-toggle="tab"
-                                data-bs-target="#found-items" type="button" role="tab" aria-controls="found-items"
-                                aria-selected="true">
-                                <i class="bi bi-geo-alt"></i> Found Items
-                            </button>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 listborder bg2">
+                    <div class="row">
+                        <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="found-items-tab" data-bs-toggle="tab"
+                                    data-bs-target="#found-items" type="button" role="tab" aria-controls="found-items"
+                                    aria-selected="true">
+                                    <i class="bi bi-geo-alt"></i> Found Items
+                                </button>
 
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="lost-items-tab" data-bs-toggle="tab"
-                                data-bs-target="#lost-items" type="button" role="tab" aria-controls="lost-items"
-                                aria-selected="false">
-                                <i class="bi bi-exclamation-circle"></i> Lost Items
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="lost-items-tab" data-bs-toggle="tab"
+                                    data-bs-target="#lost-items" type="button" role="tab" aria-controls="lost-items"
+                                    aria-selected="false">
+                                    <i class="bi bi-exclamation-circle"></i> Lost Items
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
 
-                <br>
-                <br>
+                    <br>
+                    <br>
 
-                <!-- Tab Content -->
-                <div class="tab-content" id="myTabContent">
-                    <!-- Found Items Content -->
-                    <!-- <div class="tab-pane fade show active" id="found-items" role="tabpanel"
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="myTabContent">
+                        <!-- Found Items Content -->
+                        <!-- <div class="tab-pane fade show active" id="found-items" role="tabpanel"
                         aria-labelledby="found-items-tab">
                         <p>Items listed that you found</p>
                     </div> -->
 
-                    <!-- Found Items Content -->
-                    <div class="tab-pane fade show active" id="found-items" role="tabpanel"
-                        aria-labelledby="found-items-tab">
-                        <p class="text-center animated-text">Items You Have Found</p>
+                        <!-- Found Items Content -->
+                        <div class="tab-pane fade show active" id="found-items" role="tabpanel"
+                            aria-labelledby="found-items-tab">
+                            <p class="text-center animated-text">Items You Have Found</p>
 
-                        <div class="row">
-                            <div class="col-md-4 mb-4" v-for="item in paginatedItems" :key="item.file">
-                                <div class="card">
-                                    <img :src="'path_to_image_folder/' + item.file" class="card-img-top"
-                                        alt="Item Image">
-                                    <div class="card-body">
-                                        <h3 class="card-title" v-text="item.item_name"
-                                            style="text-align: center; border-bottom: 2px solid grey; padding-bottom: 5px;">
-                                        </h3>
-                                        <p><strong><i class="bi bi-card-text"></i> Description:</strong> <span
-                                                v-text="item.item_description"></span></p>
-                                        <p><strong><i class="bi bi-clock"></i> Found Timestamp:</strong> <span
-                                                v-text="formatTimestamp(item.found_timestamp)"></span></p>
-                                        <p><strong><i class="bi bi-geo-alt"></i> Handoff Location:</strong> <span
-                                                v-text="item.handoff_location"></span></p>
-                                        <p><strong><i class="bi bi-hand-thumbs-up"></i> Handoff Method:</strong> <span
-                                                v-text="item.handoff_method"></span></p>
-                                        <p><strong><i class="bi bi-tag"></i> Item Type:</strong> <span
-                                                class="badge badge-custom" v-text="item.item_type"></span></p>
-                                        <!-- <p><strong>Report Type</strong> <span v-text="item.report_type"></span> -->
+                            <div class="row">
+                                <div class="col-md-4 mb-4" v-for="item in paginatedItems" :key="item.file">
+                                    <div class="card">
+                                        <img :src="'path_to_image_folder/' + item.file" class="card-img-top"
+                                            alt="Item Image">
+                                        <div class="card-body">
+                                            <h3 class="card-title" v-text="item.item_name"
+                                                style="text-align: center; border-bottom: 2px solid grey; padding-bottom: 5px;">
+                                            </h3>
+                                            <p><strong><i class="bi bi-card-text"></i> Description:</strong> <span
+                                                    v-text="item.item_description"></span></p>
+                                            <p><strong><i class="bi bi-clock"></i> Found Timestamp:</strong> <span
+                                                    v-text="formatTimestamp(item.found_timestamp)"></span></p>
+                                            <p><strong><i class="bi bi-geo-alt"></i> Handoff Location:</strong>
+                                                <span v-text="item.handoff_location"></span>
+                                            </p>
+                                            <p><strong><i class="bi bi-hand-thumbs-up"></i> Handoff Method:</strong>
+                                                <span v-text="item.handoff_method"></span>
+                                            </p>
+                                            <p><strong><i class="bi bi-tag"></i> Item Type:</strong> <span
+                                                    class="badge badge-custom" v-text="item.item_type"></span></p>
+                                            <!-- <p><strong>Report Type</strong> <span v-text="item.report_type"></span> -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Pagination Controls -->
+                            <div class="d-flex justify-content-center mt-3">
+                                <button class="btn btn-primary me-2" @click="previousPage"
+                                    :disabled="currentPage == 1">Previous</button>
+                                <button class="btn btn-primary" @click="nextPage"
+                                    :disabled="currentPage * itemsPerPage >= foundItems.length">Next</button>
+                            </div>
                         </div>
 
-                        <!-- Pagination Controls -->
-                        <div class="d-flex justify-content-center mt-3">
-                            <button class="btn btn-primary me-2" @click="previousPage"
-                                :disabled="currentPage == 1">Previous</button>
-                            <button class="btn btn-primary" @click="nextPage"
-                                :disabled="currentPage * itemsPerPage >= foundItems.length">Next</button>
-                        </div>
-                    </div>
-
-                    <!-- Requested Items Content -->
-                    <!-- <div class="tab-pane fade" id="requested-items" role="tabpanel"
+                        <!-- Requested Items Content -->
+                        <!-- <div class="tab-pane fade" id="requested-items" role="tabpanel"
                         aria-labelledby="requested-items-tab">
                         <p>Items that you lost are shown here</p>
                     </div> -->
 
-                    <!-- Requested Items Content -->
-                    <div class="tab-pane fade" id="lost-items" role="tabpanel" aria-labelledby="lost-items-tab">
-                        <p class="text-center animated-text">Items You Have Lost</p>
-                        <div class="row">
-                            <div class="col-md-4 mb-4" v-for="item in paginatedLostItems" :key="item.file">
-                                <div class="card">
-                                    <img :src="'path_to_image_folder/' + item.file" class="card-img-top"
-                                        alt="Item Image">
-                                    <div class="card-body">
-                                        <h3 class="card-title" v-text="item.item_name"
-                                            style="text-align: center; border-bottom: 1px solid lightgrey; padding-bottom: 5px;">
-                                        </h3>
-                                        <p><strong><i class="bi bi-card-text"></i> Description:</strong> <span
-                                                v-text="item.item_description"></span></p>
-                                        <p><strong><i class="bi bi-clock"></i> Found Timestamp:</strong> <span
-                                                v-text="formatTimestamp(item.found_timestamp)"></span></p>
-                                        <p><strong><i class="bi bi-geo-alt"></i> Handoff Location:</strong> <span
-                                                v-text="item.handoff_location"></span></p>
-                                        <p><strong><i class="bi bi-hand-thumbs-up"></i> Handoff Method:</strong> <span
-                                                v-text="item.handoff_method"></span></p>
-                                        <p><strong><i class="bi bi-tag"></i> Item Type:</strong> <span
-                                                class="badge badge-custom" v-text="item.item_type"></span></p>
-                                        <!-- <p><strong>Report Type</strong> <span v-text="item.report_type"></span> -->
-                                        </p>
+                        <!-- Requested Items Content -->
+                        <div class="tab-pane fade" id="lost-items" role="tabpanel" aria-labelledby="lost-items-tab">
+                            <p class="text-center animated-text">Items You Have Lost</p>
+                            <div class="row">
+                                <div class="col-md-4 mb-4" v-for="item in paginatedLostItems" :key="item.file">
+                                    <div class="card">
+                                        <img :src="'path_to_image_folder/' + item.file" class="card-img-top"
+                                            alt="Item Image">
+                                        <div class="card-body">
+                                            <h3 class="card-title" v-text="item.item_name"
+                                                style="text-align: center; border-bottom: 1px solid lightgrey; padding-bottom: 5px;">
+                                            </h3>
+                                            <p><strong><i class="bi bi-card-text"></i> Description:</strong> <span
+                                                    v-text="item.item_description"></span></p>
+                                            <p><strong><i class="bi bi-clock"></i> Found Timestamp:</strong> <span
+                                                    v-text="formatTimestamp(item.found_timestamp)"></span></p>
+                                            <p><strong><i class="bi bi-geo-alt"></i> Handoff Location:</strong>
+                                                <span v-text="item.handoff_location"></span>
+                                            </p>
+                                            <p><strong><i class="bi bi-hand-thumbs-up"></i> Handoff Method:</strong>
+                                                <span v-text="item.handoff_method"></span>
+                                            </p>
+                                            <p><strong><i class="bi bi-tag"></i> Item Type:</strong> <span
+                                                    class="badge badge-custom" v-text="item.item_type"></span></p>
+                                            <!-- <p><strong>Report Type</strong> <span v-text="item.report_type"></span> -->
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Pagination Controls for Requested Items -->
-                        <div class="d-flex justify-content-center mt-3">
-                            <button class="btn btn-primary me-2" @click="previousPageLost"
-                                :disabled="currentPageLost == 1">Previous</button>
-                            <button class="btn btn-primary" @click="nextPageLost"
-                                :disabled="currentPageLost * itemsPerPage >= lostItems.length">Next</button>
+                            <!-- Pagination Controls for Requested Items -->
+                            <div class="d-flex justify-content-center mt-3">
+                                <button class="btn btn-primary me-2" @click="previousPageLost"
+                                    :disabled="currentPageLost == 1">Previous</button>
+                                <button class="btn btn-primary" @click="nextPageLost"
+                                    :disabled="currentPageLost * itemsPerPage >= lostItems.length">Next</button>
+                            </div>
                         </div>
+                        <br>
+                        <br>
                     </div>
-                    <br>
-                    <br>
                 </div>
             </div>
-        </div>
 
-        <!-- Modal Structure -->
-        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editProfileModalLabel">
-                            <i class="bi bi-person"></i> Edit Profile
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
+            <!-- Modal Structure -->
+            <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editProfileModalLabel">
+                                <i class="bi bi-person"></i> Edit Profile
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
 
-                        <!-- Profile Editing Form -->
-                        <form>
-                            <div class="mb-3">
-                                <label for="profileName" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="profileName" v-model="tempUsername">
-                            </div>
-                            <div class="mb-3">
-                                <label for="profileDescription" class="form-label">Description</label>
-                                <textarea class="form-control" id="profileDescription" rows="3"
-                                    v-model="tempProfiledesc"></textarea>
-                            </div>
-                        </form>
+                            <!-- Profile Editing Form -->
+                            <form>
+                                <div class="mb-3">
+                                    <label for="profileName" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="profileName" v-model="tempUsername">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="profileDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="profileDescription" rows="3"
+                                        v-model="tempProfiledesc"></textarea>
+                                </div>
+                            </form>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="saveChanges" data-bs-dismiss="modal">Save
-                            changes</button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" @click="saveChanges"
+                                data-bs-dismiss="modal">Save
+                                changes</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 
 
     <!-- Footer placeholder -->

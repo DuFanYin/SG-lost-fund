@@ -113,7 +113,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="pointShopModalLabel">Point Shop</h5>
-                <div class="points-display" v-if="isLoggedIn" @click="showPointShop" style="cursor: pointer;">
+                <div class="points-display" v-if="isLoggedIn">
                     <img src="../static/img/points-icon.png" alt="Points Icon" class="points-icon">
                     <span class="points" v-text="points + ' Points'"></span>
                 </div>
@@ -154,8 +154,6 @@
                                             :class="item.selected ? 'btn-warning' : 'btn-success'"
                                             @click="selectItem(item)" v-text="item.selected ? 'Selected' : 'Select'">
                                         </button>
-
-
                                     </div>
                                 </div>
                             </div>

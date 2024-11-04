@@ -11,11 +11,13 @@ const app = Vue.createApp({
             userItems: {}, // Store the user's purchase status
             borderItems: [
                 { name: 'Border 1', points: 100, image: '../static/img/border1.png', field: 'border1', selected: false },
-                { name: 'Border 2', points: 100, image: '../static/img/border2.png', field: 'border2', selected: false }
+                { name: 'Border 2', points: 100, image: '../static/img/border2.png', field: 'border2', selected: false },
+                { name: 'Border 3', points: 100, image: '../static/img/border3.png', field: 'border3', selected: false },
+                { name: 'Border 4', points: 100, image: '../static/img/border4.png', field: 'border4', selected: false },
             ],
             backgroundItems: [
                 { name: 'Background 1', points: 200, image: '../static/img/background1.webp', field: 'background1', selected: false },
-                { name: 'Background 2', points: 200, image: '../static/img/background2.webp', field: 'background1', selected: false }
+                { name: 'Background 2', points: 200, image: '../static/img/background2.webp', field: 'background2', selected: false }
             ]
         };
     },
@@ -50,6 +52,15 @@ const app = Vue.createApp({
                         this.points = userData.points;
                         sessionStorage.setItem('username', userData.username);
                         this.username = userData.username;
+
+                        this.borderItems.forEach(item => {
+                            item.purchased = userData[item.field] || false;
+                        });
+                        
+                        // Update background items' purchase status
+                        this.backgroundItems.forEach(item => {
+                            item.purchased = userData[item.field] || false;
+                        });
                     } else {
                         console.error("Document does not exist");
                     }
