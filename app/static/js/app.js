@@ -375,9 +375,8 @@ function showItemsList(data, items, categoryArray, statusArray) {
         return;
     }
 
-    const totalElementChildren = panel.children.length;
-    for (let i = panel.children.length - 1; i >= 4; i--) {
-        panel.removeChild(panel.children[i]);
+    while (panel.childNodes.length > 4) {
+        panel.removeChild(panel.lastChild);
     }
 
     const categoryFilter = document.getElementById('category-filter');
