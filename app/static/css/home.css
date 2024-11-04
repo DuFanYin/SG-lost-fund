@@ -53,7 +53,7 @@ p {
     overflow: hidden; /* Prevent content overflow */
     word-wrap: break-word; /* Break long words */
 }
-.itemTypeText {
+.itemText {
     font-family: 'open sans', arial, sans-serif;
     font-size: 1.2em;
     font-weight: 525;

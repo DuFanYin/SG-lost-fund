@@ -348,7 +348,6 @@ async function calculateDistances(data, origin) {
                         };
                         distances.push(distanceObject);
                     }
-
                     resolve(distances);
                 }
             });
@@ -424,8 +423,11 @@ function addCards(data, item) {
     const temp = document.createElement('div');
     const tempBody = document.createElement('div');
 
-
+    const distance = item.distanceText;
     const currentItem = data.getFeatureById(item.itemid);
+    if(distance.split(" ")[0] > 5){
+        return;
+    }
     const item_name = currentItem.getProperty('item_name');
     const item_description = currentItem.getProperty('item_description');
     const found_timestamp = currentItem.getProperty('found_timestamp');
@@ -436,10 +438,9 @@ function addCards(data, item) {
     const targetUid = currentItem.getProperty('uid');
 
     const header = document.createElement('p');
-    header.classList.add('itemTypeText');
-    header.textContent = item_name + ` (${item.distanceText + " away"})`;
+    header.classList.add('itemText');
+    header.textContent = item_name + ` (${distance + " away"})`;
     tempBody.appendChild(header);
-
 
     tempBody.innerHTML += `
         <p>${item_description}</br>
