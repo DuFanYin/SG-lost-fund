@@ -1,61 +1,5 @@
 import { db } from './firebaseConfig.js';
 
-
-function openPopoutPanel(item) {
-    const popoutPanel = document.getElementById('info-popout-panel');
-    const popoutContent = document.getElementById('info-popout-content');
-
-    const { item_name, item_description, handoff_location, report_type, found_timestamp } = item.properties;
-    const date = new Date(found_timestamp.seconds * 1000).toLocaleString();
-
-    // Populate content
-    popoutContent.innerHTML = `
-        <h2>${item_name}</h2>
-        <p><strong>Description:</strong> ${item_description}</p>
-        <p><strong>Location:</strong> ${handoff_location}</p>
-        <p><strong>Status:</strong> ${report_type}</p>
-        <p><strong>Found on:</strong> ${date}</p>
-    `;
-
-    // Display the popout panel
-    popoutPanel.style.display = 'block';
-}
-
-// Close button functionality
-document.getElementById('close-popout-button').addEventListener('click', () => {
-    document.getElementById('info-popout-panel').style.display = 'none';
-});
-
-
-// Modify this function to open the pop-out panel when an item is clicked
-async function displayListings() {
-    const panel = document.getElementById('panel');
-    panel.innerHTML = '';
-
-    const listingsData = await exportListings();
-    listingsData.features.forEach(item => {
-        const temp = document.createElement('div');
-        temp.classList.add('listing-card');
-
-        const { itemid, item_name, item_description, handoff_location, report_type, found_timestamp } = item.properties;
-        const date = new Date(found_timestamp.seconds * 1000).toLocaleString();
-
-        temp.innerHTML = `
-            <h5 class="listing-name">${item_name}</h5>
-            <p class="listing-desc">${item_description}</p>
-            <p class="listing-location">Location: ${handoff_location}</p>
-            <p class="listing-status">Status: ${report_type}</p>
-            <p class="listing-timestamp">Found on: ${date}</p>
-        `;
-
-        // Click event to open the detailed pop-out panel
-        temp.addEventListener('click', () => openPopoutPanel(item));
-
-        panel.appendChild(temp);
-    });
-}
-window.onload = displayListings;
-
 async function exportListings() {
     const listings = [];
     const snapshot = await db.collection('listings').get();
@@ -65,7 +9,6 @@ async function exportListings() {
         const timestamp = data.found_timestamp;
         const milliseconds = (timestamp.seconds * 1000) + (timestamp.nanoseconds / 1_000_000);
         const date = new Date(milliseconds);
-        console.log(data);
         if (!data.archived) {
             const geoJsonFeature = {
                 type: "Feature",
@@ -161,6 +104,8 @@ function userLocation() {
 window.userLocation = userLocation;
 
 async function renderMapWithFeatures(centerPosition) {
+    const navHeight = document.querySelector("nav").offsetHeight;
+    document.getElementById("map").style.height = `calc(100vh - ${navHeight}px)`
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: defaultZoomLevel,
         center: centerPosition,
@@ -211,7 +156,7 @@ async function renderMapWithFeatures(centerPosition) {
         } else {
             card.style.zIndex = 2;
             panel.classList.add('open');
-            document.getElementById('arrow').src = "../static/img//arrow_left.png"
+            document.getElementById('arrow').src = "../static/img/arrow_left.png"
         }
     });
 
@@ -230,26 +175,24 @@ async function renderMapWithFeatures(centerPosition) {
         const user = data.users.find(user => user.uid === targetUid);
 
         var border = "";
-        if(report_type === "Lost"){
+        if (report_type === "Lost") {
             border = "red";
-        } else{
+        } else {
             border = "blue";
         }
         // Content for InfoWindow
         const content = `
-            <div class="card" style="border: 5px solid ${border}">
-                <div class="card-body">
-                    <img style="float:left; width:200px; margin-top:30px" src="../static/img/profile-icon.jpg">
-                    <div style="margin-left:220px; margin-bottom:20px;">
-                <h2>${item_name}</h2><p>${item_description}</p>
-                <p>
-                    <b>Found Time:</b> ${found_timestamp}<br/>
-                    <b>Email:</b> ${user.email}<br/>
-                    <b>Handoff Method:</b> ${handoff_method}<br/>
-                    <b>Handoff Location:</b> ${handoff_location}<br/>
-                    <b>Status:</b> ${report_type}<br/>
-                </p>
-                </div>
+             <div>
+                <img style="width: 150px; height: auto; display: block; margin-left: auto; margin-right: auto;" src="../static/img/profile-icon.jpg">
+                    <div style="padding: 20px;">
+                        <h2>${item_name}</h2><p>${item_description}</p>
+                        <p>
+                            <b>${report_type} On:</b> ${found_timestamp}<br />
+                            <b>Email:</b> ${user.email}<br />
+                            <b>Handoff Method:</b> ${handoff_method}<br />
+                            <b>Handoff Location:</b> ${handoff_location}<br />
+                        </p>
+                    </div>
             </div>`;
 
         infoWindow.setContent(content);
@@ -281,7 +224,7 @@ async function renderMapWithFeatures(centerPosition) {
     container.setAttribute('id', 'autocomplete-container');
     input.setAttribute('id', 'autocomplete-input');
     input.setAttribute('type', 'text');
-    input.setAttribute('placeholder', 'Enter an address');
+    input.setAttribute('placeholder', 'Location of Lost Item');
     input.style.width = '100%';
     container.appendChild(input);
     const autocomplete = new google.maps.places.Autocomplete(input, options);
@@ -460,36 +403,36 @@ function showItemsList(data, items, categoryArray, statusArray) {
 }
 window.showItemsList = showItemsList;
 function addCards(data, item) {
-
     const temp = document.createElement('div');
-    temp.classList.add('card');
     const tempBody = document.createElement('div');
-    tempBody.classList.add('card-body');
+
 
     const currentItem = data.getFeatureById(item.itemid);
-    const item_name = document.createElement('p');
-    item_name.classList.add('itemTypeText');
-    item_name.textContent = currentItem.getProperty('item_name');
-    tempBody.appendChild(item_name);
+    const item_name = currentItem.getProperty('item_name');
+    const item_description = currentItem.getProperty('item_description');
+    const found_timestamp = currentItem.getProperty('found_timestamp');
+    const handoff_method = currentItem.getProperty('handoff_method');
+    const handoff_location = currentItem.getProperty('handoff_location');
+    const report_type = currentItem.getProperty('report_type');
+    const position = currentItem.getGeometry().get();
+    const targetUid = currentItem.getProperty('uid');
 
-    const distanceText = document.createElement('p');
-    distanceText.classList.add('distanceText');
-    distanceText.textContent = item.distanceText;
-    tempBody.appendChild(distanceText);
+    const header = document.createElement('p');
+    header.classList.add('itemTypeText');
+    header.textContent = item_name + ` (${item.distanceText + " away"})`;
+    tempBody.appendChild(header);
 
+
+    tempBody.innerHTML += `
+        <p>${item_description}</br>
+        Location: ${handoff_location}</br>
+        ${report_type} on: ${found_timestamp}</br>
+        <hr>
+    `;
     temp.appendChild(tempBody);
 
     // Add click event listener to show the InfoWindow when the card is clicked
     temp.addEventListener('click', async () => {
-        const item_name = currentItem.getProperty('item_name');
-        const item_description = currentItem.getProperty('item_description');
-        const found_timestamp = currentItem.getProperty('found_timestamp');
-        const handoff_method = currentItem.getProperty('handoff_method');
-        const handoff_location = currentItem.getProperty('handoff_location');
-        const report_type = currentItem.getProperty('report_type');
-        const position = currentItem.getGeometry().get();
-
-        const targetUid = currentItem.getProperty('uid');
         const data = await exportUsers();
         const user = data.users.find(user => user.uid === targetUid);
 
@@ -498,7 +441,6 @@ function addCards(data, item) {
             infoPanel = document.createElement('div');
             infoPanel.setAttribute('id', 'info-panel');
             infoPanel.classList.add('info-panel');
-
             document.body.appendChild(infoPanel);
         }
 
@@ -509,11 +451,10 @@ function addCards(data, item) {
                     <div style="padding: 20px;">
                         <h2>${item_name}</h2><p>${item_description}</p>
                         <p>
-                            <b>Found Time:</b> ${found_timestamp}<br />
+                            <b>${report_type} On:</b> ${found_timestamp}<br />
                             <b>Email:</b> ${user.email}<br />
                             <b>Handoff Method:</b> ${handoff_method}<br />
                             <b>Handoff Location:</b> ${handoff_location}<br />
-                            <b>Status:</b> ${report_type}<br />
                         </p>
                     </div>
             </div>`;
@@ -521,9 +462,9 @@ function addCards(data, item) {
         infoPanel.innerHTML = content;
         infoPanel.style.display = 'block';
         infoPanel.style.position = 'absolute';
-        infoPanel.style.left = ' max(225px, calc(22% + 20px))';
+        infoPanel.style.left = ' max(225px, calc(20% + 20px))';
         infoPanel.style.height = '100%';
-        infoPanel.style.width = 'calc(22% + 20px)';
+        infoPanel.style.width = 'calc(20% + 20px)';
         infoPanel.style.minWidth = '225px';
         infoPanel.style.backgroundColor = '#fff';
         infoPanel.style.boxShadow = '-2px 0px 5px rgba(0, 0, 0, 0.3)';
@@ -558,11 +499,13 @@ function adjustPanelsForScreenSize() {
     if (!infoPanel || !panel) return; // Guard clause if the panels don't exist yet
 
     if (window.innerWidth >= 992) { // Medium breakpoint onwards
-        infoPanel.style.left = 'calc(22% + 20px)';
+        infoPanel.style.left = 'calc(20% + 20px)';
 
     } else {
         infoPanel.style.left = 0;
-        document.getElementById('toggle-panel-button').classList.add('hidden');
+        if(!infoPanel.classList.contains("hidden")){
+            document.getElementById('toggle-panel-button').classList.add('hidden');
+        }
     }
 }
 window.adjustPanelsForScreenSize = adjustPanelsForScreenSize;
@@ -588,7 +531,7 @@ function applyFilters(panel, data) {
         });
     }
 
-    while (panel.childNodes.length > 7) {
+    while (panel.childNodes.length > 4) {
         panel.removeChild(panel.lastChild);
     }
 
@@ -604,6 +547,7 @@ function applyFiltersToMap(data) {
     const selectedStatus = document.getElementById('status-filter').value;
 
     data.forEach((feature) => {
+        console.log(feature);
         const item_type = feature.getProperty('item_type');
         const report_type = feature.getProperty('report_type');
 
