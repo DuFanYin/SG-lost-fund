@@ -156,12 +156,10 @@ async function renderMapWithFeatures(centerPosition) {
             card.style.zIndex = 0;
             panel.classList.remove('open');
             document.getElementById('arrow').src = "../static/img/arrow_right.png"
-            isSidebarOpen = false;
         } else {
             card.style.zIndex = 2;
             panel.classList.add('open');
             document.getElementById('arrow').src = "../static/img/arrow_left.png"
-            isSidebarOpen = true;
         }
 
     });
