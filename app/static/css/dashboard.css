@@ -181,14 +181,16 @@ body {
   .fish-cursor {
     position: absolute;
     pointer-events: none; /* Prevent interference with clicks */
-    width: 32px; /* Adjust based on your image size */
-    height: 32px; /* Adjust based on your image size */
-    background-image: url('../img/nemo.png'); /* Correct path to your image */
+    width: 70px; /* Increase size here */
+    height: 70px; /* Increase size here */
+    background-image: url('../img/dogg.png'); /* Correct path to your image */
     background-size: contain;
     background-repeat: no-repeat;
     z-index: 9999; /* Ensure it's above other elements */
     transform: translate(-50%, -50%); /* Center the image on the cursor */
-    transition: transform 0.1s ease; /* Smooth transition */}
+    transition: transform 0.1s ease; /* Smooth transition */
+}
+
    
    
     .congratulations {
