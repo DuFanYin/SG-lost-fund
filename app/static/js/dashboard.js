@@ -23,9 +23,6 @@ const dashboardApp = Vue.createApp({
             pieChartInstance: null, // Tracks the pie chart instance
             lineChartInstance: null,
             isLoggedIn: sessionStorage.getItem("uid") !== null, // Initialize based on session storage
-            showCursor: true, // Control visibility of the custom cursor
-
-
         };
     },
 
@@ -487,11 +484,6 @@ const dashboardApp = Vue.createApp({
                 console.error("Error rendering line chart:", error);
             }
         },
-        moveCursor(event) {
-            const fishCursor = document.querySelector('.fish-cursor');
-            fishCursor.style.left = `${event.pageX}px`;
-            fishCursor.style.top = `${event.pageY}px`;
-          },
     },
 
     watch: {
@@ -504,10 +496,6 @@ const dashboardApp = Vue.createApp({
     async mounted() {
         this.selectedReportType = "Found"; // Initial value
         console.log("Set selectedReportType to 'Found' in mounted.");
-        document.addEventListener('mousemove', this.moveCursor);
-
-        
-
     
         try {
             await this.countUsers(); // General count of users
@@ -528,10 +516,6 @@ const dashboardApp = Vue.createApp({
             console.error("Error in mounted lifecycle:", error);
         }
     },
-    beforeDestroy() {
-        // Clean up the event listener when the component is destroyed
-        document.removeEventListener('mousemove', this.moveCursor);
-      },
     
 
 }); dashboardApp.mount("#app");// Mount the Vue app to #app
