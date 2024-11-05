@@ -9,9 +9,7 @@ html, body {
     flex: 1;
 }
 
-.pink-box,
-.yellow-box,
-.green-box,
+.grey_border
 .leaderboard {
     height: 100%;
     display: flex;
@@ -22,27 +20,39 @@ html, body {
     padding: 20px;
 }
 
-.pink-box {
-    background-color: pink;
+.grey_border_top{
+    border: 2px solid #d8d5d5; /* Adds a dark border around the box */
 }
 
-.pink-box p {
+.grey_border_bottom{
+    border: 2px solid #d8d5d5; /* Adds a dark border around the box */
+    margin-bottom: 10px;
+
+}
+.grey_border_top p {
     font-size: 2em; /* Adjust the size as needed */
     font-weight: bold; /* Optional: makes the text bold */
+    text-align: center;
+    justify-content: center;
+    color: rgba(75, 75, 235, 0.815);
 }
 
-.yellow-box {
-    background-color: #d6eaf8;
+.grey_border_bottom p {
+    font-size: 2em; /* Adjust the size as needed */
+    font-weight: bold; /* Optional: makes the text bold */
+    text-align: center;
+    justify-content: center;
+        color: rgba(75, 75, 235, 0.815);
 }
 
-.green-box {
-    background-color: #d0ece7;
+.grey_border_top, .grey_border_bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center-aligns everything horizontally */
+    justify-content: center; /* Center-aligns everything vertically */
+    text-align: center; /* Ensures text is centered within each element */
 }
 
-.yellow-box,
-.green-box {
-    margin-bottom: 10px;
-}
 
 .current-user {
     background-color: #ffc107; /* Gold background color for the current user */
@@ -50,61 +60,75 @@ html, body {
     font-weight: bold; /* Bold text for emphasis */
 }
 
+.leaderboard-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.trophy-icon {
+    width: 70px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+    margin: 0 8px; /* Space between image and text */
+    vertical-align: middle; /* Aligns image with text */
+    margin-bottom: 15px;
+}
 .leaderboard {
-    position: relative; /* Limits the overlay to this container */
-    background-color: #6698FF;
+    position: relative;
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-    overflow: hidden; /* Prevents overlay overflow */
+    overflow: hidden;
 }
 
+
+
 .leaderboard h2 {
-    color: #f8f9fa; /* Light color for the title */
-    font-weight: 600; /* Bold title */
-    font-size: 1.8rem; /* Larger font size for title */
+    color: #f8f9fa;
+    font-weight: 600;
+    font-size: 1.8rem;
 }
 
 .table {
-    border-collapse: collapse; /* Collapse table borders for cleaner look */
-    width: 100%; /* Full-width table */
+    border-collapse: collapse;
+    width: 100%;
 }
 
 .table th, .table td {
-    padding: 12px; /* Space inside table cells */
-    text-align: center; /* Center align text */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Light border for rows */
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .table th {
-    color: #ffffff; /* White text for header */
+    background-color: #e8e3e6 !important;
+    color: white;
     font-weight: bold;
-    text-transform: uppercase; /* Uppercase header text */
+    text-transform: uppercase;
 }
 
 .table tbody tr {
-    transition: background-color 0.2s; /* Smooth transition for hover */
+    transition: background-color 0.2s;
 }
 
 .table tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Hover effect */
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .table td {
-    color: #f8f9fa; /* Light color for readability */
-    font-size: 1rem; /* Standard font size */
+    color: #f8f9fa;
+    font-size: 1rem;
 }
 
-/* Style for "You" to stand out */
-.table td:contains("(You)") {
-    font-weight: bold; /* Bold text for emphasis */
-    color: #ffc107; /* Gold color for highlighting */
+.highlight-you {
+    font-weight: bold;
+    color: #ffc107;
 }
 
 .leaderboard tr:nth-child(even) td {
-    background-color: #60A5FA;
+    background-color: #E6E6FA;
 }
+
 
 #boldNumber{
     font-weight: bold;
@@ -149,3 +173,51 @@ body, html {
     color: #ffffff; /* White text for contrast */
     text-decoration: underline;
 }
+
+body {
+    cursor: none; /* Hide the default cursor */
+  }
+  
+  .fish-cursor {
+    position: absolute;
+    pointer-events: none; /* Prevent interference with clicks */
+    width: 70px; /* Increase size here */
+    height: 70px; /* Increase size here */
+    background-image: url('../img/dogg.png'); /* Correct path to your image */
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 9999; /* Ensure it's above other elements */
+    transform: translate(-50%, -50%); /* Center the image on the cursor */
+    transition: transform 0.1s ease; /* Smooth transition */
+}
+
+   
+   
+    .congratulations {
+        animation: dance 1.5s ease-in-out 3; /* Repeat the animation 3 times */
+    }
+    
+    @keyframes dance {
+        0%, 100% {
+            transform: scale(1); /* Original size */
+        }
+        50% {
+            transform: scale(1.2); /* Scale up */
+        }
+    }
+
+    
+    .shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8); /* Adjust shadow parameters as needed */
+        border-radius: 8px; /* Optional: adds rounded corners */
+        padding: 16px; /* Optional: adds padding within the div */
+    }
+
+    .table_border{
+        border: 1px solid #c2adad; /* Adds a dark border around the box */
+
+    }
+
+    .box-title{
+        font-size: 24px;
+    }
