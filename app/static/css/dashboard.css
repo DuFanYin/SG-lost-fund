@@ -9,6 +9,7 @@ html, body {
     flex: 1;
 }
 
+
 .grey_border
 .leaderboard {
     height: 100%;
@@ -18,6 +19,16 @@ html, body {
     align-items: center;
     border-radius: 10px;
     padding: 20px;
+}
+
+.leaderboard {
+    position: relative;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    height: calc(200px * 2 + 45px); /* Box height * 2 + margin space (adjust if needed) */
+
 }
 
 .grey_border_top{
@@ -72,13 +83,6 @@ html, body {
     margin: 0 8px; /* Space between image and text */
     vertical-align: middle; /* Aligns image with text */
     margin-bottom: 15px;
-}
-.leaderboard {
-    position: relative;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-    overflow: hidden;
 }
 
 
@@ -160,8 +164,22 @@ body, html {
     font-size: 30px;
     font-weight: bold;
     text-align: center;
-    border-radius: 12px;
+    border-radius: 10px;
     z-index: 2;
+}
+.overlay-message {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    padding: 20px;
+    text-align: center;
 }
 
 .overlay-message h3 {
@@ -219,5 +237,5 @@ body {
     }
 
     .box-title{
-        font-size: 24px;
+        font-size: 20px;
     }

@@ -1,6 +1,12 @@
 // Firebase Configuration
 import { db } from '../js/firebaseConfig.js'; // Adjust the path according to your structure
-
+// Added for UI Tooltip
+document.addEventListener("DOMContentLoaded", function () {
+    const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(tooltipTriggerEl => {
+        new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
 
 
 // Vue Application
@@ -107,8 +113,8 @@ const dashboardApp = Vue.createApp({
                                 {
                                     label: "Top 5 Most Lost Items",
                                     data: itemCountsData,
-                                    backgroundColor: "#d9d0f3",
-                                    borderColor: "#ebe6f8",
+                                    backgroundColor: "#B95CF4",
+                                    borderColor: "#7D0DC3",
                                     borderWidth: 1,
                                 },
                             ],
@@ -117,6 +123,15 @@ const dashboardApp = Vue.createApp({
                             responsive: true,
                             maintainAspectRatio: false, // This allows the chart to fill its container
                             plugins: {
+                                title: {
+                                    display: true,
+                                    text: "Top 5 Most Lost Items",
+                                    font: {
+                                        size: 20, // Set the desired font size (e.g., 20)
+                                        weight: 'bold', // Make the text bold
+                                        color: '#000000' // Set the font color to black
+                                    }
+                                },
                                 tooltip: {
                                     enabled: true,
                                     callbacks: {
@@ -303,7 +318,7 @@ const dashboardApp = Vue.createApp({
                         labels: ['Success Rate', 'Failure Rate'],
                         datasets: [{
                             data: [data.successRate, 100 - data.successRate],
-                            backgroundColor: ['#CFDFEF', '#CCCAF0'],
+                            backgroundColor: ['#6495ED', '#D397F8'],
                         }]
                     },
                     options: {
@@ -316,7 +331,13 @@ const dashboardApp = Vue.createApp({
                             },
                             title: {
                                 display: true,
-                                text: `Success Rate for ${this.selectedReportType} Items`
+                                text: `Success Rate for ${this.selectedReportType} Items`,
+                                font: {
+                                    size: 20, // Set the desired font size (e.g., 20)
+                                    weight: 'bold', // Make the text bold
+                                    family: 'Arial', // Optional: Set the font family
+                                    color: 'black' // Set the font color to black
+                                },
                             },
                             tooltip: {
                                 callbacks: {
@@ -451,6 +472,12 @@ const dashboardApp = Vue.createApp({
                             title: {
                                 display: true,
                                 text: `Monthly Trends: Items Found VS Lost in ${getMonthName()}`,
+                                font: {
+                                    size: 20, // Set the desired font size (e.g., 20)
+                                    weight: 'bold', // Make the text bold
+                                    family: 'Arial', // Optional: Set the font family
+                                    color: 'black' // Set the font color to black
+                                },
                             }
                         }
                     }

@@ -60,8 +60,12 @@
         <div class="row">
             <div class="col-lg-6 d-flex flex-column">
                 <div class="grey_border_top w-100 mb-3 mt-3 shadow">
-                    <br> <i class="fas fa-users"></i>
-                    <span class="box-title">Total Number of Registered Users</span>
+                    <br> <i class="fas fa-users fa-2x"></i>
+
+                    <span class="box-title">Total Number of Registered Users
+                        <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                            title="This number represents the total number of users who have signed up on the platform."></i>
+                    </span>
 
                     <!-- Direct binding -->
                     <p id="boldNumber" v-text="totalUsers"></p>
@@ -70,16 +74,27 @@
                     <div class="col-md-6 col-lg-6 d-flex align-items-stretch">
                         <div class="grey_border_bottom w-100 shadow">
                             <br>
-                            <i class="fas fa-book icon-large"></i>
-                            <span class="box-title">Total Lost Item Reports</span>
+                            <i class="fas fa-book icon-large fa-2x"></i>
+
+                            <span class="box-title">Total Lost Item Reports
+                                <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    title="This number represents the total number of lost item reports across all users."></i>
+                            </span>
+        
+                          
                             <p id="boldNumber" v-text="lostItemReports"></p>
                         </div>
                     </div>
                     <div class="col-md-6 d-flex align-items-stretch mt-3 mt-md-0 ">
                         <!-- Add top margin on small screens -->
                         <div class="grey_border_bottom w-100 shadow">
-                            <br> <i class="fas fa-thumbs-up"></i>
-                            <span class="box-title">Total Number of Recovered Items</span>
+                            <br> <i class="fas fa-thumbs-up fa-2x"></i>
+
+                            <span class="box-title">Total Number of Recovered Items
+                                <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    title="This number represents the total number of recovered items across all users."></i>
+                            </span>
+                          
                             <p id="boldNumber" v-text="recoveredItems"></p>
                         </div>
                     </div>
@@ -90,7 +105,7 @@
             <br>
             
             <div class="col-lg-6 col-md-12">
-                <div class="leaderboard grey_border_top mt-3 shadow">
+                <div class="leaderboard grey_border_top mt-3 mr-1 ml-2 shadow">
                     <h1 class="text-center text-dark">
                         <img src="static/img/trophy2.png" alt="trophy" class="trophy-icon" /> 
                         Leaderboard 
@@ -121,21 +136,15 @@
                     </div>
                 </div>
             </div>
-            <div class="row mt-3">
-                <div class="ml-3 col-lg-6 col-md-6 d-flex flex-column shadow grey_border_top bg-light">
-                    <!-- Pie Chart-->
-                    <div class="p-1 rounded-3 flex-fill ">
+           <div class="row mt-3">
+                <div class="ml-3 col-lg-6 col-md-6 d-flex flex-column shadow grey_border_top">
+                    <div class="p-1 rounded-3 flex-fill w-100 ">
                         <div class="container-fluid py-2 chart-container pie-chart-container ">
-                            <!-- Unique ID for the pie chart -->
-                            <canvas id="pieChart"></canvas>
+                            
+                            <canvas id="pieChart" style="width: 100%; height: 400px;"></canvas>
                         </div>
-                        <!--  <select class="form-select mt-2" v-model="selectedReportType" @change="handleSelectionChange">  
-                <option disabled value="">Select Status</option> 
-                <option value="Found">Found</option>
-                <option value="Lost">Lost</option>
-            </select>-->
-
-                        <select class="form-select mt-2" v-model="selectedReportType" @change="updatePieChart">
+            
+                        <select class="form-select mt-2" style="width: 100%;" v-model="selectedReportType" @change="updatePieChart">
                             <option disabled value="">Select Status</option>
                             <option value="Found">Found</option>
                             <option value="Lost">Lost</option>
@@ -144,16 +153,18 @@
 
                     </div>
 
-                </div>
+                </div> 
+           
+                
 
                 <div class="col-lg-6 col-md-6 d-flex flex-column">
                     <!-- Stacked Line and Bar Charts -->
-                    <div class="p-1 bg-light rounded-3 flex-fill ">
+                    <div class="p-1 rounded-3 flex-fill ">
                         <div class="container-fluid py-2 chart-container shadow grey_border_top">
                             <canvas id="lineChart" style="width: 100%; height: 300px;"></canvas>
                         </div>
                     </div>
-                    <div class="p-1 bg-light rounded-3 flex-fill">
+                    <div class="p-1 rounded-3 flex-fill">
                         <div class="container-fluid py-2 chart-container shadow grey_border_top">
                             <canvas id="barChart" style="width: 100%; height: 300px;"></canvas>
                         </div>
