@@ -62,40 +62,40 @@ const dashboardApp = Vue.createApp({
             try {
                 const listingsRef = db.collection("listings");
                 const snapshot = await listingsRef.where("report_type", "==", "Lost").get();
-        
+
                 const itemCounts = {};
                 snapshot.forEach(doc => {
                     const itemName = doc.data().item_name;
                     itemCounts[itemName] = (itemCounts[itemName] || 0) + 1;
                 });
-        
+
                 // Log the counts for each item
                 console.log("Item Counts:", itemCounts);
-        
+
                 const topItems = Object.entries(itemCounts)
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 5);
-        
+
                 // Log the top items and their counts
                 console.log("Top Items:", topItems);
-        
+
                 const itemNames = topItems.map(item => item[0]);
                 const itemCountsData = topItems.map(item => item[1]);
-        
+
                 // Log the processed item names and counts
                 console.log("Item Names:", itemNames);
                 console.log("Item Counts Data:", itemCountsData);
-        
+
                 const barChartCanvas = document.getElementById("barChart");
                 if (!barChartCanvas) {
                     throw new Error("barChart element not found.");
                 }
-        
+
                 const ctx = barChartCanvas.getContext("2d");
                 if (!ctx) {
                     throw new Error("getContext failed on barChart canvas.");
                 }
-        
+
                 // Create a new bar chart or update the existing one
                 if (this.barChartInstance) {
                     this.barChartInstance.data.labels = itemNames;
@@ -126,8 +126,13 @@ const dashboardApp = Vue.createApp({
                                     font: {
                                         size: 20, // Set the desired font size (e.g., 20)
                                         weight: 'bold', // Make the text bold
-                                        color: '#000000' // Set the font color to black
-                                    }
+                                    },
+                                    color: 'black',
+                                    padding: {
+                                        top: 10, // Add padding on top if needed
+                                        bottom: 10 // Add padding on bottom if needed
+                                    },
+                                    align: 'start', // Align the title to the start (left)
                                 },
                                 tooltip: {
                                     enabled: true,
@@ -135,14 +140,26 @@ const dashboardApp = Vue.createApp({
                                         label: function (context) {
                                             const rank = context.dataIndex + 1; // Get the rank (1-based index)
                                             const labelPrefix = rank === 1 ? "Top most lost item" :
-                                                                rank === 2 ? "Top 2nd most lost item" :
-                                                                rank === 3 ? "Top 3rd most lost item" :
-                                                                `Top ${rank}th most lost item`;
+                                                rank === 2 ? "Top 2nd most lost item" :
+                                                    rank === 3 ? "Top 3rd most lost item" :
+                                                        `Top ${rank}th most lost item`;
                                             const value = context.raw;
                                             const reportLabel = value === 1 ? "report" : "reports";
                                             return `${labelPrefix}: ${value} ${reportLabel}`;
                                         }
                                     }
+                                }
+                            },
+                            legend: {
+                                display: false,
+                                position: 'bottom', // Set the legend position to bottom
+                                align: 'center', // Center the legend
+                                labels: {
+                                    boxWidth: 20, // Sets the size of the legend box
+                                    font: {
+                                        size: 14 // Font size of the legend
+                                    },
+                                    padding: 15 // Padding around the legend items
                                 }
                             },
                             scales: {
@@ -161,25 +178,25 @@ const dashboardApp = Vue.createApp({
                 console.error("Error loading top lost items:", error);
             }
         },
-  
-       
+
+
         async fetchAndRankUsers(currentUserId) {
             try {
                 const usersRef = db.collection("users");
                 const snapshot = await usersRef.get();
-        
+
                 const users = [];
                 const listingsRef = db.collection("listings"); // Reference to the listings collection
-        
+
                 // Create an array of promises for counting items found
                 const itemCountPromises = snapshot.docs.map(async doc => {
                     const userData = doc.data();
                     const userId = doc.id; // Get the user ID
-        
+
                     // Count items found by this user
                     const foundSnapshot = await listingsRef.where("uid", "==", userId).where("report_type", "==", "Found").get();
                     const itemsFound = foundSnapshot.size; // Count of found items
-        
+
                     users.push({
                         username: userData.username,
                         itemsFound: itemsFound, // Number of items found by the user
@@ -187,18 +204,18 @@ const dashboardApp = Vue.createApp({
                         userId: userId // Store the user ID for later use
                     });
                 });
-        
+
                 // Wait for all promises to resolve
                 await Promise.all(itemCountPromises);
-        
+
                 // Sort users by points
                 users.sort((a, b) => b.points - a.points);
-        
+
                 // Find the current user index
                 const currentUserIndex = users.findIndex(user => user.userId === currentUserId);
-        
+
                 let usersToDisplay;
-        
+
                 // Logic to determine which users to display
                 if (currentUserIndex <= 4) {
                     // If user is in the top 5, show the first 5 users
@@ -207,7 +224,7 @@ const dashboardApp = Vue.createApp({
                     // If user is beyond 5th place, show the user in the third position
                     const startIndex = currentUserIndex - 2; // 2 users above
                     const endIndex = currentUserIndex + 3;   // 2 users below
-        
+
                     // Adjust indices to prevent going out of bounds
                     if (startIndex < 0) {
                         // If too high, adjust to start at 0
@@ -219,20 +236,39 @@ const dashboardApp = Vue.createApp({
                         usersToDisplay = users.slice(startIndex, endIndex);
                     }
                 }
-        
+
                 // Display the leaderboard in the HTML
                 const leaderboardDataElement = document.getElementById("leaderboardData");
                 leaderboardDataElement.innerHTML = ""; // Clear existing data
-        
+
                 usersToDisplay.forEach((user, index) => {
                     const row = document.createElement("tr");
-        
-                    // Add a special class for the current user
+
+                    // Only highlight the current user
                     if (user.userId === currentUserId) {
-                        row.classList.add("current-user");
-                        row.classList.add("congratulations"); // Always trigger animation on load
+                        console.log("Highlighting user:", user.username); // Log user being highlighted
+                        row.classList.add("highlight-current-user"); // Add highlight class for current user
+                        row.classList.add("congratulations"); // Optional additional styling for animation
+
+                        // Trigger confetti over the current user's row
+                        setTimeout(() => {
+                            // Get the bounding box of the row to position confetti
+                            const rowPosition = row.getBoundingClientRect();
+                            const xPosition = (rowPosition.left + rowPosition.right) / 2 / window.innerWidth;
+                            const yPosition = (rowPosition.top + rowPosition.bottom) / 2 / window.innerHeight;
+
+                            confetti({
+                                particleCount: 100,
+                                spread: 70,
+                                origin: { x: xPosition, y: yPosition },
+                                startVelocity: 30,
+                                gravity: 0.5,
+                                useWorker: true,
+                                colors: ['#ffeb3b', '#ff4081', '#69f0ae', '#3f51b5']
+                            });
+                        }, 500); // Add a delay to allow row rendering
                     }
-        
+
                     row.innerHTML = `
                         <td>${index + 1}</td>
                         <td>${user.username}${user.userId === currentUserId ? ' (You)' : ''}</td>
@@ -241,29 +277,30 @@ const dashboardApp = Vue.createApp({
                     `;
                     leaderboardDataElement.appendChild(row);
                 });
-        
+
+
             } catch (error) {
                 console.error("Error fetching and ranking users:", error);
             }
         },
-        
+
 
 
         updatePieChart() {
             console.log("Selected report type changed to:", this.selectedReportType);
             this.renderPieChart(); // Call to re-render the chart
         },
-        
+
         async fetchDataForPieChart(reportType) {
             try {
                 const listingsRef = db.collection("listings");
                 const snapshot = await listingsRef.where("report_type", "==", reportType).get();
-        
+
                 const totalCount = snapshot.size; // Total items for the selected report type
                 console.log("Total Count for report type", reportType, ":", totalCount);
-        
+
                 let successCount = 0; // Initialize success count
-        
+
                 // Count how many of these items are archived (successful recoveries)
                 snapshot.forEach(doc => {
                     const data = doc.data();
@@ -271,11 +308,11 @@ const dashboardApp = Vue.createApp({
                         successCount++;
                     }
                 });
-        
+
                 console.log("Success Count for report type", reportType, ":", successCount);
                 const successRate = (totalCount > 0) ? (successCount / totalCount) * 100 : 0;
                 console.log("Calculated Success Rate for report type", reportType, ":", successRate);
-        
+
                 return {
                     successRate: successRate,
                     totalCount: totalCount
@@ -285,29 +322,29 @@ const dashboardApp = Vue.createApp({
                 return null;
             }
         },
-        
+
         async renderPieChart() {
             const ctx = document.getElementById('pieChart')?.getContext('2d');
             if (!ctx) {
                 console.error("Canvas element not found or getContext failed.");
                 return;
             }
-        
+
             console.log(`Rendering pie chart for report type: ${this.selectedReportType}`);
-        
+
             try {
                 const data = await this.fetchDataForPieChart(this.selectedReportType);
                 if (!data) {
                     console.error("No data returned for the pie chart.");
                     return;
                 }
-        
+
                 // Destroy the previous chart instance if it exists
                 if (this.pieChartInstance) {
                     this.pieChartInstance.destroy();
                     console.log("Destroyed previous pie chart instance.");
                 }
-        
+
                 // Create a new pie chart instance
                 this.pieChartInstance = new Chart(ctx, {
                     type: 'pie',
@@ -316,6 +353,10 @@ const dashboardApp = Vue.createApp({
                         datasets: [{
                             data: [data.successRate, 100 - data.successRate],
                             backgroundColor: ['#6495ED', '#D397F8'],
+                            borderColor: '#ffffff',
+                            borderWidth: 2,
+                            hoverOffset: 8, // Adds a 3D effect on hover
+                            offset: 10 // Offset slices slightly for a 3D look on load
                         }]
                     },
                     options: {
@@ -324,21 +365,35 @@ const dashboardApp = Vue.createApp({
                         plugins: {
                             legend: {
                                 display: true,
-                                position: 'top'
+                                position: 'bottom', // Positions the legend box to the right
+                                align: 'center', // Aligns the legend box vertically
+                                labels: {
+                                    boxWidth: 20, // Sets the size of the legend box
+                                    font: {
+                                        size: 14
+                                    },
+                                    padding: 15
+                                }
                             },
                             title: {
                                 display: true,
-                                text: `Success Rate for ${this.selectedReportType} Items`,
+                                text: `Rates ${this.selectedReportType} Items`,
                                 font: {
-                                    size: 20, // Set the desired font size (e.g., 20)
-                                    weight: 'bold', // Make the text bold
-                                    family: 'Arial', // Optional: Set the font family
-                                    color: 'black' // Set the font color to black
+                                    size: 25, // Adjusted font size for better alignment with dropdown
+                                    weight: 'bold', // Keep the text bold
+                                    family: 'Arial', // Keep the font family
                                 },
+                                color: 'black',  // Keep the font color
+                                padding: {
+                                    top: 10, // Add some space above the title
+                                    bottom: 10 // Add space below the title to separate from the chart
+                                },
+                                align: 'start', // Align the title to the start
+                                position: 'top' // Position the title above the chart
                             },
                             tooltip: {
                                 callbacks: {
-                                    label: function(context) {
+                                    label: function (context) {
                                         let label = context.label || '';
                                         if (label) {
                                             label += ': ';
@@ -347,43 +402,47 @@ const dashboardApp = Vue.createApp({
                                         return label;
                                     }
                                 }
+                            },
+                            animation: {
+                                animateScale: true, // Adds scaling effect on load
+                                animateRotate: true // Adds rotation effect on load
                             }
                         }
                     }
                 });
-        
+
                 console.log("Pie chart rendered successfully with data:", data);
             } catch (error) {
                 console.error("Error rendering pie chart:", error);
             }
         },
-        
-        
+
+
         async lineChart() {
             try {
                 const listingsRef = db.collection("listings");
-        
+
                 const now = new Date();
                 const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
                 const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-        
+
                 const foundCounts = Array(4).fill(0);
                 const lostCounts = Array(4).fill(0);
-        
+
                 // Fetch all "Found" items within the current month
                 const foundSnapshot = await listingsRef
                     .where("report_type", "==", "Found")
                     .where("found_timestamp", ">=", startOfMonth)
                     .where("found_timestamp", "<=", endOfMonth)
                     .get();
-        
+
                 // Fetch all "Lost" items within the current month
                 const lostSnapshot = await listingsRef
                     .where("report_type", "==", "Lost")
                     .where("found_timestamp", ">=", startOfMonth)
                     .where("found_timestamp", "<=", endOfMonth)
                     .get();
-        
+
                 // Count the number of found items per week
                 foundSnapshot.forEach(doc => {
                     const foundDate = doc.data().found_timestamp.toDate();
@@ -392,7 +451,7 @@ const dashboardApp = Vue.createApp({
                         foundCounts[weekIndex]++;
                     }
                 });
-        
+
                 // Count the number of lost items per week
                 lostSnapshot.forEach(doc => {
                     const lostDate = doc.data().found_timestamp.toDate();
@@ -401,7 +460,7 @@ const dashboardApp = Vue.createApp({
                         lostCounts[weekIndex]++;
                     }
                 });
-        
+
                 // Prepare data for the line chart
                 const data = {
                     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
@@ -411,17 +470,25 @@ const dashboardApp = Vue.createApp({
                             data: foundCounts,
                             borderColor: '#FFC0CB',
                             fill: false,
+                            backgroundColor: 'rgba(255, 192, 203, 0.2)', // Add a light background color
+                            pointRadius: 5, // Adjust the radius of the points
+                            fill: true, // Fill the area under the line
+                            tension: 0.3, // Smooth the line
                         },
                         {
                             label: 'Items Lost',
                             data: lostCounts,
                             borderColor: '#4D81DA',
                             fill: false,
+                            backgroundColor: 'rgba(77, 129, 218, 0.2)', // Add a light background color
+                            pointRadius: 5, // Adjust the radius of the points
+                            fill: true, // Fill the area under the line
+                            tension: 0.3, // Smooth the line
                         },
                     ]
                 };
                 console.log("Line Chart Data:", data); // Log the data for the line chart
-        
+
                 function getMonthName() {
                     const monthNames = [
                         "January", "February", "March", "April", "May", "June",
@@ -430,18 +497,18 @@ const dashboardApp = Vue.createApp({
                     const date = new Date();
                     return monthNames[date.getMonth()]; // Returns the current month name
                 }
-        
+
                 const ctx = document.getElementById('lineChart')?.getContext('2d');
                 if (!ctx) {
                     console.error("Canvas element not found for line chart.");
                     return;
                 }
-                
+
                 // Destroy previous instance if it exists
                 if (this.lineChartInstance) {
                     this.lineChartInstance.destroy();
                 }
-                
+
                 // Create the line chart
                 this.lineChartInstance = new Chart(ctx, {
                     type: 'line',
@@ -464,7 +531,8 @@ const dashboardApp = Vue.createApp({
                             },
                             legend: {
                                 display: true,
-                                position: 'top'
+                                position: 'bottom', // Positions the legend box to the right
+                                align: 'center' // Aligns the legend to the start (left)
                             },
                             title: {
                                 display: true,
@@ -473,13 +541,18 @@ const dashboardApp = Vue.createApp({
                                     size: 20, // Set the desired font size (e.g., 20)
                                     weight: 'bold', // Make the text bold
                                     family: 'Arial', // Optional: Set the font family
-                                    color: 'black' // Set the font color to black
                                 },
+                                color: 'black', // Set the font color to black
+                                padding: {
+                                    top: 10, // Add padding on top if needed
+                                    bottom: 10 // Add padding on bottom if needed
+                                },
+                                align: 'start', // Align the title to the start (left)
                             }
                         }
                     }
                 });
-                
+
             } catch (error) {
                 console.error("Error rendering line chart:", error);
             }
@@ -496,19 +569,19 @@ const dashboardApp = Vue.createApp({
     async mounted() {
         this.selectedReportType = "Found"; // Initial value
         console.log("Set selectedReportType to 'Found' in mounted.");
-    
+
         try {
             await this.countUsers(); // General count of users
             await this.countLostItemReports(); // General count of lost item reports
             await this.countRecoveredItems(); // General count of recovered items
             await this.loadTopLostItems(); // Load top lost items for all users
-    
+
             // Fetch and rank users only if a user ID is present
             const currentUserId = sessionStorage.getItem("uid");
             if (currentUserId) {
                 await this.fetchAndRankUsers(currentUserId); // This function is uid specific
             }
-    
+
             // Render the pie chart and line chart
             await this.renderPieChart(); // General pie chart rendering
             await this.lineChart(); // General line chart rendering
@@ -516,7 +589,7 @@ const dashboardApp = Vue.createApp({
             console.error("Error in mounted lifecycle:", error);
         }
     },
-    
+
 
 }); dashboardApp.mount("#app");// Mount the Vue app to #app
 

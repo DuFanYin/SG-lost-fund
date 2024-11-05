@@ -1,17 +1,37 @@
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 .container-fluid {
     flex: 1;
 }
 
+.dropdown-container {
+    position: absolute;
+    top: 10px; /* Adjust to avoid overlapping with title */
+    right: 10px;
+    z-index: 2;
+    background-color: rgba(255, 255, 255, 0.9); /* Optional: background for visibility */
+    border-radius: 5px;
+    padding: 5px;
+    min-width: 100px; /* Ensures proper width */
+}
 
-.grey_border
-.leaderboard {
+.pie-chart-container {
+    position: relative;
+}
+
+.form-select-sm {
+    width: auto;
+}
+
+
+.grey_border .leaderboard {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -27,61 +47,80 @@ html, body {
     padding: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
     overflow: hidden;
-    height: calc(200px * 2 + 45px); /* Box height * 2 + margin space (adjust if needed) */
+    height: calc(200px * 2 + 45px);
+    /* Box height * 2 + margin space (adjust if needed) */
 
 }
 
-.grey_border_top{
-    border: 2px solid #d8d5d5; /* Adds a dark border around the box */
+.grey_border_top {
+    border: 2px solid #d8d5d5;
+    /* Adds a dark border around the box */
 }
 
-.grey_border_bottom{
-    border: 2px solid #d8d5d5; /* Adds a dark border around the box */
+.grey_border_bottom {
+    border: 2px solid #d8d5d5;
+    /* Adds a dark border around the box */
     margin-bottom: 10px;
 
 }
+
 .grey_border_top p {
-    font-size: 2em; /* Adjust the size as needed */
-    font-weight: bold; /* Optional: makes the text bold */
+    font-size: 2em;
+    /* Adjust the size as needed */
+    font-weight: bold;
+    /* Optional: makes the text bold */
     text-align: center;
     justify-content: center;
     color: rgba(75, 75, 235, 0.815);
 }
 
 .grey_border_bottom p {
-    font-size: 2em; /* Adjust the size as needed */
-    font-weight: bold; /* Optional: makes the text bold */
+    font-size: 2em;
+    /* Adjust the size as needed */
+    font-weight: bold;
+    /* Optional: makes the text bold */
     text-align: center;
     justify-content: center;
-        color: rgba(75, 75, 235, 0.815);
+    color: rgba(75, 75, 235, 0.815);
 }
 
-.grey_border_top, .grey_border_bottom {
+.grey_border_top,
+.grey_border_bottom {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center-aligns everything horizontally */
-    justify-content: center; /* Center-aligns everything vertically */
-    text-align: center; /* Ensures text is centered within each element */
+    align-items: center;
+    /* Center-aligns everything horizontally */
+    justify-content: center;
+    /* Center-aligns everything vertically */
+    text-align: center;
+    /* Ensures text is centered within each element */
+}
+
+.highlight-current-user {
+    background-color: #ffeb3b !important;
+    font-weight: bold !important;
+    color: #333 !important;
 }
 
 
-.current-user {
-    background-color: #ffc107; /* Gold background color for the current user */
-    color: #000; /* Dark text color for contrast */
-    font-weight: bold; /* Bold text for emphasis */
-}
 
 .leaderboard-title {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.5em; /* Default font size */
 }
 
+
 .trophy-icon {
-    width: 70px; /* Adjust the width as needed */
-    height: auto; /* Maintain aspect ratio */
-    margin: 0 8px; /* Space between image and text */
-    vertical-align: middle; /* Aligns image with text */
+    width: 40px;
+    /* Adjust the width as needed */
+    height: auto;
+    /* Maintain aspect ratio */
+    margin: 0 8px;
+    /* Space between image and text */
+    vertical-align: middle;
+    /* Aligns image with text */
     margin-bottom: 15px;
 }
 
@@ -98,10 +137,15 @@ html, body {
     width: 100%;
 }
 
-.table th, .table td {
+.table th,
+.table td {
+    font-size: 0.875rem;
+    /* Adjust this value as needed */
     padding: 12px;
     text-align: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    white-space: normal;
+    /* Allows text to wrap within cells */
 }
 
 .table th {
@@ -119,6 +163,7 @@ html, body {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
+
 .table td {
     color: #f8f9fa;
     font-size: 1rem;
@@ -129,17 +174,24 @@ html, body {
     color: #ffc107;
 }
 
-.leaderboard tr:nth-child(even) td {
+/* .leaderboard tr:nth-child(even) td {
     background-color: #E6E6FA;
+} */
+
+.highlight-current-user td {
+    background-color: #E6E6FA !important; /* Bright yellow for highlighting */
+    font-weight: bold;
+    color: #333; /* Dark text color for contrast */
 }
 
 
-#boldNumber{
+#boldNumber {
     font-weight: bold;
     font-size: 30px;
-} 
+}
 
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -156,17 +208,18 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(102, 119, 153, 0.8); 
+    background: rgba(102, 119, 153, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #ffffff; 
+    color: #ffffff;
     font-size: 30px;
     font-weight: bold;
     text-align: center;
     border-radius: 10px;
     z-index: 2;
 }
+
 .overlay-message {
     position: absolute;
     top: 0;
@@ -188,35 +241,55 @@ body, html {
 }
 
 .overlay-message a {
-    color: #ffffff; /* White text for contrast */
+    color: #ffffff;
+    /* White text for contrast */
     text-decoration: underline;
 }
-   
-    .congratulations {
-        animation: dance 1.5s ease-in-out 3; /* Repeat the animation 3 times */
-    }
-    
-    @keyframes dance {
-        0%, 100% {
-            transform: scale(1); /* Original size */
-        }
-        50% {
-            transform: scale(1.2); /* Scale up */
-        }
+
+.congratulations {
+    animation: dance 1.5s ease-in-out 3;
+    /* Repeat the animation 3 times */
+}
+
+@keyframes dance {
+
+    0%,
+    100% {
+        transform: scale(1);
+        /* Original size */
     }
 
-    
-    .shadow {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8); /* Adjust shadow parameters as needed */
-        border-radius: 8px; /* Optional: adds rounded corners */
-        padding: 16px; /* Optional: adds padding within the div */
+    50% {
+        transform: scale(1.2);
+        /* Scale up */
     }
+}
 
-    .table_border{
-        border: 1px solid #c2adad; /* Adds a dark border around the box */
 
-    }
+.shadow {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+    /* Adjust shadow parameters as needed */
+    border-radius: 8px;
+    /* Optional: adds rounded corners */
+    padding: 16px;
+    /* Optional: adds padding within the div */
+}
 
-    .box-title{
-        font-size: 20px;
-    }
+.table_border {
+    border: 1px solid #c2adad;
+    /* Adds a dark border around the box */
+
+}
+
+.box-title {
+    font-size: 20px;
+}
+
+.pulsing-text {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
