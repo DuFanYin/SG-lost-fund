@@ -1,6 +1,8 @@
 // Firebase Configuration
 import { db } from '../js/firebaseConfig.js'; // Adjust the path according to your structure
 
+
+
 // Vue Application
 // Within the Vue app
 // Vue Application
@@ -14,7 +16,9 @@ const dashboardApp = Vue.createApp({
             barChartInstance: null, // Store the bar chart instance
             pieChartInstance: null, // Tracks the pie chart instance
             lineChartInstance: null,
-            isLoggedIn: sessionStorage.getItem("uid") !== null // Initialize based on session storage
+            isLoggedIn: sessionStorage.getItem("uid") !== null, // Initialize based on session storage
+            showCursor: true, // Control visibility of the custom cursor
+
 
         };
     },
@@ -30,6 +34,7 @@ const dashboardApp = Vue.createApp({
                 console.error("Error counting users:", error);
             }
         },
+
         async countLostItemReports() {
             try {
                 const reportsRef = db.collection("listings");
@@ -102,8 +107,8 @@ const dashboardApp = Vue.createApp({
                                 {
                                     label: "Top 5 Most Lost Items",
                                     data: itemCountsData,
-                                    backgroundColor: "rgba(54, 162, 235, 0.6)",
-                                    borderColor: "rgba(54, 162, 235, 1)",
+                                    backgroundColor: "#d9d0f3",
+                                    borderColor: "#ebe6f8",
                                     borderWidth: 1,
                                 },
                             ],
@@ -139,12 +144,14 @@ const dashboardApp = Vue.createApp({
                         },
                     });
                 }
+
             } catch (error) {
                 console.error("Error loading top lost items:", error);
             }
         },
-
-        async fetchAndRankUsers(currentUserId) { // Pass the current user's ID as an argument
+  
+       
+        async fetchAndRankUsers(currentUserId) {
             try {
                 const usersRef = db.collection("users");
                 const snapshot = await usersRef.get();
@@ -211,6 +218,7 @@ const dashboardApp = Vue.createApp({
                     // Add a special class for the current user
                     if (user.userId === currentUserId) {
                         row.classList.add("current-user");
+                        row.classList.add("congratulations"); // Always trigger animation on load
                     }
         
                     row.innerHTML = `
@@ -221,26 +229,13 @@ const dashboardApp = Vue.createApp({
                     `;
                     leaderboardDataElement.appendChild(row);
                 });
+        
             } catch (error) {
                 console.error("Error fetching and ranking users:", error);
             }
         },
         
-        displayLeaderboard(users) {
-            const leaderboardDataElement = document.getElementById('leaderboardData');
-            leaderboardDataElement.innerHTML = ''; // Clear existing data
 
-            users.forEach(user => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${user.rank}</td>
-                    <td>${user.username}</td>
-                    <td>${user.itemsFound}</td>
-                    <td>${user.points}</td>
-                `;
-                leaderboardDataElement.appendChild(row);
-            });
-        },
 
         updatePieChart() {
             console.log("Selected report type changed to:", this.selectedReportType);
@@ -308,7 +303,7 @@ const dashboardApp = Vue.createApp({
                         labels: ['Success Rate', 'Failure Rate'],
                         datasets: [{
                             data: [data.successRate, 100 - data.successRate],
-                            backgroundColor: ['#36a2eb', '#ff6384'],
+                            backgroundColor: ['#CFDFEF', '#CCCAF0'],
                         }]
                     },
                     options: {
@@ -396,13 +391,13 @@ const dashboardApp = Vue.createApp({
                         {
                             label: 'Items Found',
                             data: foundCounts,
-                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderColor: '#FFC0CB',
                             fill: false,
                         },
                         {
                             label: 'Items Lost',
                             data: lostCounts,
-                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderColor: '#4D81DA',
                             fill: false,
                         },
                     ]
@@ -464,8 +459,12 @@ const dashboardApp = Vue.createApp({
             } catch (error) {
                 console.error("Error rendering line chart:", error);
             }
-        }
-
+        },
+        moveCursor(event) {
+            const fishCursor = document.querySelector('.fish-cursor');
+            fishCursor.style.left = `${event.pageX}px`;
+            fishCursor.style.top = `${event.pageY}px`;
+          },
     },
 
     watch: {
@@ -478,6 +477,10 @@ const dashboardApp = Vue.createApp({
     async mounted() {
         this.selectedReportType = "Found"; // Initial value
         console.log("Set selectedReportType to 'Found' in mounted.");
+        document.addEventListener('mousemove', this.moveCursor);
+
+        
+
     
         try {
             await this.countUsers(); // General count of users
@@ -498,229 +501,11 @@ const dashboardApp = Vue.createApp({
             console.error("Error in mounted lifecycle:", error);
         }
     },
+    beforeDestroy() {
+        // Clean up the event listener when the component is destroyed
+        document.removeEventListener('mousemove', this.moveCursor);
+      },
     
 
 }); dashboardApp.mount("#app");// Mount the Vue app to #app
 
-// function showData() {
-//     let url = "/static/js/leaderboard.json";
-
-//     axios.get(url)
-//         .then(response => {
-//             const data = response.data; // Access data from the response
-//             const tableBody = document.getElementById('leaderboardData');
-//             let tableRows = '';
-
-//             // Loop through the data and build table rows dynamically
-//             data.forEach(player => {
-//                 tableRows += 
-//                     <tr>
-//                         <td>${player.ranking}</td>
-//                         <td>${player.username}</td>
-//                         <td>${player.items_found}</td>
-//                         <td>${player.points}</td>
-//                     </tr>
-//                 ;
-//             });
-//             tableBody.innerHTML = tableRows;
-//         })
-//         .catch(error => {
-//             console.log("Error loading JSON:", error.message);
-//         });
-// }
-
-// function lineChart() {
-//     axios.get('static/js/lineChart.json') // Update this path to your JSON file
-//         .then(response => {
-//             const jsonData = response.data.data; // Access the data property from JSON
-
-//             // Create the layout for the plot
-//             const layout = {
-//                 title: 'Weekly Items Found and Returned',
-//                 xaxis: {
-//                     title: 'Weeks',
-//                     showgrid: true,
-//                     zeroline: false
-//                 },
-//                 yaxis: {
-//                     title: 'Number of Items',
-//                     showline: true
-//                 },
-//                 legend: {
-//                     x: 0,
-//                     y: 1,
-//                     traceorder: 'normal',
-//                     orientation: 'h'
-//                 },
-//                 autosize: true // Ensure the plot resizes with the container
-//             };
-
-//             // Create the plot with displayModeBar set to false
-//             Plotly.newPlot('lineChart', jsonData, layout, { responsive: true, displayModeBar: false });
-//         })
-//         .catch(error => {
-//             console.error("Error fetching the JSON data:", error);
-//         });
-// }
-
-
-// <! -- let pieChartInstance; // Variable to hold the chart instance
-// function pieChart() {
-//     axios.get('static/js/pieChart.json') // Update this path to your JSON file
-//         .then(response => {
-//             console.log(response.data); // Log the response to check its structure
-//             const jsonData = response.data.data; // Access the data property from JSON
-
-//             if (!jsonData) {
-//                 console.error("No data found in the response.");
-//                 return;
-//             }
-
-//             Create the plot
-//             const renderChart = (status) => {
-//                 let filteredData, successRate = 0, totalCount = 0;
-
-//                 Filter data based on status
-//                 filteredData = jsonData.filter(item => item.item_status === status);
-
-//                 Calculate the success rate based on the status
-//                 if (filteredData.length > 0) {
-//                     const successfulCount = filteredData[0].success_count; // Get success count
-//                     totalCount = filteredData[0].total_count; // Get total count
-//                     successRate = (successfulCount / totalCount) * 100; // Calculate success rate as a percentage
-//                 }
-
-//                 const ctx = document.getElementById('pieChart').getContext('2d');
-
-//                 Destroy the existing chart instance if it exists
-//                 if (pieChartInstance) {
-//                     pieChartInstance.destroy(); // Destroy the old chart instance
-//                 }
-
-//                 Create a new chart instance
-//                 pieChartInstance = new Chart(ctx, {
-//                     type: 'pie',
-//                     data: {
-//                         labels: ['Success Rate', 'Failure Rate'], // Labels for the pie chart
-//                         datasets: [{
-//                             data: [successRate, 100 - successRate], // Data for success and failure
-//                             backgroundColor: ['#36a2eb', '#ff6384'], // Colors for the segments
-//                         }]
-//                     },
-//                     options: {
-//                         responsive: true, // Make chart responsive
-//                         maintainAspectRatio: false,
-//                         plugins: {
-//                             legend: {
-//                                 display: true,
-//                                 position: 'top'
-//                             },
-//                             title: {
-//                                 display: true,
-//                                 text: Success Rate for ${status} Items
-//                             },
-//                             datalabels: {
-//                                 formatter: (value, ctx) => {
-//                                     const total = ctx.chart.data.datasets[0].data.reduce((acc, val) => acc + val, 0);
-//                                     const percentage = (value / total * 100).toFixed(0); // Calculate percentage
-//                                     return percentage + '%'; // Display percentage
-//                                 },
-//                                 color: '#fff',
-//                                 font: {
-//                                     weight: 'bold',
-//                                     size: 14
-//                                 }
-//                             }
-//                         }
-//                     },
-//                     plugins: [ChartDataLabels] // Enable the Data Labels plugin
-//                 });
-//             }
-
-//             Set up event listener for dropdown selection change
-//             document.getElementById('statusSelect').addEventListener('change', function () {
-//                 renderChart(this.value); // Render chart for selected status
-//             });
-
-//             Initial chart rendering
-//             renderChart('Returned'); // Default value to display on load
-//         })
-//         .catch(error => {
-//             console.error("Error fetching the JSON data:", error);
-//         });
-// }
-
-// document.addEventListener("DOMContentLoaded", function () {
-//     pieChart(); // Call the function to initialize after DOM is loaded
-// });
-
-
-// function barChart() {
-//     axios.get('static/js/barChart.json')
-//         .then(function (response) {
-//             Handle successful response
-//             const data = response.data;
-
-//             Sort the items by report_count in descending order and take the top 5
-//             const top5Items = data.items_reported.sort((a, b) => b.report_count - a.report_count).slice(0, 5);
-
-//             Extract data for the top 5 items for the bar chart
-//             const itemNames = top5Items.map(item => item.item_name);
-//             const reportCounts = top5Items.map(item => item.report_count);
-//             const percentages = top5Items.map(item => item.percentage_of_total);
-
-//             Get the current month name
-//             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-//             const currentMonth = monthNames[new Date().getMonth()];
-
-//             Bar chart configuration for top 5 items
-//             const trace1 = {
-//                 x: itemNames, // Item names on the x-axis
-//                 y: reportCounts, // Report counts on the y-axis (vertical bars)
-//                 type: 'bar', // Bar chart
-//                 text: percentages.map(percent => percent + '%'), // Display percentage on each bar
-//                 textposition: 'auto',
-//                 marker: {
-//                     color: 'rgba(55, 128, 191, 0.7)',
-//                     line: {
-//                         color: 'rgba(55, 128, 191, 1.0)',
-//                         width: 2
-//                     }
-//                 }
-//             };
-
-//             const layout = {
-//                 title: Top 5 Most Reported Items - ${currentMonth} ${new Date().getFullYear()}, // Use dynamic month and year
-//                 xaxis: {
-//                     title: 'Item Names' // Labels on x-axis
-//                 },
-//                 yaxis: {
-//                     title: 'Number of Reports' // Labels on y-axis
-//                 },
-//                 margin: {
-//                     l: 50,
-//                     r: 50,
-//                     b: 100,
-//                     t: 50,
-//                     pad: 4
-//                 },
-//                 autosize: true, // Automatically size the chart
-//             };
-
-//             Render the vertical bar chart for the top 5 items without mode bar
-//             Plotly.newPlot('barChart', [trace1], layout, { displayModeBar: false, responsive: true }); // Combine options in one object
-//         })
-//         .catch(function (error) {
-//             Handle error if the request fails
-//             console.error('Error fetching the JSON data:', error);
-//         });
-// }
-
-
-// window.onload = function () {
-//     showData();
-//     lineChart();
-//     pieChart();
-//     barChart();
-// };
-// </script>
