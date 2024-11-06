@@ -83,6 +83,7 @@ def footer():
     return render_template('footer.html')
 
 
+
 @main.route('/navbar')
 def navbar():
     return render_template('navbar.html')

@@ -1,6 +1,5 @@
 import { db } from './firebaseConfig.js';
 
-
 Vue.createApp({
     data() {
         return {
@@ -75,6 +74,7 @@ Vue.createApp({
         },
         submitForm() {
             const uid = sessionStorage.getItem('uid');
+            
         
             // Proceed with form submission if all required fields are filled
             if (this.formData.item_name && this.formData.location && this.formData.item_description &&
