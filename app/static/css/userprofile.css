@@ -133,11 +133,11 @@
 }
 
 .profile_description {
-    font-size: 16px;
     white-space: normal;
     word-wrap: break-word;
-    max-width: 60%; /* Adjust the width as needed */
+    max-width: 60%; /* Default width for larger screens */
 }
+
 
 .redtext{
     color: red;
@@ -163,10 +163,20 @@
     .profile_name {
         font-size: 18px;
     }
+    .profile_description {
+        max-width: 70%; /* Make it even narrower on very small screens */
+        margin: 0 auto; /* Center the text within the container */
+        text-align: center; /* Center-align text */
+    }
 }
 
 @media (max-width: 576px) { /* Small screens (Bootstrap sm) */
     .profile_name {
         font-size: 16px;
+    }
+    .profile_description {
+        max-width: 90%; /* Make it even narrower on very small screens */
+        margin: 0 auto; /* Center the text within the container */
+        text-align: center; /* Center-align text */
     }
 }
