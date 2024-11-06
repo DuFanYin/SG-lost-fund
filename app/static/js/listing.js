@@ -1,5 +1,6 @@
 import { db } from './firebaseConfig.js';
 
+
 Vue.createApp({
     data() {
         return {
@@ -17,6 +18,9 @@ Vue.createApp({
                     lat: null,
                     lng: null
                 },
+                formData: {
+                    datetime: '',  // Initialize datetime
+                }
             },
             characterCount: 0,
             formSubmitted: false,
@@ -25,6 +29,7 @@ Vue.createApp({
         };
     },
     methods: {
+        
         setType(type) {
             this.formData.type = type;
         },
@@ -70,21 +75,21 @@ Vue.createApp({
         },
         submitForm() {
             const uid = sessionStorage.getItem('uid');
+        
+            // Proceed with form submission if all required fields are filled
             if (this.formData.item_name && this.formData.location && this.formData.item_description &&
                 this.formData.item_type && this.formData.handoff_method && this.formData.handoff_location &&
                 this.formData.datetime && this.formData.file && this.formData.coordinates.lat !== null && this.formData.coordinates.lng !== null) {
-        
+            
                 // Prepare FormData for the file upload
                 const formData = new FormData();
                 formData.append('file', this.formData.file);  // Include the file for upload
-        
+            
                 // First upload the file to the server
                 axios.post('/listing', formData)
                     .then(response => {
-                        // Assuming the response contains the file path
                         const data = response.data;
-        
-                        // Now add the document to Firestore without using GeoPoint
+                        // Add document to Firestore with datetime value
                         return db.collection("listings").add({
                             item_name: this.formData.item_name,
                             location: this.formData.location,
@@ -92,13 +97,14 @@ Vue.createApp({
                             item_type: this.formData.item_type,
                             handoff_method: this.formData.handoff_method,
                             handoff_location: this.formData.handoff_location,
+                            found_timestamp: datetimeValue,
                             uid: uid,
-                            file_path: data.filePath,  // Use the file path returned from the server
-                            latitude: this.formData.coordinates.lat, // Store latitude
-                            longitude: this.formData.coordinates.lng, // Store longitude
-                            report_type: this.formData.type === 'found' ? 'Found' : 'Lost', // Store report_type based on selected form type
-                            archived: false, // Default to false
-                            comments: null // Initialize comments as null
+                            file_path: data.filePath,
+                            latitude: this.formData.coordinates.lat,
+                            longitude: this.formData.coordinates.lng,
+                            report_type: this.formData.type === 'found' ? 'Found' : 'Lost',
+                            archived: false,
+                            comments: null
                         });
                     })
                     .then(() => {
@@ -141,6 +147,6 @@ Vue.createApp({
         window.initMap = this.initMap;
 
         // Initialize the map after Vue instance is mounted
-        this.initMap();
+
     }
 }).mount('#temp');

@@ -10,6 +10,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favicon-16x16.png">
     <link rel="manifest" href="../static/site.webmanifest">
+    <!-- Add this inside your <head> tag -->
+
     <style>
         /* Ensure the map div has a height, otherwise the map won't show */
         #map {
@@ -89,11 +91,10 @@
                             </div>
 
                             <!-- Date and Time Field -->
+                            <!-- Date and Time Picker -->
                             <div class="mb-3">
-                                <label for="datetime" class="form-label">Date and Time: <span
-                                        style="color: red;">*</span></label>
-                                <input type="datetime-local" v-model="formData.datetime" class="form-control"
-                                    id="datetime" required>
+                                <label for="datetime" class="form-label">Date and Time: <span style="color: red;">*</span></label>
+                                <input type="datetime-local" v-model="formData.datetime" class="form-control" id="datetime" required>
                             </div>
 
 
