@@ -13,10 +13,15 @@ Vue.createApp({
                 handoff_location: '',
                 datetime: '',  // New datetime field
                 file: null,
-                coordinates: { lat: null, lng: null } // Field to store coordinates
+                coordinates: { // Initialize coordinates
+                    lat: null,
+                    lng: null
+                },
             },
             characterCount: 0,
-            formSubmitted: false
+            formSubmitted: false,
+            map: null, // Store map instance
+            marker: null, // Store marker instance
         };
     },
     methods: {
@@ -31,22 +36,36 @@ Vue.createApp({
                 this.characterCount = 200;
             }
         },
-        geocodeLocation() {
-            if (!this.formData.location) {
-                alert("Please enter a location.");
-                return;
-            }
+        initMap() {
+            // Center of Singapore
+            const singapore = { lat: 1.3521, lng: 103.8198 };
 
-            const geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ address: this.formData.location }, (results, status) => {
-                if (status === "OK") {
-                    const location = results[0].geometry.location;
-                    this.formData.coordinates.lat = location.lat();
-                    this.formData.coordinates.lng = location.lng();
-                    alert(`Coordinates retrieved: ${this.formData.coordinates.lat}, ${this.formData.coordinates.lng}`);
-                } else {
-                    alert("Geocode was not successful: " + status);
-                }
+            // Initialize the map
+            this.map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: singapore
+            });
+
+            // Create a marker at the initial position
+            this.marker = new google.maps.Marker({
+                position: singapore,
+                map: this.map
+            });
+
+            // Listen for click events on the map
+            google.maps.event.addListener(this.map, 'click', (event) => {
+                const clickedLocation = event.latLng;
+
+                // Move the marker to the clicked position
+                this.marker.setPosition(clickedLocation);
+
+                // Update the coordinates in the form data
+                this.formData.coordinates.lat = clickedLocation.lat();
+                this.formData.coordinates.lng = clickedLocation.lng();
+
+                // Update the input fields with the new coordinates
+                document.getElementById('lat').value = this.formData.coordinates.lat;
+                document.getElementById('lng').value = this.formData.coordinates.lng;
             });
         },
         submitForm() {
@@ -54,34 +73,18 @@ Vue.createApp({
             if (this.formData.item_name && this.formData.location && this.formData.item_description &&
                 this.formData.item_type && this.formData.handoff_method && this.formData.handoff_location &&
                 this.formData.datetime && this.formData.file && this.formData.coordinates.lat !== null && this.formData.coordinates.lng !== null) {
-
-                // Parse the datetime into a Firestore Timestamp
-                const date = new Date(this.formData.datetime);
-                const timestamp = firebase.firestore.Timestamp.fromDate(date);  // Ensure this line references firebase.firestore.Timestamp correctly
-
+        
                 // Prepare FormData for the file upload
                 const formData = new FormData();
                 formData.append('file', this.formData.file);  // Include the file for upload
-
+        
                 // First upload the file to the server
-                fetch('/listing', {
-                    method: 'POST',
-                    body: formData
-                })
+                axios.post('/listing', formData)
                     .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json(); // Get the file path back
-                    })
-                    .then(data => {
-                        // Create a GeoPoint from the coordinates
-                        const geoPoint = new firebase.firestore.GeoPoint(
-                            this.formData.coordinates.lat,
-                            this.formData.coordinates.lng
-                        );
-
-                        // Now add the document to Firestore without the File object
+                        // Assuming the response contains the file path
+                        const data = response.data;
+        
+                        // Now add the document to Firestore without using GeoPoint
                         return db.collection("listings").add({
                             item_name: this.formData.item_name,
                             location: this.formData.location,
@@ -89,15 +92,13 @@ Vue.createApp({
                             item_type: this.formData.item_type,
                             handoff_method: this.formData.handoff_method,
                             handoff_location: this.formData.handoff_location,
-                            found_timestamp: timestamp, // Store as Firestore Timestamp
-                            // datetime: this.formData.datetime,
                             uid: uid,
                             file_path: data.filePath,  // Use the file path returned from the server
-                            geolocation: geoPoint, // Store as a GeoPoint
+                            latitude: this.formData.coordinates.lat, // Store latitude
+                            longitude: this.formData.coordinates.lng, // Store longitude
                             report_type: this.formData.type === 'found' ? 'Found' : 'Lost', // Store report_type based on selected form type
                             archived: false, // Default to false
                             comments: null // Initialize comments as null
-
                         });
                     })
                     .then(() => {
@@ -130,11 +131,16 @@ Vue.createApp({
                 handoff_location: '',
                 datetime: '',  // Reset datetime field
                 file: null,
-                coordinates: { lat: null, lng: null } // Reset coordinates
-
             };
             document.getElementById("file").value = null;
             this.characterCount = 0;
         }
+    },
+    mounted() {
+        // Attach initMap to the global window object
+        window.initMap = this.initMap;
+
+        // Initialize the map after Vue instance is mounted
+        this.initMap();
     }
 }).mount('#temp');
