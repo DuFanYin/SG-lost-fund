@@ -135,7 +135,7 @@
 .profile_description {
     white-space: normal;
     word-wrap: break-word;
-    max-width: 60%; /* Default width for larger screens */
+    max-width: 70%; /* Default width for larger screens */
 }
 
 
@@ -178,5 +178,12 @@
         max-width: 90%; /* Make it even narrower on very small screens */
         margin: 0 auto; /* Center the text within the container */
         text-align: center; /* Center-align text */
+    }
+}
+
+/* Hide "Edit Profile" text between 768px and 992px */
+@media (max-width: 992px) and (min-width: 768px) {
+    .edit-text {
+        display: none;
     }
 }
