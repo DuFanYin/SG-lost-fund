@@ -108,7 +108,7 @@ p {
 }
 
 /* Styling for individual result cards */
-#panel > div:not(#filter-container):not(#filter-status-container) {
+#panel > div:not(#filter-container):not(#filter-status-container):not(#filter-date-container) {
     padding: 15px;
     margin: 10px 15px;
     border-radius: 5px;
@@ -121,14 +121,14 @@ p {
 }
 
 /* Hover effect for cards */
-#panel > div:not(#filter-container):not(#filter-status-container):hover {
+#panel > div:not(#filter-container):not(#filter-status-container):not(#filter-date-container):hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transform: translateY(-3px);
     background-color: #f9f9f9;
 }
 
 /* Title styling */
-#panel > div:not(#filter-container):not(#filter-status-container) .itemText {
+#panel > div:not(#filter-container):not(#filter-status-container):not(#filter-date-container) .itemText {
     font-size: 1.1em;
     font-weight: bold;
     color: #333;
@@ -136,14 +136,14 @@ p {
 }
 
 /* Styling for description and details */
-#panel > div:not(#filter-container):not(#filter-status-container) p {
+#panel > div:not(#filter-container):not(#filter-status-container):not(#filter-date-container) p {
     margin: 4px 0;
     font-size: 0.9em;
     color: #666;
 }
 
 /* Highlighting specific labels */
-#panel > div:not(#filter-container):not(#filter-status-container) p b {
+#panel > div:not(#filter-container):not(#filter-status-container):not(#filter-date-container) p b {
     color: #333;
     font-weight: bold;
 }
@@ -182,10 +182,10 @@ p {
 }
 
 
-#filter-container, #filter-status-container{
+#filter-container, #filter-status-container, #filter-date-container{
     display: inline-block;
     padding-left: 15px;
-    width: calc(calc(100% - 18.2px) / 2);
+    width: calc(calc(100% - 18.2px) / 3);
 }
 
 

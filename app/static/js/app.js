@@ -68,9 +68,10 @@ let defaultZoomLevel = 11;
 let zoomedInLevel = 15;
 var map = null;
 var bounds = null;
-var uniqueCategories = new Set();
 var userPos = null;
-let uniqueStatuses = new Set();
+var uniqueCategories = new Set();
+var uniqueStatuses = new Set();
+var uniqueDates = null;
 let original = true;
 
 //Prevents XSS
@@ -124,6 +125,7 @@ async function renderMapWithFeatures(centerPosition) {
 
     bounds = new google.maps.LatLngBounds();
 
+    var temp = new Set();
     map.data.addListener('addfeature', (event) => {
         if (event.feature.getGeometry().getType() === 'Point') {
             const position = event.feature.getGeometry().get();
@@ -138,6 +140,11 @@ async function renderMapWithFeatures(centerPosition) {
             if (report_type) {
                 uniqueStatuses.add(report_type);
             }
+
+            const date = event.feature.getProperty('found_timestamp');
+            if (date) {
+                temp.add(date);
+            }
         }
     });
 
@@ -150,6 +157,11 @@ async function renderMapWithFeatures(centerPosition) {
     }
 
     addCustomMarker();
+    uniqueDates = Array.from(temp)
+        .sort((a, b) => a - b)
+        .map(date => date.toDateString())
+        .filter((date, index, self) => self.indexOf(date) === index);
+
     const togglePanelButton = document.getElementById('toggle-panel-button');
     togglePanelButton.addEventListener('click', () => {
         if (panel.classList.contains('open')) {
@@ -234,7 +246,7 @@ async function renderMapWithFeatures(centerPosition) {
     });
 
     const rankedItems = await calculateDistances(map.data, centerPosition);
-    showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses));
+    showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses), uniqueDates);
 
     // Autocomplete location search bar
     const container = document.getElementById('sidebar-autocomplete-container');
@@ -276,14 +288,14 @@ async function renderMapWithFeatures(centerPosition) {
         // Use the selected address as the origin to calculate distances to each of the store locations
         const rankedItems = await calculateDistances(map.data, originLocation);
         original = false;
-        showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses));
+        showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses), uniqueDates);
     });
 
     input.addEventListener('input', async () => {
         if (input.value === '') {
             // Input is empty, reset listings and map
             original = true;
-            showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses));
+            showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses), uniqueDates);
         }
     });
 
@@ -380,7 +392,7 @@ async function calculateDistances(data, origin) {
     return distancesList;
 }
 window.calculateDistances = calculateDistances;
-function showItemsList(data, items, categoryArray, statusArray) {
+function showItemsList(data, items, categoryArray, statusArray, datesArray) {
     const panel = document.getElementById('panel');
 
     if (!panel) {
@@ -388,7 +400,7 @@ function showItemsList(data, items, categoryArray, statusArray) {
         return;
     }
 
-    while (panel.childNodes.length > 4) {
+    while (panel.childNodes.length > 6) {
         panel.removeChild(panel.lastChild);
     }
 
@@ -423,6 +435,24 @@ function showItemsList(data, items, categoryArray, statusArray) {
     statusFilter.addEventListener('change', () => {
         applyFilters(panel, data);
     });
+
+
+    const dateFilter = document.getElementById('date-filter');
+    dateFilter.innerHTML = '';
+    const allDatesOption = document.createElement('option');
+    allDatesOption.value = 'all';
+    allDatesOption.textContent = 'All';
+    dateFilter.appendChild(allDatesOption);
+    datesArray.forEach((date) => {
+        const option = document.createElement('option');
+        option.value = date;
+        option.textContent = date;
+        dateFilter.appendChild(option);
+    });
+    dateFilter.addEventListener('change', () => {
+        applyFilters(panel, data);
+    });
+
 
     panel.originalItems = items;
     items.forEach((item) => {
@@ -561,6 +591,7 @@ function applyFilters(panel, data) {
 
     const selectedCategory = document.getElementById('category-filter').value;
     const selectedStatus = document.getElementById('status-filter').value;
+    const selectedDate = document.getElementById('date-filter').value;
     let filteredItems = panel.originalItems;
 
     if (selectedCategory !== 'all') {
@@ -577,7 +608,14 @@ function applyFilters(panel, data) {
         });
     }
 
-    while (panel.childNodes.length > 4) {
+    if (selectedDate !== 'all') {
+        filteredItems = filteredItems.filter((item) => {
+            const feature = data.getFeatureById(item.itemid);
+            return feature.getProperty('found_timestamp').toDateString() === selectedDate;
+        });
+    }
+
+    while (panel.childNodes.length > 6) {
         panel.removeChild(panel.lastChild);
     }
 
@@ -591,16 +629,21 @@ window.applyFilters = applyFilters;
 function applyFiltersToMap(data) {
     const selectedCategory = document.getElementById('category-filter').value;
     const selectedStatus = document.getElementById('status-filter').value;
+    const selectedDates = document.getElementById('date-filter').value;
 
     data.forEach((feature) => {
         const item_type = feature.getProperty('item_type');
         const report_type = feature.getProperty('report_type');
+        const found_timestamp = feature.getProperty('found_timestamp');
 
         let visible = true;
         if (selectedCategory !== 'all' && item_type !== selectedCategory) {
             visible = false;
         }
         if (selectedStatus !== 'all' && report_type !== selectedStatus) {
+            visible = false;
+        }
+        if (selectedDates !== 'all' && found_timestamp.toDateString() !== selectedDates) {
             visible = false;
         }
 
