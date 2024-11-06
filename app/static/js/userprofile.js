@@ -61,6 +61,27 @@ const profile = Vue.createApp({
         },
     },
     methods: {
+        archiveItem(item) {
+            // Reference to the specific item document in Firestore
+            const itemRef = db.collection('listings').doc(item.id); // Assume `id` is the document ID
+    
+            // Update the 'archived' field to true
+            itemRef.update({ archived: true })
+                .then(() => {
+                    console.log(`Item ${item.item_name} archived successfully.`);
+                    item.archived = true; // Update locally
+    
+                    // Remove the item from the appropriate array
+                    if (item.report_type === 'Found') {
+                        this.foundItems = this.foundItems.filter(i => i.id !== item.id);
+                    } else if (item.report_type === 'Lost') {
+                        this.lostItems = this.lostItems.filter(i => i.id !== item.id);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error archiving item:", error);
+                });
+        },
         updateBodyBackground() {
             if (this.selectedBackground) {
                 document.body.style.backgroundImage = `url(${this.selectedBackground})`;
@@ -164,16 +185,16 @@ const profile = Vue.createApp({
                     this.foundItems = [];
                     this.lostItems = [];
                     querySnapshot.forEach((doc) => {
-                        const item = doc.data();
-                        if (item.report_type === 'Found') {
+                        const item = { ...doc.data(), id: doc.id }; // Spread data and include document ID
+                        if (item.report_type === 'Found' && !item.archived) {
                             this.foundItems.push(item);
-                        } else if (item.report_type === 'Lost') {
+                        } else if (item.report_type === 'Lost' && !item.archived) {
                             this.lostItems.push(item);
                         }
                     });
                 })
                 .catch((error) => {
-                    console.error("Error fetching items: ", error);
+                    console.error("Error fetching items:", error);
                 });
         },
 

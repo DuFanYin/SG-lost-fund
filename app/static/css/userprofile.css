@@ -187,3 +187,9 @@
         display: none;
     }
 }
+
+.archive-button {
+    float: right;             /* Moves the button to the right side */
+    border-radius: 30%;       /* Applies a 30% border radius */
+    margin-top: 10px;         /* Adds a little space above the button */
+}

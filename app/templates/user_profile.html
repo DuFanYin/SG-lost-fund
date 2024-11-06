@@ -60,10 +60,10 @@
                             <div class="profile_description" v-text="profiledesc"></div>
                         </div>
                         <div class="col-12 col-md-3 text-center pt-md-0 pt-4">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal"
-                            @click="openEditModal" style="border-radius: 30px;">
-                            <i class="bi bi-pencil-fill"></i> <span class="edit-text">Edit Profile</span>
-                        </button>                        
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#editProfileModal" @click="openEditModal" style="border-radius: 30px;">
+                                <i class="bi bi-pencil-fill"></i> <span class="edit-text">Edit Profile</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -128,6 +128,10 @@
                                             </p>
                                             <p><strong><i class="bi bi-tag"></i> Item Type:</strong> <span
                                                     class="badge badge-custom" v-text="item.item_type"></span></p>
+                                                    <button class="btn btn-danger archive-button" @click="archiveItem(item)"
+                                                    v-if="!item.archived">
+                                                    Complete
+                                                </button>
                                             <!-- <p><strong>Report Type</strong> <span v-text="item.report_type"></span> -->
                                         </div>
                                     </div>
@@ -173,6 +177,10 @@
                                             </p>
                                             <p><strong><i class="bi bi-tag"></i> Item Type:</strong> <span
                                                     class="badge badge-custom" v-text="item.item_type"></span></p>
+                                            <button class="btn btn-danger archive-button" @click="archiveItem(item)"
+                                                v-if="!item.archived">
+                                                Complete
+                                            </button>
                                             <!-- <p><strong>Report Type</strong> <span v-text="item.report_type"></span> -->
                                             </p>
                                         </div>
@@ -217,7 +225,7 @@
                                     <label for="profileDescription" class="form-label">Description</label>
                                     <textarea class="form-control" id="profileDescription" rows="3"
                                         v-model="tempProfiledesc" maxlength="165"></textarea>
-                                        <small class="redtext" v-text="charactersRemaining"></small>
+                                    <small class="redtext" v-text="charactersRemaining"></small>
                                 </div>
                             </form>
 
