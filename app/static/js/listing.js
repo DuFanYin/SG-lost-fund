@@ -97,7 +97,7 @@ Vue.createApp({
                             item_type: this.formData.item_type,
                             handoff_method: this.formData.handoff_method,
                             handoff_location: this.formData.handoff_location,
-                            found_timestamp: datetimeValue,
+                            found_timestamp: this.formData.datetime,
                             uid: uid,
                             file_path: data.filePath,
                             latitude: this.formData.coordinates.lat,
