@@ -529,8 +529,35 @@ function addItemInfo(data, item) {
                             <b>Handoff Method:</b> ${handoff_method}<br />
                             <b>Handoff Location:</b> ${handoff_location}<br />
                         </p>
+
+                        <!-- Write a Comment Button -->
+                        <button id="write-review-btn" class="btn btn-primary">
+                            <i class="fas fa-pencil-alt"></i> Write a Comment
+                        </button>
                     </div>
-            </div>`;
+                <!-- Modal Structure -->
+                <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg custom-modal-right">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="reviewModalLabel">Write a Review</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="reviewForm">
+                                    <div class="mb-3">
+                                        <label for="reviewDescription" class="form-label">Description</label>
+                                        <textarea class="form-control" id="reviewDescription" rows="5" placeholder="Enter description"></textarea>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="submitReview">Submit Review</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
 
         infoPanel.innerHTML = content;
         infoPanel.style.display = 'block';
@@ -560,6 +587,26 @@ function addItemInfo(data, item) {
         map.setZoom(zoomedInLevel);
         map.setCenter(position);
         adjustPanelsForScreenSize();
+
+        // JavaScript for Modal Button and Submission
+        const reviewButton = document.getElementById('write-review-btn');
+        if (reviewButton) {
+            reviewButton.addEventListener('click', () => {
+                const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'), {
+                    backdrop: false,  // Disable backdrop
+                    keyboard: true
+                });
+                reviewModal.show();
+            });
+        }
+
+        document.getElementById('submitReview').addEventListener('click', () => {
+            const description = document.getElementById('reviewDescription').value;
+            console.log("Description:", description);
+            document.getElementById('reviewForm').reset();
+            bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+        });
+
     });
 
 

@@ -227,3 +227,11 @@ p {
 }
 
 
+/* Shift modal to the right */
+.custom-modal-right {
+    position: absolute;
+    left: 10%; /* Adjust this percentage to position the modal as needed */
+    top: 10%;
+    transform: none !important; /* Ensure the modal doesn't center itself automatically */
+    width: 500px; /* Optional: Set width to control its size */
+}
