@@ -26,7 +26,7 @@ async function exportListings() {
                     coordinates: [data.geolocation.longitude, data.geolocation.latitude] // Adjust these fields as needed
                 },
                 properties: {
-                    itemid: data.file,
+                    itemid: data.file_path,
                     found_timestamp: date,
                     handoff_location: data.handoff_location,
                     handoff_method: data.handoff_method,
@@ -495,7 +495,7 @@ function addItemInfo(data, item) {
                         <h2>${item_name}</h2><p>${item_description}</p>
                         <p>
                             <b>${report_type} On:</b> ${found_timestamp}<br />
-                            <b>Email:</b> ${user.email}<br />
+                            <b>Email:</b> <a href="mailto:${user.email}">${user.email}</a><br />
                             <b>Handoff Method:</b> ${handoff_method}<br />
                             <b>Handoff Location:</b> ${handoff_location}<br />
                         </p>
