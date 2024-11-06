@@ -39,7 +39,7 @@
         <!-- Vue wrapper with dynamic background -->
         <div class="main-wrapper">
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 profileborder bg1">
+                <div class="col-12 col-md-8 profileborder bg1">
                     <div class="row profile align-items-start">
                         <div class="col-12 col-md-3 text-center ">
                             <div class="profile-image-container">
@@ -60,17 +60,17 @@
                             <div class="profile_description" v-text="profiledesc"></div>
                         </div>
                         <div class="col-12 col-md-3 text-center pt-md-0 pt-4">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#editProfileModal" @click="openEditModal" style="border-radius: 30px;">
-                                <i class="bi bi-pencil-fill"></i> Edit Profile
-                            </button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal"
+                            @click="openEditModal" style="border-radius: 30px;">
+                            <i class="bi bi-pencil-fill"></i> <span class="edit-text">Edit Profile</span>
+                        </button>                        
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 listborder bg2">
+                <div class="col-12 col-md-8 listborder bg2">
                     <div class="row">
                         <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
