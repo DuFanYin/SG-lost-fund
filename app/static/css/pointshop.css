@@ -21,3 +21,9 @@
     padding-top: 20px;
     /* Adjust as needed */
 }
+
+#pointShopModal .modal-content {
+    background: rgb(224,222,235);
+    background: linear-gradient(90deg, rgba(224,222,235,1) 15%, rgba(229,228,240,1) 50%, rgba(224,222,235,1) 85%);
+}
+
