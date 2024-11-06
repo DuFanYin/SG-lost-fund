@@ -56,6 +56,9 @@ const profile = Vue.createApp({
             const end = start + this.itemsPerPage;
             return this.lostItems.slice(start, end);
         },
+        charactersRemaining() {
+            return `${165 - this.tempProfiledesc.length} characters remaining`;
+        },
     },
     methods: {
         updateBodyBackground() {

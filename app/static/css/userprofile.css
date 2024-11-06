@@ -1,7 +1,7 @@
 .profileborder {
-    padding: 20px 30px;
+    padding: 40px 20px;
     margin-top: 20px;
-    min-height: 20vh;
+    min-height: 30vh;
 }
 
 .listborder {
@@ -11,8 +11,8 @@
 }
 
 .profile-img {
-    width: 50vw;
-    max-width: 150px;
+    width: 170px; /* Adjust width as needed */
+    height: 170px; /* Adjust height as needed */
     height: auto;
     z-index: 1;
 }
@@ -26,6 +26,7 @@
     font-size: 25px;
     font-weight: bold;
     line-height: 1;
+    margin-bottom: -20px;
 }
 
 .profile_username {
@@ -35,7 +36,7 @@
 }
 
 .bg1 {
-    background-color: #EA2F2F;
+    background-color: #f5eeee;
 }
 
 .bg2 {
@@ -58,11 +59,11 @@
     width: 100%;
 }
 
-@media (max-width: 576px) {
+/* @media (max-width: 576px) {
     .profile-img {
         max-width: 30px;
     }
-}
+} */
 
 .card {
     border: none;
@@ -118,7 +119,7 @@
 .profile-image-container {
     position: relative;
     width: fit-content;
-    margin: 0 auto;
+    margin: auto;
 }
 
 .border-overlay {
@@ -129,4 +130,43 @@
     height: calc(100% + 30px); /* Increase height beyond the container */
     z-index: 2;
     pointer-events: none;
+}
+
+.profile_description {
+    font-size: 16px;
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 60%; /* Adjust the width as needed */
+}
+
+.redtext{
+    color: red;
+}
+
+@media (max-width: 1200px) {
+    .profile_description {
+        max-width: 100%; /* Make the profile description full width on smaller screens */
+    }
+}
+
+@media (max-width: 992px) { /* Large screens (Bootstrap lg) */
+    .profile_name {
+        font-size: 22px;
+    }
+    .profile_description {
+        font-size: 12px;
+
+    }
+}
+
+@media (max-width: 768px) { /* Medium screens (Bootstrap md) */
+    .profile_name {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 576px) { /* Small screens (Bootstrap sm) */
+    .profile_name {
+        font-size: 16px;
+    }
 }

@@ -41,7 +41,7 @@
             <div class="row justify-content-center">
                 <div class="col-12 col-md-10 profileborder bg1">
                     <div class="row profile align-items-start">
-                        <div class="col-12 col-sm-3 text-center ps-5">
+                        <div class="col-12 col-md-3 text-center ">
                             <div class="profile-image-container">
                                 <!-- Border overlay -->
                                 <img v-if="selectedBorder" :src="selectedBorder" class="border-overlay"
@@ -52,14 +52,14 @@
                                     src="{{ url_for('static', filename='img/profile-icon.jpg') }}" alt="Profile Image">
                             </div>
                         </div>
-                        <div class="col-12 col-sm-6 text-center text-sm-start">
+                        <div class="col-12 col-md-6 text-center text-md-start pt-md-0 pt-4">
                             <div class="profile_name" v-text="username"></div>
                             <br>
                             <div class="profile_username" v-text="email"></div>
 
-                            <div v-text="profiledesc"></div>
+                            <div class="profile_description" v-text="profiledesc"></div>
                         </div>
-                        <div class="col-12 col-sm-3 text-center">
+                        <div class="col-12 col-md-3 text-center pt-md-0 pt-4">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#editProfileModal" @click="openEditModal" style="border-radius: 30px;">
                                 <i class="bi bi-pencil-fill"></i> Edit Profile
@@ -216,7 +216,8 @@
                                 <div class="mb-3">
                                     <label for="profileDescription" class="form-label">Description</label>
                                     <textarea class="form-control" id="profileDescription" rows="3"
-                                        v-model="tempProfiledesc"></textarea>
+                                        v-model="tempProfiledesc" maxlength="165"></textarea>
+                                        <small class="redtext" v-text="charactersRemaining"></small>
                                 </div>
                             </form>
 
