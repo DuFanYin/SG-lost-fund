@@ -1,4 +1,4 @@
-import { db } from './firebaseConfig.js';
+import { db, GeoPoint } from './firebaseConfig.js';
 
 Vue.createApp({
     data() {
@@ -74,22 +74,21 @@ Vue.createApp({
         },
         submitForm() {
             const uid = sessionStorage.getItem('uid');
-            
         
-            // Proceed with form submission if all required fields are filled
             if (this.formData.item_name && this.formData.location && this.formData.item_description &&
                 this.formData.item_type && this.formData.handoff_method && this.formData.handoff_location &&
                 this.formData.datetime && this.formData.file && this.formData.coordinates.lat !== null && this.formData.coordinates.lng !== null) {
-            
-                // Prepare FormData for the file upload
+             
                 const formData = new FormData();
-                formData.append('file', this.formData.file);  // Include the file for upload
-            
-                // First upload the file to the server
+                formData.append('file', this.formData.file);
+                
+                // Convert datetime to Firebase Timestamp
+                const datetimeValue = new Date(this.formData.datetime);
+        
                 axios.post('/listing', formData)
                     .then(response => {
                         const data = response.data;
-                        // Add document to Firestore with datetime value
+        
                         return db.collection("listings").add({
                             item_name: this.formData.item_name,
                             location: this.formData.location,
@@ -97,11 +96,10 @@ Vue.createApp({
                             item_type: this.formData.item_type,
                             handoff_method: this.formData.handoff_method,
                             handoff_location: this.formData.handoff_location,
-                            found_timestamp: this.formData.datetime,
+                            found_timestamp: firebase.firestore.Timestamp.fromDate(datetimeValue),  // Firebase Timestamp
                             uid: uid,
                             file_path: data.filePath,
-                            latitude: this.formData.coordinates.lat,
-                            longitude: this.formData.coordinates.lng,
+                            coordinates: new GeoPoint(this.formData.coordinates.lat, this.formData.coordinates.lng),
                             report_type: this.formData.type === 'found' ? 'Found' : 'Lost',
                             archived: false,
                             comments: null
