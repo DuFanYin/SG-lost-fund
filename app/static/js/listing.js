@@ -102,7 +102,7 @@ Vue.createApp({
                             found_timestamp: firebase.firestore.Timestamp.fromDate(datetimeValue),  // Firebase Timestamp
                             uid: uid,
                             file_path: data.filePath,
-                            coordinates: new GeoPoint(this.formData.coordinates.lat, this.formData.coordinates.lng),
+                            geolocation: new GeoPoint(this.formData.coordinates.lat, this.formData.coordinates.lng),
                             report_type: this.formData.type === 'found' ? 'Found' : 'Lost',
                             archived: false,
                             comments: null
