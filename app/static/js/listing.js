@@ -1,4 +1,4 @@
-import { db, GeoPoint } from './firebaseConfig.js';
+import { db, GeoPoint , storage } from './firebaseConfig.js';
 
 Vue.createApp({
     data() {
@@ -75,57 +75,67 @@ Vue.createApp({
                 document.getElementById('lng').value = this.formData.coordinates.lng;
             });
         },
-        submitForm() {
+        async submitForm() {
             const uid = sessionStorage.getItem('uid');
-        
-            if (this.formData.item_name && this.formData.location && this.formData.item_description &&
-                this.formData.item_type && this.formData.handoff_method && this.formData.handoff_location &&
-                this.formData.datetime && this.formData.file && this.formData.coordinates.lat !== null && this.formData.coordinates.lng !== null) {
-             
-                const formData = new FormData();
-                formData.append('file', this.formData.file);
-                
-                // Convert datetime to Firebase Timestamp
-                const datetimeValue = new Date(this.formData.datetime);
-        
-                axios.post('/listing', formData)
-                    .then(response => {
-                        const data = response.data;
-        
-                        return db.collection("listings").add({
-                            item_name: this.formData.item_name,
-                            location: this.formData.location,
-                            item_description: this.formData.item_description,
-                            item_type: this.formData.item_type,
-                            handoff_method: this.formData.handoff_method,
-                            handoff_location: this.formData.handoff_location,
-                            found_timestamp: firebase.firestore.Timestamp.fromDate(datetimeValue),  // Firebase Timestamp
-                            uid: uid,
-                            file_path: data.filePath,
-                            geolocation: new GeoPoint(this.formData.coordinates.lat, this.formData.coordinates.lng),
-                            report_type: this.formData.type === 'found' ? 'Found' : 'Lost',
-                            archived: false,
-                            comments: null,
-                        });
-                    })
-                    .then(() => {
-                        console.log("Form Submitted Successfully to Firestore");
-                        this.formSubmitted = true;
-                        this.resetForm();
-                    })
-                    .catch((error) => {
-                        console.error("Error submitting the form:", error);
-                        alert('There was an error submitting the form.');
+            if (this.formData.item_name && this.formData.file && this.formData.location) {
+                try {
+                    // Upload the image file and get the URL
+                    const imageURL = await this.uploadImageAndGetURL(this.formData.file);
+
+                    const datetimeValue = new Date(this.formData.datetime);
+
+                    // Save the listing with the image URL
+                    await db.collection("listings").add({
+                        item_name: this.formData.item_name,
+                        location: this.formData.location,
+                        item_description: this.formData.item_description,
+                        item_type: this.formData.item_type,
+                        handoff_method: this.formData.handoff_method,
+                        handoff_location: this.formData.handoff_location,
+                        found_timestamp: firebase.firestore.Timestamp.fromDate(datetimeValue),
+                        uid: uid,
+                        imageURL: imageURL, // Link the image URL to the listing
+                        geolocation: new GeoPoint(this.formData.coordinates.lat, this.formData.coordinates.lng),
+                        report_type: this.formData.type === 'found' ? 'Found' : 'Lost',
+                        archived: false,
+                        comments: []
                     });
+
+                    console.log("Listing with image saved successfully.");
+                    this.formSubmitted = true;
+                    this.resetForm();
+                } catch (error) {
+                    console.error("Error saving the listing:", error);
+                    alert('There was an error submitting the form.');
+                }
             } else {
-                alert("Please fill in all fields, including retrieving the coordinates.");
+                alert("Please fill in all fields, including uploading an image.");
             }
         },
         handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                this.formData.file = file;
-            }
+            this.formData.file = event.target.files[0];
+        },
+        async uploadImageAndGetURL(file) {
+            const storageRef = storage.ref(`listings/${Date.now()}_${file.name}`);
+            const uploadTask = storageRef.put(file);
+
+            return new Promise((resolve, reject) => {
+                uploadTask.on(
+                    'state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log(`Upload is ${progress}% done`);
+                    },
+                    (error) => {
+                        console.error("Error uploading image:", error);
+                        reject(error);
+                    },
+                    async () => {
+                        const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                        resolve(downloadURL);
+                    }
+                );
+            });
         },
         resetForm() {
             this.formData = {
@@ -136,10 +146,10 @@ Vue.createApp({
                 item_type: '',
                 handoff_method: '',
                 handoff_location: '',
-                datetime: '',  // Reset datetime field
+                datetime: '',
                 file: null,
+                coordinates: { lat: null, lng: null }
             };
-            document.getElementById("file").value = null;
             this.characterCount = 0;
         }
     },

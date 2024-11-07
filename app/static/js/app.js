@@ -135,7 +135,7 @@ async function exportListings() {
                     coordinates: [data.geolocation.longitude, data.geolocation.latitude] // Adjust these fields as needed
                 },
                 properties: {
-                    itemid: data.file_path,
+                    itemid: doc.id,
                     found_timestamp: date,
                     handoff_location: data.handoff_location,
                     handoff_method: data.handoff_method,
@@ -144,6 +144,7 @@ async function exportListings() {
                     item_type: data.item_type,
                     report_type: data.report_type,
                     uid: data.uid,
+                    imageURL: data.imageURL,
                 }
             };
             listings.push(geoJsonFeature);
@@ -295,6 +296,7 @@ async function renderMapWithFeatures(centerPosition) {
         const handoff_location = event.feature.getProperty('handoff_location');
         const report_type = event.feature.getProperty('report_type');
         const position = event.feature.getGeometry().get();
+        const imageURL = event.feature.getProperty('imageURL'); // Get the image URL
 
         const targetUid = event.feature.getProperty('uid');
         const data = await exportUsers();
@@ -311,7 +313,7 @@ async function renderMapWithFeatures(centerPosition) {
         infoPanel.innerHTML = '';
         const content = `
             <div class="info-panel-content">
-                <img style="width: 100%; height: auto;" src="../static/img/profile-icon.jpg">
+                <img style="width: 100%; height: auto;" src="${imageURL}">
                     <div style="padding: 20px;">
                         <h2>${item_name}</h2><p>${item_description}</p>
                         <p>
@@ -578,8 +580,15 @@ function addItemInfo(data, item) {
     const temp = document.createElement('div');
     const tempBody = document.createElement('div');
 
-    const distance = item.distanceText;
     const currentItem = data.getFeatureById(item.itemid);
+     // Check if currentItem is valid
+     if (!currentItem) {
+        console.error(`Feature with ID ${item.itemid} not found.`);
+        return; // Exit the function if the feature is not found
+    }
+
+    const distance = item.distanceText;
+
     const panel = document.getElementById('panel');
     if (distance.split(" ")[0] > 3 && original === false) {
         return;
@@ -592,6 +601,7 @@ function addItemInfo(data, item) {
     const report_type = currentItem.getProperty('report_type');
     const position = currentItem.getGeometry().get();
     const targetUid = currentItem.getProperty('uid');
+    const imageURL = currentItem.getProperty('imageURL'); // Retrieve the image URL
 
     const header = document.createElement('p');
     header.classList.add('itemText');
@@ -606,6 +616,7 @@ function addItemInfo(data, item) {
     tempBody.appendChild(distanceElement);
 
     tempBody.innerHTML += `
+         <img src="${imageURL}" alt="Item Image" style="width: 100%; height: auto;">
         <p>${item_description}</br>
         Location: ${handoff_location}</br>
         ${report_type} on: ${found_timestamp}</br>
@@ -629,7 +640,7 @@ function addItemInfo(data, item) {
         infoPanel.innerHTML = '';
         const content = `
             <div class="info-panel-content">
-                <img style="width: 100%; height: auto;" src="../static/img/profile-icon.jpg">
+                <img style="width: 100%; height: auto;" src="${imageURL}">
                     <div style="padding: 20px;">
                         <h2>${item_name}</h2><p>${item_description}</p>
                         <p>
