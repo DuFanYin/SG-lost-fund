@@ -15,5 +15,7 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+const GeoPoint = firebase.firestore.GeoPoint; // Add this line to get GeoPoint
 
-export { app, auth, db };
+
+export { app, auth, db, GeoPoint };
