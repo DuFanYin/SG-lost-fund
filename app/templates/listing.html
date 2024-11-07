@@ -72,13 +72,14 @@
                                 <label class="form-label">Select Form Type:</label>
                                 <div class="btn-group" role="group" aria-label="Form Type Toggle">
                                     <button type="button" class="btn"
-                                        :class="formData.type === 'found' ? 'btn-primary' : 'btn btn-primary'"
+                                        :class="formData.type === 'found' ? 'btn-primary' : 'btn-outline-primary'"
                                         @click="setType('found')">Found</button>
                                     <button type="button" class="btn"
-                                        :class="formData.type === 'lost' ? 'btn-primary' : 'btn btn-primary'"
+                                        :class="formData.type === 'lost' ? 'btn-primary' : 'btn-outline-primary'"
                                         @click="setType('lost')">Lost</button>
                                 </div>
                             </div>
+                            
                             
                             <h3 class="text-start text-md-left" style="font-weight: bold;">Item Information</h3>
 
