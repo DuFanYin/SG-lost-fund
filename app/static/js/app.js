@@ -2,11 +2,120 @@ import { db } from './firebaseConfig.js';
 
 // Added for UI Tooltip
 document.addEventListener("DOMContentLoaded", function () {
+    // Initialize Bootstrap tooltips
     const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.forEach(tooltipTriggerEl => {
         new bootstrap.Tooltip(tooltipTriggerEl);
     });
+
+    // Add event listener to the review button (write-review-btn)
+    const reviewButton = document.getElementById('write-review-btn');
+    if (reviewButton) {
+        reviewButton.addEventListener('click', () => {
+            const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'), {
+                backdrop: false,  // Disable backdrop
+                keyboard: true
+            });
+
+            // Show modal when the button is clicked
+            reviewModal.show();
+        });
+    }
+
+    // Add event listener for submitting the review
+    const submitReviewButton = document.getElementById('submitReview');
+    if (submitReviewButton) {
+        submitReviewButton.addEventListener('click', saveCommentToFirebase);
+    }
 });
+
+
+// Function to save comment to Firestore
+async function saveCommentToFirebase() {
+    try {
+        console.log('Saving comment...');  // Check if the function is triggered
+
+        // Get the current user's UID from sessionStorage (or use Firebase auth)
+        const uid = sessionStorage.getItem('uid'); // Replace with Firebase auth if needed
+        if (!uid) {
+            console.error('User is not authenticated.');
+            return;
+        }
+
+        // Retrieve the current username from Firestore based on the UID
+        const username = await getUsername(uid);
+        if (!username) {
+            console.error('Username not found.');
+            return;
+        }
+
+        // Ensure the review description exists and retrieve the review text
+        const reviewDescription = document.getElementById("reviewDescription");
+        if (!reviewDescription) {
+            console.error('Review input field not found.');
+            return;
+        }
+        console.log('Review input field found.');
+
+        // Trim whitespace and get the value of the textarea
+        const message = reviewDescription.value.trim();
+        console.log('Message:', message); // Check the value entered in the textarea
+        
+        // Check if message is empty after trimming whitespace
+        if (!message) {
+            console.error('Review message is required.');
+            return;
+        }
+
+        // Get the current timestamp for the review
+        const timestamp = new Date().toISOString();
+
+        // Construct the comment data object
+        const commentData = {
+            [`${timestamp}`]: {
+                userId: uid,
+                username: username,
+                message: message
+            }
+        };
+
+        // Get the document ID of the item being commented on (this should be dynamic based on your logic)
+        const documentId = "7leD9T5L7pxPOW592IMH"; // Example, replace with dynamic ID
+
+        // Save the comment to Firestore under the relevant listing
+        const listingRef = db.collection('listings').doc(documentId);
+
+        await listingRef.update({
+            comments: firebase.firestore.FieldValue.arrayUnion(commentData)
+        });
+
+        console.log('Comment saved successfully!');
+        // Optionally, close the modal after saving
+        const reviewModal = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
+        reviewModal.hide();
+    } catch (error) {
+        console.error('Error saving comment:', error);
+    }
+}
+
+
+
+// Function to fetch the username from Firestore based on the UID
+async function getUsername(uid) {
+    try {
+        const userDoc = await db.collection('users').doc(uid).get();
+        if (userDoc.exists) {
+            return userDoc.data().username;
+        } else {
+            console.error('User not found in Firestore.');
+            return null;
+        }
+    } catch (error) {
+        console.error('Error fetching username:', error);
+        return null;
+    }
+}
+
 
 
 async function exportListings() {
@@ -600,12 +709,65 @@ function addItemInfo(data, item) {
             });
         }
 
-        document.getElementById('submitReview').addEventListener('click', () => {
+        // document.getElementById('submitReview').addEventListener('click', () => {
+        //     const description = document.getElementById('reviewDescription').value;
+        //     console.log("Description:", description);
+        //     document.getElementById('reviewForm').reset();
+        //     bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+        // }
+        document.getElementById('submitReview').addEventListener('click', async () => {
             const description = document.getElementById('reviewDescription').value;
             console.log("Description:", description);
+        
+            // Save the comment to Firebase if you want it to be persistent.
+            // Assuming you have a function `saveCommentToFirebase` to handle the database operation.
+            const commentData = {
+                description,
+                timestamp: new Date().toISOString(),
+                user: user.uid // assuming `user` is the logged-in user's data
+            };
+            await saveCommentToFirebase(targetUid, commentData); // replace with actual saving function
+        
+            // Display the comment in the info panel
+            const commentSection = document.getElementById('comment-section');
+            if (!commentSection) {
+                const newCommentSection = document.createElement('div');
+                newCommentSection.id = 'comment-section';
+                infoPanel.appendChild(newCommentSection);
+            }
+        
+            // Add the comment to the section
+            const commentElement = document.createElement('p');
+            commentElement.textContent = `${description}`;
+            document.getElementById('comment-section').appendChild(commentElement);
+        
+            // Clear the form and hide the modal
             document.getElementById('reviewForm').reset();
             bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
         });
+        
+       
+
+    
+  
+  // Function to fetch the username from Firestore based on the UID
+  async function getUsername(uid) {
+    try {
+      const userDoc = await db.collection('users').doc(uid).get();
+      if (userDoc.exists) {
+        return userDoc.data().username;
+      } else {
+        console.error('User not found in Firestore.');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching username:', error);
+      return null;
+    }
+  }
+  
+  // Event listener for the comment submission
+  document.getElementById("write-review-btn").addEventListener("click", saveCommentToFirebase);
 
     });
 
