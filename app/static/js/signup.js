@@ -134,6 +134,7 @@ Vue.createApp({
                     border4: false,
                     background1: false,
                     background2: false,
+                    selectedbackground: '../static/img/cloud.png'
                 });
 
 
