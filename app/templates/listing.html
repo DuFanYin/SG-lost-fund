@@ -46,147 +46,153 @@
     <!-- Navbar placeholder -->
     <div id="navbar-placeholder"></div>
 
-    <!-- Header Styling -->
-    <h2 class="d-flex justify-content-center align-items-center fs-1 fs-md-2" style="color: black; margin-top: 40px;">
-        <i class="fas fa-clipboard me-2" style="font-size: 32px;"></i>
-        <span>Post a new listing</span>
-    </h2>
-
-    <hr class="mx-auto" style="border: 5px solid rgb(91, 142, 173); margin-top: 0; margin-bottom: 10px; width: 100%;" />
 
     <!-- Form Structure -->
-    <div id="temp" class="container my-5 content">
+    <div class="form-background">
+        <div class="form-background" style="background-image: url('static/img/cloud.png'); background-size: cover;background-position: center; background-repeat: no-repeat;">
+     
+
+    <div id="temp" class="container content">
         <div v-if="!formSubmitted" class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card custom-width">
                     <div class="card-body">
-                        <br>
 
                         <!-- Form structure with Vue binding -->
-                        <h3 class="text-start text-md-left">Item Information</h3>
-                        <br>
-
+                
+                    
+                         <!-- Header Styling -->
+                         <h2 class="d-flex justify-content-center align-items-center fs-1 fs-md-2" style="color: black; margin-bottom: 10px;">
+                       <i class="fas fa-clipboard me-2" style="font-size: 32px;"></i>
+        <span>Post a new listing</span> 
+    </h2>
                         <form @submit.prevent="submitForm">
 
                             <div class="mb-3">
                                 <label class="form-label">Select Form Type:</label>
                                 <div class="btn-group" role="group" aria-label="Form Type Toggle">
                                     <button type="button" class="btn"
-                                        :class="formData.type === 'found' ? 'btn-primary' : 'btn-outline-primary'"
+                                        :class="formData.type === 'found' ? 'btn-primary' : 'btn btn-primary'"
                                         @click="setType('found')">Found</button>
                                     <button type="button" class="btn"
-                                        :class="formData.type === 'lost' ? 'btn-primary' : 'btn-outline-primary'"
+                                        :class="formData.type === 'lost' ? 'btn-primary' : 'btn btn-primary'"
                                         @click="setType('lost')">Lost</button>
                                 </div>
                             </div>
-
-
-
-                            <!-- Item Name -->
-                            <div class="mb-3">
-                                <label for="item_name" class="form-label">Item Name: <span
-                                        style="color: red;">*</span></label>
-                                <input type="text" v-model="formData.item_name" class="form-control" id="item_name"
-                                    placeholder="Enter Item Name" required>
-                            </div>
-
-                            <!-- Date and Time Field -->
-                            <!-- Date and Time Picker -->
-                            <div class="mb-3">
-                                <label for="datetime" class="form-label">Date and Time: <span style="color: red;">*</span></label>
-                                <input type="datetime-local" v-model="formData.datetime" class="form-control" id="datetime" required>
-                            </div>
-
-
-                            <!-- Location Found -->
-                            <div v-if="formData.type === 'found' ">
-                                <div class="mb-3">
-                                    <label for="location" class="form-label">Location Found at: <span
-                                            style="color: red;">*</span></label>
-                                    <input type="text" v-model="formData.location" class="form-control" id="location"
-                                        placeholder="Enter Location Found" required>
-                                </div>
-                            </div>
-
-                            <div v-if="formData.type === 'lost' ">
-                                <div class="mb-3">
-                                    <label for="location" class="form-label">Location lost at: <span
-                                            style="color: red;">*</span></label>
-                                    <input type="text" v-model="formData.location" class="form-control" id="location"
-                                        placeholder="Enter Location Found" required>
-                                </div>
-                            </div>
                             
+                            <h3 class="text-start text-md-left" style="font-weight: bold;">Item Information</h3>
 
-                            <!-- Google Map container -->
-                            <!-- Google Map container -->
-                            <div id="map" style="height: 400px; width: 100%;"></div>
+<!-- Item Name -->
+<div class="mb-3">
+    <label for="item_name" class="form-label">Item Name:
+         <span style="color: red;">*</span></label>
+    <input type="text" v-model="formData.item_name" class="form-control" id="item_name"
+        placeholder="Enter Item Name" required>
+</div>
+<!-- Item Type -->
+<div class="mb-3">
+    <label for="item_type" class="form-label">Item Type: <span
+            style="color: red;">*</span></label>
+    <select v-model="formData.item_type" class="form-select" id="item_type" required>
+        <option value="" disabled>Select Item Type</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Furniture">Furniture</option>
+        <option value="Books">Books</option>
+        <option value="Jewelry">Jewelry</option>
+        <option value="Other">Other</option>
+    </select>
+</div>
+<!-- Item Description + Characters check -->
+<div class="mb-3">
+    <label for="item_description" class="form-label">Item Description: <span
+            style="color: red;">*</span></label>
+    <textarea v-model="formData.item_description" @input="checkCharacterCount"
+        class="form-control" id="item_description" placeholder="Enter Item Description"
+        rows="4" required></textarea>
+    <small class="text-muted"
+        v-text="'Characters remaining: ' + (200 - characterCount)"></small>
+</div>
 
-                            <!-- Lat/Lng inputs for the selected location -->
-                            <input type="text" id="lat" v-model="formData.coordinates.lat" readonly>
-                            <input type="text" id="lng" v-model="formData.coordinates.lng" readonly>
+
+<!-- File Upload -->
+<div class="mb-3">
+    <label for="file" class="form-label">Upload Image: <span
+            style="color: red;">*</span></label>
+    <input type="file"  @change="handleFileUpload" class="form-control" id="file" required>
+</div>
+
+<hr class="mx-auto" style="border: 1px solid rgb(91, 142, 173); margin-top: 0; margin-bottom: 10px; width: 100%;" />
 
 
-                            <!-- Item Description + Characters check -->
-                            <div class="mb-3">
-                                <label for="item_description" class="form-label">Item Description: <span
-                                        style="color: red;">*</span></label>
-                                <textarea v-model="formData.item_description" @input="checkCharacterCount"
-                                    class="form-control" id="item_description" placeholder="Enter Item Description"
-                                    rows="4" required></textarea>
-                                <small class="text-muted"
-                                    v-text="'Characters remaining: ' + (200 - characterCount)"></small>
-                            </div>
+<h3 class="text-start text-md-left" style="font-weight: bold;">Time and Location Details</h3>
+<br>
+
+<!-- Date and Time Field -->
+<!-- Date and Time Picker -->
+<div class="mb-3">
+    <label for="datetime" class="form-label">Date and Time: <span style="color: red;">*</span></label>
+    <input type="datetime-local" v-model="formData.datetime" class="form-control" id="datetime" required>
+</div>
 
 
-                            <!-- Item Type -->
-                            <div class="mb-3">
-                                <label for="item_type" class="form-label">Item Type: <span
-                                        style="color: red;">*</span></label>
-                                <select v-model="formData.item_type" class="form-select" id="item_type" required>
-                                    <option value="" disabled>Select Item Type</option>
-                                    <option value="Electronics">Electronics</option>
-                                    <option value="Clothing">Clothing</option>
-                                    <option value="Furniture">Furniture</option>
-                                    <option value="Books">Books</option>
-                                    <option value="Jewelry">Jewelry</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
+<!-- Location Found -->
+<div v-if="formData.type === 'found' ">
+    <div class="mb-3">
+        <label for="location" class="form-label">Location Found at: <span
+                style="color: red;">*</span></label>
+        <input type="text" v-model="formData.location" class="form-control" id="location"
+            placeholder="Enter Location Found" required>
+    </div>
+</div>
 
-                            <!-- File Upload -->
-                            <div class="mb-3">
-                                <label for="file" class="form-label">Upload Image: <span
-                                        style="color: red;">*</span></label>
-                                <input type="file" @change="handleFileUpload" class="form-control" id="file" required>
-                            </div>
+<div v-if="formData.type === 'lost' ">
+    <div class="mb-3">
+        <label for="location" class="form-label">Location lost at: <span
+                style="color: red;">*</span></label>
+        <input type="text" v-model="formData.location" class="form-control" id="location"
+            placeholder="Enter Location Found" required>
+    </div>
+</div>
 
-                            <!-- Hand off Details -->
-                            <br>
-                            <br>
-                            <h3 class="text-start text-md-left">Hand Off Details</h3>
-                            <br>
 
-                            <!-- Handoff Method -->
-                            <div class="mb-3">
-                                <label for="handoff_method" class="form-label">Handoff Method: <span
-                                        style="color: red;">*</span></label>
-                                <select v-model="formData.handoff_method" class="form-select" id="handoff_method"
-                                    required>
-                                    <option value="" disabled>Select Handoff Method</option>
-                                    <option value="Mail">Mail</option>
-                                    <option value="In-Person">In-Person</option>
-                                </select>
-                            </div>
+<!-- Google Map container -->
+<!-- Google Map container -->
+<div id="map" style="height: 400px; width: 100%;"></div>
 
-                            <!-- Handoff Location -->
-                            <div class="mb-3">
-                                <label for="handoff_location" class="form-label">Handoff Location: <span
-                                        style="color: red;">*</span></label>
-                                <input type="text" v-model="formData.handoff_location" class="form-control"
-                                    id="handoff_location" placeholder="Enter Handoff Location" required>
-                            </div>
+<!-- Lat/Lng inputs for the selected location -->
+<input type="text" id="lat" v-model="formData.coordinates.lat" readonly>
+<input type="text" id="lng" v-model="formData.coordinates.lng" readonly>
+<br>
+<br>
 
+
+<hr class="mx-auto" style="border: 1px solid rgb(91, 142, 173); margin-top: 0; margin-bottom: 10px; width: 100%;" />
+
+<!-- Hand off Details -->
+
+<h3 class="text-start text-md-left" style="font-weight: bold;">Hand Off Details</h3>
+<br>
+
+<!-- Handoff Method -->
+<div class="mb-3">
+    <label for="handoff_method" class="form-label">Handoff Method: <span
+            style="color: red;">*</span></label>
+    <select v-model="formData.handoff_method" class="form-select" id="handoff_method"
+        required>
+        <option value="" disabled>Select Handoff Method</option>
+        <option value="Mail">Mail</option>
+        <option value="In-Person">In-Person</option>
+    </select>
+</div>
+
+<!-- Handoff Location -->
+<div class="mb-3">
+    <label for="handoff_location" class="form-label">Handoff Location: <span
+            style="color: red;">*</span></label>
+    <input type="text" v-model="formData.handoff_location" class="form-control"
+        id="handoff_location" placeholder="Enter Handoff Location" required>
+</div>
 
 
 
@@ -206,7 +212,8 @@
                 </div>
             </div>
         </div>
-
+    </div>
+</div>
         <!-- Success response message after the form is successfully submitted -->
         <div v-else class="row justify-content-center">
             <div class="col-md-8">

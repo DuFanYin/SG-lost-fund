@@ -19,6 +19,7 @@ Vue.createApp({
                 },
                 formData: {
                     datetime: '',  // Initialize datetime
+                    type: null,
                 }
             },
             characterCount: 0,
@@ -31,6 +32,8 @@ Vue.createApp({
         
         setType(type) {
             this.formData.type = type;
+            console.log(this.formData.type);  // Check the value of formData.type
+
         },
         checkCharacterCount() {
             this.characterCount = this.formData.item_description.length;
