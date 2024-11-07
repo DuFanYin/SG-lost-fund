@@ -106,7 +106,6 @@ Vue.createApp({
                             report_type: this.formData.type === 'found' ? 'Found' : 'Lost',
                             archived: false,
                             comments: null,
-                            notification: null
                         });
                     })
                     .then(() => {
