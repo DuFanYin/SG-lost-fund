@@ -11,11 +11,13 @@
 }
 
 .profile-img {
-    width: 170px; /* Adjust width as needed */
-    height: 170px; /* Adjust height as needed */
-    height: auto;
+    width: 170px;         /* Ensure fixed width */
+    height: 170px;        /* Ensure fixed height */
+    object-fit: cover;    /* Crop image to fill square */
+    border-radius: 15px;  /* Optional: add rounded corners */
     z-index: 1;
 }
+
 
 .profile {
     padding-left: 0;

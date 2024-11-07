@@ -40,6 +40,8 @@ Vue.createApp({
                     sessionStorage.setItem('profiledesc', userData.profiledesc);  // Ensure this line is executed
                     sessionStorage.setItem('email', userData.email); // Ensure this line is executed
 
+                    sessionStorage.setItem('profileImageURL', userData.profileImageURL || "{{ url_for('static', filename='img/profile-icon.jpg') }}"); // Set a default if it doesn't exist
+
                        // Cache selectedBorder and selectedBackground in localStorage
                     localStorage.setItem('selectedBorder', userData.selectedborder || '');
                     localStorage.setItem('selectedBackground', userData.selectedbackground || '');

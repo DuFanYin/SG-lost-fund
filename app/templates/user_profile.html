@@ -29,13 +29,14 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script> <!-- Add this line -->
 </head>
 
 <body>
     <!-- Navbar placeholder -->
     <div id="navbar-placeholder"></div>
 
-    <div id='profile' class="container">
+    <div id='profile' class="container" data-default-profile-url="{{ url_for('static', filename='img/profile-icon.jpg') }}">
         <!-- Vue wrapper with dynamic background -->
         <div class="main-wrapper">
             <div class="row justify-content-center">
@@ -48,8 +49,9 @@
                                     alt="Profile Border">
 
                                 <!-- Profile image -->
-                                <img class="profile-img img-fluid"
-                                    src="{{ url_for('static', filename='img/profile-icon.jpg') }}" alt="Profile Image">
+
+                                    <img class="profile-img img-fluid" :src="profileImageURL" alt="Profile Image">
+
                             </div>
                         </div>
                         <div class="col-12 col-md-6 text-center text-md-start pt-md-0 pt-4">
@@ -217,6 +219,11 @@
 
                             <!-- Profile Editing Form -->
                             <form>
+                                <div class="mb-3">
+                                    <label for="profileImage" class="form-label">Profile Image</label>
+                                    <input type="file" class="form-control" id="profileImage" @change="handleFileUpload">
+                                </div>
+                                
                                 <div class="mb-3">
                                     <label for="profileName" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="profileName" v-model="tempUsername">
