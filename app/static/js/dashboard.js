@@ -58,45 +58,44 @@ const dashboardApp = Vue.createApp({
                 console.error("Error counting recovered items:", error);
             }
         },
+
+
         async loadTopLostItems() {
             try {
                 const listingsRef = db.collection("listings");
                 const snapshot = await listingsRef.where("report_type", "==", "Lost").get();
-
+        
                 const itemCounts = {};
                 snapshot.forEach(doc => {
-                    const itemName = doc.data().item_name;
+                    const data = doc.data();
+                    const itemName = data.item_name.toLowerCase(); // Convert to lowercase
                     itemCounts[itemName] = (itemCounts[itemName] || 0) + 1;
                 });
-
-                // Log the counts for each item
-                console.log("Item Counts:", itemCounts);
-
+        
+                console.log("Item Counts Object:", itemCounts);
+        
                 const topItems = Object.entries(itemCounts)
-                    .sort((a, b) => b[1] - a[1])
+                    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
                     .slice(0, 5);
-
-                // Log the top items and their counts
-                console.log("Top Items:", topItems);
-
+        
+                console.log("Top Items Array:", topItems);
+        
                 const itemNames = topItems.map(item => item[0]);
                 const itemCountsData = topItems.map(item => item[1]);
-
-                // Log the processed item names and counts
+        
                 console.log("Item Names:", itemNames);
                 console.log("Item Counts Data:", itemCountsData);
-
+        
                 const barChartCanvas = document.getElementById("barChart");
                 if (!barChartCanvas) {
                     throw new Error("barChart element not found.");
                 }
-
+        
                 const ctx = barChartCanvas.getContext("2d");
                 if (!ctx) {
                     throw new Error("getContext failed on barChart canvas.");
                 }
-
-                // Create a new bar chart or update the existing one
+        
                 if (this.barChartInstance) {
                     this.barChartInstance.data.labels = itemNames;
                     this.barChartInstance.data.datasets[0].data = itemCountsData;
@@ -110,35 +109,33 @@ const dashboardApp = Vue.createApp({
                                 {
                                     label: "Top 5 Most Lost Items",
                                     data: itemCountsData,
-                                    backgroundColor: "#B95CF4",
-                                    borderColor: "#7D0DC3",
-                                    borderWidth: 1,
+                                    backgroundColor: "#C6E7FF",                           
                                 },
                             ],
                         },
                         options: {
                             responsive: true,
-                            maintainAspectRatio: false, // This allows the chart to fill its container
+                            maintainAspectRatio: false,
                             plugins: {
                                 title: {
                                     display: true,
                                     text: "Top 5 Most Lost Items",
                                     font: {
-                                        size: 20, // Set the desired font size (e.g., 20)
-                                        weight: 'bold', // Make the text bold
+                                        size: 20,
+                                        weight: 'bold',
                                     },
                                     color: 'black',
                                     padding: {
-                                        top: 10, // Add padding on top if needed
-                                        bottom: 10 // Add padding on bottom if needed
+                                        top: 10,
+                                        bottom: 10,
                                     },
-                                    align: 'start', // Align the title to the start (left)
+                                    align: 'start',
                                 },
                                 tooltip: {
                                     enabled: true,
                                     callbacks: {
                                         label: function (context) {
-                                            const rank = context.dataIndex + 1; // Get the rank (1-based index)
+                                            const rank = context.dataIndex + 1;
                                             const labelPrefix = rank === 1 ? "Top most lost item" :
                                                 rank === 2 ? "Top 2nd most lost item" :
                                                     rank === 3 ? "Top 3rd most lost item" :
@@ -152,70 +149,72 @@ const dashboardApp = Vue.createApp({
                             },
                             legend: {
                                 display: false,
-                                position: 'bottom', // Set the legend position to bottom
-                                align: 'center', // Center the legend
+                                position: 'bottom',
+                                align: 'center',
                                 labels: {
-                                    boxWidth: 20, // Sets the size of the legend box
+                                    boxWidth: 20,
                                     font: {
-                                        size: 14 // Font size of the legend
+                                        size: 14
                                     },
-                                    padding: 15 // Padding around the legend items
-                                }
+                                    padding: 15,
+                                },
                             },
                             scales: {
                                 y: {
                                     beginAtZero: true,
                                     ticks: {
-                                        precision: 0 // Remove decimal points by using whole numbers
-                                    }
+                                        precision: 0,
+                                    },
                                 },
                             },
                         },
                     });
                 }
-
+        
             } catch (error) {
                 console.error("Error loading top lost items:", error);
             }
-        },
-
+        }
+        
+        
+        ,
+        
 
         async fetchAndRankUsers(currentUserId) {
             try {
                 const usersRef = db.collection("users");
                 const snapshot = await usersRef.get();
-
+        
                 const users = [];
                 const listingsRef = db.collection("listings"); // Reference to the listings collection
-
+        
                 // Create an array of promises for counting items found
                 const itemCountPromises = snapshot.docs.map(async doc => {
                     const userData = doc.data();
                     const userId = doc.id; // Get the user ID
-
+        
                     // Count items found by this user
                     const foundSnapshot = await listingsRef.where("uid", "==", userId).where("report_type", "==", "Found").get();
                     const itemsFound = foundSnapshot.size; // Count of found items
-
+        
                     users.push({
                         username: userData.username,
                         itemsFound: itemsFound, // Number of items found by the user
-                        points: userData.points,
                         userId: userId // Store the user ID for later use
                     });
                 });
-
+        
                 // Wait for all promises to resolve
                 await Promise.all(itemCountPromises);
-
-                // Sort users by points
-                users.sort((a, b) => b.points - a.points);
-
+        
+                // Sort users by items found
+                users.sort((a, b) => b.itemsFound - a.itemsFound);
+        
                 // Find the current user index
                 const currentUserIndex = users.findIndex(user => user.userId === currentUserId);
-
+        
                 let usersToDisplay;
-
+        
                 // Logic to determine which users to display
                 if (currentUserIndex <= 4) {
                     // If user is in the top 5, show the first 5 users
@@ -224,7 +223,7 @@ const dashboardApp = Vue.createApp({
                     // If user is beyond 5th place, show the user in the third position
                     const startIndex = currentUserIndex - 2; // 2 users above
                     const endIndex = currentUserIndex + 3;   // 2 users below
-
+        
                     // Adjust indices to prevent going out of bounds
                     if (startIndex < 0) {
                         // If too high, adjust to start at 0
@@ -236,27 +235,27 @@ const dashboardApp = Vue.createApp({
                         usersToDisplay = users.slice(startIndex, endIndex);
                     }
                 }
-
+        
                 // Display the leaderboard in the HTML
                 const leaderboardDataElement = document.getElementById("leaderboardData");
                 leaderboardDataElement.innerHTML = ""; // Clear existing data
-
+        
                 usersToDisplay.forEach((user, index) => {
                     const row = document.createElement("tr");
-
+        
                     // Only highlight the current user
                     if (user.userId === currentUserId) {
                         console.log("Highlighting user:", user.username); // Log user being highlighted
                         row.classList.add("highlight-current-user"); // Add highlight class for current user
                         row.classList.add("congratulations"); // Optional additional styling for animation
-
+        
                         // Trigger confetti over the current user's row
                         setTimeout(() => {
                             // Get the bounding box of the row to position confetti
                             const rowPosition = row.getBoundingClientRect();
                             const xPosition = (rowPosition.left + rowPosition.right) / 2 / window.innerWidth;
                             const yPosition = (rowPosition.top + rowPosition.bottom) / 2 / window.innerHeight;
-
+        
                             confetti({
                                 particleCount: 100,
                                 spread: 70,
@@ -268,21 +267,21 @@ const dashboardApp = Vue.createApp({
                             });
                         }, 500); // Add a delay to allow row rendering
                     }
-
+        
                     row.innerHTML = `
                         <td>${index + 1}</td>
                         <td>${user.username}${user.userId === currentUserId ? ' (You)' : ''}</td>
                         <td>${user.itemsFound}</td>
-                        <td>${user.points}</td>
                     `;
                     leaderboardDataElement.appendChild(row);
                 });
-
-
+        
+        
             } catch (error) {
                 console.error("Error fetching and ranking users:", error);
             }
         },
+        
 
 
 
@@ -352,7 +351,7 @@ const dashboardApp = Vue.createApp({
                         labels: ['Success Rate', 'Failure Rate'],
                         datasets: [{
                             data: [data.successRate, 100 - data.successRate],
-                            backgroundColor: ['#6495ED', '#D397F8'],
+                            backgroundColor: ['#FFC0CB', '#8caee7'],
                             borderColor: '#ffffff',
                             borderWidth: 2,
                             hoverOffset: 8, // Adds a 3D effect on hover
@@ -372,7 +371,7 @@ const dashboardApp = Vue.createApp({
                                     font: {
                                         size: 14
                                     },
-                                    padding: 15
+                    
                                 }
                             },
                             title: {
@@ -384,10 +383,7 @@ const dashboardApp = Vue.createApp({
                                     family: 'Arial', // Keep the font family
                                 },
                                 color: 'black',  // Keep the font color
-                                padding: {
-                                    top: 10, // Add some space above the title
-                                    bottom: 10 // Add space below the title to separate from the chart
-                                },
+                               
                                 align: 'start', // Align the title to the start
                                 position: 'top' // Position the title above the chart
                             },

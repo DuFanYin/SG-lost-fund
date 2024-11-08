@@ -55,100 +55,83 @@
 <body>
     <!-- Navbar placeholder -->
     <div id="navbar-placeholder"></div>
-
-    <!-- Dashboard content with Vue binding -->
-    <div id="app" class="container-fluid">
-        <div class="row">
-            <div class="col-lg-6 d-flex flex-column">
-                <div class="grey_border_top w-100 mb-3 mt-3 shadow">
-                    <br> <i class="fas fa-users fa-2x"></i>
-
-                    <span class="box-title">Total Number of Registered Users
-                        <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
-                            title="This number represents the total number of users who have signed up on the platform."></i>
-                    </span>
-
-                    <!-- Direct binding -->
-                    <p id="boldNumber" v-text="totalUsers"></p>
-                </div>
-                <div class="row gx-3 gx-md-5 mt-3 "> <!-- Adjust gap with gx-* classes -->
-                    <div class="col-md-6 col-lg-6 d-flex align-items-stretch">
-                        <div class="grey_border_bottom w-100 shadow">
-                            <br>
-                            <i class="fas fa-book icon-large fa-2x"></i>
-
-                            <span class="box-title">Total Lost Item Reports
-                                <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
-                                    title="This number represents the total number of lost item reports across all users."></i>
-                            </span>
-
-
-                            <p id="boldNumber" v-text="lostItemReports"></p>
-                        </div>
+    <div class="background-color">
+     <div class="container-fluid mr-4 ml-4">
+        <!-- Dashboard content with Vue binding -->
+        <div id="app" class="container-fluid">
+            
+            <!-- First Row (4-4-4) -->
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="grey_border_top w-100 mb-3 mt-3 shadow bg-white">
+                        <br> <i class="fas fa-users fa-2x"></i>
+                        <span class="box-title">Total Number of Registered Users
+                            <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                title="This number represents the total number of users who have signed up on the platform."></i>
+                        </span>
+                        <p id="boldNumber" v-text="totalUsers"></p>
                     </div>
-                    <div class="col-md-6 d-flex align-items-stretch mt-3 mt-md-0 ">
-                        <!-- Add top margin on small screens -->
-                        <div class="grey_border_bottom w-100 shadow">
-                            <br> <i class="fas fa-thumbs-up fa-2x"></i>
-
-                            <span class="box-title">Total Number of Recovered Items
-                                <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
-                                    title="This number represents the total number of recovered items across all users."></i>
-                            </span>
-
-                            <p id="boldNumber" v-text="recoveredItems"></p>
-                        </div>
+                </div>  
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="grey_border_top w-100 mb-3 mt-3 shadow bg-white">
+                        <br><i class="fas fa-book icon-large fa-2x"></i>
+                        <span class="box-title">Total Lost Item Reports
+                            <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                title="This number represents the total number of lost item reports across all users."></i>
+                        </span>
+                        <p id="boldNumber" v-text="lostItemReports"></p>
                     </div>
-                </div>
+                </div>  
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="grey_border_top w-100 mb-3 mt-3 shadow bg-white" >
+                        <br> <i class="fas fa-thumbs-up fa-2x"></i>
+                        <span class="box-title">Total Number of Recovered Items
+                            <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                title="This number represents the total number of recovered items across all users."></i>
+                        </span>
+                        <p id="boldNumber" v-text="recoveredItems"></p>
+                    </div>
+                </div>  
             </div>
-
-            <br>
-            <br>
-
-            <div class="col-lg-6 col-md-12">
-                <!-- Leaderboard Content -->
-                <div class="leaderboard grey_border_top mt-3 shadow p-4">
-                    <div class="d-flex align-items-center justify-content-center mb-3">
-                        <img src="static/img/trophy2.png" alt="trophy" class="trophy-icon me-2" />
-                        <h1 class="text-center text-dark mb-0">Leaderboard</h1>
-                        <img src="static/img/trophy2.png" alt="trophy" class="trophy-icon ms-2" />
-                    </div>
-
-                    <!-- Leaderboard Table -->
-                    <div v-if="isLoggedIn">
-                        <div class="pulsing-text">
-                            🎉 Congratulations to our top performers! 🎉
+    
+            <!-- Second Row (7-5) -->
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-12">
+                    <!-- Leaderboard Content -->
+                    <div class="leaderboard grey_border_top mt-3 shadow bg-white">
+                        <div class="d-flex align-items-center justify-content-center mb-3">
+                            <img src="static/img/trophy2.png" alt="trophy" class="trophy-icon me-2" />
+                            <h1 class="text-center text-dark mb-0">Leaderboard</h1>
+                            <img src="static/img/trophy2.png" alt="trophy" class="trophy-icon ms-2" />
                         </div>
-
-                        <table class="table table-hover text-white shadow table_border">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Ranking</th>
-                                    <th>Username</th>
-                                    <th class="text-wrap">Number of Items Found</th>
-                                    <th>Points</th>
-                                </tr>
-                            </thead>
-                            <tbody id="leaderboardData">
-                                <!-- Dynamic Content Here -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div v-else class="overlay-message">
-                        <h3><i class="fas fa-lock"></i> Login Access Required. Please <a href="/login">login</a> to view
-                            it.</h3>
+                        <div v-if="isLoggedIn">
+                            <div class="pulsing-text">
+                                🎉 Congratulations to our top performers! 🎉
+                            </div>
+                            
+                            <!-- Table with full width and grey border -->
+                            <table class="table table-hover text-white shadow w-100 border border-secondary">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Ranking</th>
+                                        <th>Username</th>
+                                        <th class="text-wrap">Number of Items Found</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leaderboardData">
+                                    <!-- Dynamic Content Here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div v-else class="overlay-message">
+                            <h3><i class="fas fa-lock"></i> Login Access Required. Please <a href="/login">login</a> to view it.</h3>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <br>
-
-            <div class="row mt-3">
-                <!-- Pie Chart Card (Left Side) -->
-                <div class="col-lg-6 col-md-6 d-flex flex-column">
-                    <div class="p-1 rounded-3 flex-fill shadow grey_border_top position-relative">
+    
+                <div class="col-lg-4 col-md-4 col-sm-12 d-flex flex-column">
+                    <div class="p-1 rounded-3 flex-fill shadow grey_border_top position-relative bg-white">
                         <div class="container-fluid py-2 chart-container pie-chart-container position-relative">
-                            <!-- Dropdown in the top-right corner within the chart area -->
                             <canvas id="pieChart" style="width: 100%; height: 400px;"></canvas>
                             <div class="dropdown-container position-absolute top-0 end-0 p-2">
                                 <select class="form-select form-select-sm" v-model="selectedReportType" @change="updatePieChart">
@@ -160,31 +143,32 @@
                         </div>
                     </div>
                 </div>
-            
-
-                <br>
-
-                <!-- Line Chart and Bar Chart (Right Side) -->
-                <div class="col-lg-6 col-md-6 d-flex flex-column">
-                    <!-- Line Chart Card (Top Right) -->
-                    <div class="p-1 rounded-3 flex-fill shadow grey_border_top mb-3">
+            </div>
+    
+            <!-- Third Row (6-6) -->
+            <div class="row my-3">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="p-1 rounded-3 flex-fill shadow grey_border_top mb-3 bg-white">
                         <div class="container-fluid py-2 chart-container">
-                            <canvas id="lineChart" style="width: 100%; height: 200px;"></canvas>
+                            <canvas id="lineChart" style="width: 100%; height: 400px;"></canvas>
                         </div>
                     </div>
-
-                    <br>
-
-                    <!-- Bar Chart Card (Bottom Right) -->
-                    <div class="p-1 rounded-3 flex-fill shadow grey_border_top">
+                </div>
+    
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="p-1 rounded-3 flex-fill shadow grey_border_top bg-white">
                         <div class="container-fluid py-2 chart-container">
-                            <canvas id="barChart" style="width: 100%; height: 200px;"></canvas>
+                            <canvas id="barChart" style="width: 100%; height: 400px;"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
+</div>
+
+
 
 
     <!-- Footer placeholder -->

@@ -17,7 +17,7 @@ body {
     right: 10px;
     z-index: 2;
     background-color: rgba(255, 255, 255, 0.9); /* Optional: background for visibility */
-    border-radius: 5px;
+    border-radius: 20%;
     padding: 5px;
     min-width: 100px; /* Ensures proper width */
 }
@@ -37,7 +37,6 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: 10px;
     padding: 20px;
 }
 
@@ -49,6 +48,7 @@ body {
     overflow: hidden;
     height: calc(200px * 2 + 45px);
     /* Box height * 2 + margin space (adjust if needed) */
+    width: 100%;
 
 }
 
@@ -71,7 +71,6 @@ body {
     /* Optional: makes the text bold */
     text-align: center;
     justify-content: center;
-    color: rgba(75, 75, 235, 0.815);
 }
 
 .grey_border_bottom p {
@@ -81,7 +80,7 @@ body {
     /* Optional: makes the text bold */
     text-align: center;
     justify-content: center;
-    color: rgba(75, 75, 235, 0.815);
+    /* color: rgba(75, 75, 235, 0.815); */
 }
 
 .grey_border_top,
@@ -179,7 +178,7 @@ body {
 } */
 
 .highlight-current-user td {
-    background-color: #E6E6FA !important; /* Bright yellow for highlighting */
+    background-color: #D4F6FF !important; /* Bright yellow for highlighting */
     font-weight: bold;
     color: #333; /* Dark text color for contrast */
 }
@@ -195,6 +194,7 @@ html {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    color:white;
 }
 
 .container-fluid {
@@ -293,3 +293,10 @@ html {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1); }
 }
+
+
+.background-color{
+    background-color: #e3f2fd;
+}
+
+
