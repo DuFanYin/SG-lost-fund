@@ -137,14 +137,20 @@
 
                                     <!-- Date and Time Field -->
                                     <!-- Date and Time Picker -->
-                                    <div class="mb-3">
+                                  <!--  <div class="mb-3">
                                         <label for="datetime" class="form-label">Date and Time: <span
                                                 style="color: red;">*</span></label>
                                         <input type="datetime-local" v-model="formData.datetime" class="form-control"
                                             id="datetime" required>
+                                    </div>-->
+
+                                    <!-- Date and Time Picker -->
+                                    <div class="mb-3">
+                                        <label for="datetime" class="form-label">Date and Time: <span style="color: red;">*</span></label>
+                                        <input type="datetime-local" v-model="formData.datetime" class="form-control" id="datetime" @input="validateDateTime" required>
                                     </div>
-
-
+                                    <div v-if="dateError" style="color: red;">{{ dateError }}</div>
+                                    
                                     <!-- Location Found -->
                                     <div v-if="formData.type === 'found' ">
                                         <div class="mb-3">

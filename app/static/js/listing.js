@@ -20,7 +20,8 @@ Vue.createApp({
                 formData: {
                     datetime: '',  // Initialize datetime
                     type: null,
-                }
+                },
+                dateError: '',
             },
             characterCount: 0,
             formSubmitted: false,
@@ -29,6 +30,29 @@ Vue.createApp({
         };
     },
     methods: {
+        validateDateTime() {
+            const date = new Date(this.formData.datetime);
+            if (isNaN(date.getTime())) {
+                this.dateError = "Please select a valid date and time.";
+            } else {
+                this.dateError = "";
+            }
+        },
+        setSingaporeDateTime() {
+            const now = new Date();
+    
+            // Get UTC time and add 8 hours to reach Singapore time (UTC+8)
+            const singaporeTime = new Date(now.getTime() + (8 * 60 * 60 * 1000)); 
+    
+            // Format to 'YYYY-MM-DDTHH:MM' for the datetime-local input
+            const year = singaporeTime.getUTCFullYear();
+            const month = String(singaporeTime.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(singaporeTime.getUTCDate()).padStart(2, '0');
+            const hours = String(singaporeTime.getUTCHours()).padStart(2, '0');
+            const minutes = String(singaporeTime.getUTCMinutes()).padStart(2, '0');
+    
+            this.formData.datetime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        },
         
         setType(type) {
             this.formData.type = type;
@@ -156,6 +180,9 @@ Vue.createApp({
     mounted() {
         // Attach initMap to the global window object
         window.initMap = this.initMap;
+
+        this.setSingaporeDateTime(); // Set default to Singapore time
+
 
         // Initialize the map after Vue instance is mounted
 
