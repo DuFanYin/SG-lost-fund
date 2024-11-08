@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-
 // Function to save comment to Firestore
 async function saveCommentToFirebase() {
     try {
@@ -60,7 +59,7 @@ async function saveCommentToFirebase() {
         // Trim whitespace and get the value of the textarea
         const message = reviewDescription.value.trim();
         console.log('Message:', message); // Check the value entered in the textarea
-        
+
         // Check if message is empty after trimming whitespace
         if (!message) {
             console.error('Review message is required.');
@@ -98,8 +97,6 @@ async function saveCommentToFirebase() {
     }
 }
 
-
-
 // Function to fetch the username from Firestore based on the UID
 async function getUsername(uid) {
     try {
@@ -115,8 +112,6 @@ async function getUsername(uid) {
         return null;
     }
 }
-
-
 
 async function exportListings() {
     const listings = [];
@@ -157,7 +152,7 @@ async function exportListings() {
         features: listings
     };
 };
-window.exportListings = exportListings;
+
 async function exportUsers() {
     const users = [];
     const snapshot = await db.collection('users').get();
@@ -171,7 +166,6 @@ async function exportUsers() {
         users
     };
 }
-window.exportUsers = exportUsers;
 
 const card = document.getElementById('card');
 let defaultZoomLevel = 11;
@@ -196,7 +190,6 @@ function sanitizeHTML(strings) {
     }
     return result;
 }
-window.sanitizeHTML = sanitizeHTML;
 
 function userLocation() {
     const defaultPos = { lat: 1.3521, lng: 103.8198 }; // Singapore center
@@ -411,7 +404,6 @@ async function renderMapWithFeatures(centerPosition) {
     });
 
 }
-window.renderMapWithFeatures = renderMapWithFeatures;
 
 function imageExists(url, callback) {
     const img = new Image();
@@ -419,7 +411,7 @@ function imageExists(url, callback) {
     img.onerror = () => callback(false);
     img.src = url;
 }
-window.imageExists = imageExists;
+
 function addCustomMarker() {
     map.data.setStyle((feature) => {
         const item_type = feature.getProperty("item_type");
@@ -450,7 +442,7 @@ function addCustomMarker() {
         };
     });
 }
-window.addCustomMarker = addCustomMarker;
+
 async function calculateDistances(data, origin) {
 
     const items = [];
@@ -502,7 +494,7 @@ async function calculateDistances(data, origin) {
     });
     return distancesList;
 }
-window.calculateDistances = calculateDistances;
+
 function showItemsList(data, items, categoryArray, statusArray, datesArray) {
     const panel = document.getElementById('panel');
 
@@ -574,15 +566,14 @@ function showItemsList(data, items, categoryArray, statusArray, datesArray) {
     card.style.zIndex = 2;
     document.getElementById('arrow').src = "../static/img/arrow_left.png"
 }
-window.showItemsList = showItemsList;
 
 function addItemInfo(data, item) {
     const temp = document.createElement('div');
     const tempBody = document.createElement('div');
 
     const currentItem = data.getFeatureById(item.itemid);
-     // Check if currentItem is valid
-     if (!currentItem) {
+    // Check if currentItem is valid
+    if (!currentItem) {
         console.error(`Feature with ID ${item.itemid} not found.`);
         return; // Exit the function if the feature is not found
     }
@@ -729,7 +720,7 @@ function addItemInfo(data, item) {
         document.getElementById('submitReview').addEventListener('click', async () => {
             const description = document.getElementById('reviewDescription').value;
             console.log("Description:", description);
-        
+
             // Save the comment to Firebase if you want it to be persistent.
             // Assuming you have a function `saveCommentToFirebase` to handle the database operation.
             const commentData = {
@@ -738,7 +729,7 @@ function addItemInfo(data, item) {
                 user: user.uid // assuming `user` is the logged-in user's data
             };
             await saveCommentToFirebase(targetUid, commentData); // replace with actual saving function
-        
+
             // Display the comment in the info panel
             const commentSection = document.getElementById('comment-section');
             if (!commentSection) {
@@ -746,39 +737,39 @@ function addItemInfo(data, item) {
                 newCommentSection.id = 'comment-section';
                 infoPanel.appendChild(newCommentSection);
             }
-        
+
             // Add the comment to the section
             const commentElement = document.createElement('p');
             commentElement.textContent = `${description}`;
             document.getElementById('comment-section').appendChild(commentElement);
-        
+
             // Clear the form and hide the modal
             document.getElementById('reviewForm').reset();
             bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
         });
-        
-       
 
-    
-  
-  // Function to fetch the username from Firestore based on the UID
-  async function getUsername(uid) {
-    try {
-      const userDoc = await db.collection('users').doc(uid).get();
-      if (userDoc.exists) {
-        return userDoc.data().username;
-      } else {
-        console.error('User not found in Firestore.');
-        return null;
-      }
-    } catch (error) {
-      console.error('Error fetching username:', error);
-      return null;
-    }
-  }
-  
-  // Event listener for the comment submission
-  document.getElementById("write-review-btn").addEventListener("click", saveCommentToFirebase);
+
+
+
+
+        // Function to fetch the username from Firestore based on the UID
+        async function getUsername(uid) {
+            try {
+                const userDoc = await db.collection('users').doc(uid).get();
+                if (userDoc.exists) {
+                    return userDoc.data().username;
+                } else {
+                    console.error('User not found in Firestore.');
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error fetching username:', error);
+                return null;
+            }
+        }
+
+        // Event listener for the comment submission
+        document.getElementById("write-review-btn").addEventListener("click", saveCommentToFirebase);
 
     });
 
@@ -787,7 +778,7 @@ function addItemInfo(data, item) {
     const hrElement = document.createElement("hr");
     panel.appendChild(hrElement);
 }
-window.addItemInfo = addItemInfo;
+
 function adjustPanelsForScreenSize() {
     const infoPanel = document.getElementById('info-panel');
     const panel = document.getElementById('panel');
@@ -804,8 +795,8 @@ function adjustPanelsForScreenSize() {
         }
     }
 }
-window.adjustPanelsForScreenSize = adjustPanelsForScreenSize;
 window.addEventListener('resize', adjustPanelsForScreenSize);
+
 function applyFilters(panel, data) {
     card.style.zIndex = 2;
 
@@ -845,7 +836,7 @@ function applyFilters(panel, data) {
 
     applyFiltersToMap(data);
 }
-window.applyFilters = applyFilters;
+
 function applyFiltersToMap(data) {
     const selectedCategory = document.getElementById('category-filter').value;
     const selectedStatus = document.getElementById('status-filter').value;
@@ -870,5 +861,5 @@ function applyFiltersToMap(data) {
         data.overrideStyle(feature, { visible: visible });
     });
 }
-window.applyFiltersToMap = applyFiltersToMap;
+
 
