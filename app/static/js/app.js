@@ -214,7 +214,37 @@ function userLocation() {
 };
 window.userLocation = userLocation;
 
+function showLoadingScreen() {
+    const loading = document.getElementById('loading');
+    if (loading) {
+        loading.style.display = 'flex';
+        console.log('Loading screen displayed.');
+    } else {
+        console.error('Loading screen element not found.');
+    }
+}
+function hideLoadingScreen() {
+    const loading = document.getElementById('loading');
+    if (loading) {
+        loading.style.display = 'none';
+        console.log('Loading screen hidden.');
+    } else {
+        console.error('Loading screen element not found.');
+    }
+
+    const mapDiv = document.getElementById('map');
+    if (mapDiv) {
+        mapDiv.style.display = 'block';
+        mapDiv.classList.add('show');
+        console.log('Map displayed.');
+    } else {
+        console.error('Map container element not found.');
+    }
+}
+
 async function renderMapWithFeatures(centerPosition) {
+    showLoadingScreen();
+
     const navElement = document.querySelector("nav");
     const navHeight = navElement ? navElement.offsetHeight : 0;
     document.getElementById("map").style.height = `calc(100vh - ${navHeight}px)`;
@@ -225,7 +255,6 @@ async function renderMapWithFeatures(centerPosition) {
         mapTypeId: 'roadmap',
         mapTypeControl: false,
     });
-
     bounds = new google.maps.LatLngBounds();
 
     var temp = new Set();
@@ -350,13 +379,13 @@ async function renderMapWithFeatures(centerPosition) {
     });
 
     const rankedItems = await calculateDistances(map.data, centerPosition);
+    hideLoadingScreen();
     showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses), uniqueDates);
 
     // Autocomplete location search bar
     const container = document.getElementById('sidebar-autocomplete-container');
     const input = document.createElement('input');
     const options = {
-        types: ['address'],
         componentRestrictions: { country: 'sg' },
     };
 
@@ -367,7 +396,7 @@ async function renderMapWithFeatures(centerPosition) {
     input.style.width = '100%';
     container.appendChild(input);
     const autocomplete = new google.maps.places.Autocomplete(input, options);
-    autocomplete.setFields(['address_components', 'geometry', 'name']);
+    autocomplete.setFields(['address_components', 'geometry', 'name', 'place_id', 'formatted_address']);
 
     const originMarker = new google.maps.Marker({ map: map });
     originMarker.setVisible(false);
