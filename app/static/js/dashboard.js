@@ -64,43 +64,48 @@ const dashboardApp = Vue.createApp({
             try {
                 const listingsRef = db.collection("listings");
                 const snapshot = await listingsRef.where("report_type", "==", "Lost").get();
-        
+
                 const itemCounts = {};
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     const itemName = data.item_name.toLowerCase(); // Convert to lowercase
                     itemCounts[itemName] = (itemCounts[itemName] || 0) + 1;
                 });
-        
+
                 console.log("Item Counts Object:", itemCounts);
-        
+
                 const topItems = Object.entries(itemCounts)
                     .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
                     .slice(0, 5);
-        
+
                 console.log("Top Items Array:", topItems);
-        
+
                 const itemNames = topItems.map(item => item[0]);
                 const itemCountsData = topItems.map(item => item[1]);
-        
+
                 console.log("Item Names:", itemNames);
                 console.log("Item Counts Data:", itemCountsData);
-        
+
                 const barChartCanvas = document.getElementById("barChart");
                 if (!barChartCanvas) {
                     throw new Error("barChart element not found.");
                 }
-        
+
                 const ctx = barChartCanvas.getContext("2d");
                 if (!ctx) {
                     throw new Error("getContext failed on barChart canvas.");
                 }
-        
+
                 if (this.barChartInstance) {
                     this.barChartInstance.data.labels = itemNames;
                     this.barChartInstance.data.datasets[0].data = itemCountsData;
                     this.barChartInstance.update();
                 } else {
+                    const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+                    gradient.addColorStop(0, '#820000'); // Darkest red at the top
+                    gradient.addColorStop(1, '#ff7878'); // Lightest red at the bottom
+
+
                     this.barChartInstance = new Chart(ctx, {
                         type: "bar",
                         data: {
@@ -109,7 +114,7 @@ const dashboardApp = Vue.createApp({
                                 {
                                     label: "Top 5 Most Lost Items",
                                     data: itemCountsData,
-                                    backgroundColor: "#C6E7FF",                           
+                                    backgroundColor: gradient,
                                 },
                             ],
                         },
@@ -170,51 +175,51 @@ const dashboardApp = Vue.createApp({
                         },
                     });
                 }
-        
+
             } catch (error) {
                 console.error("Error loading top lost items:", error);
             }
         }
-        
-        
+
+
         ,
-        
+
 
         async fetchAndRankUsers(currentUserId) {
             try {
                 const usersRef = db.collection("users");
                 const snapshot = await usersRef.get();
-        
+
                 const users = [];
                 const listingsRef = db.collection("listings"); // Reference to the listings collection
-        
+
                 // Create an array of promises for counting items found
                 const itemCountPromises = snapshot.docs.map(async doc => {
                     const userData = doc.data();
                     const userId = doc.id; // Get the user ID
-        
+
                     // Count items found by this user
                     const foundSnapshot = await listingsRef.where("uid", "==", userId).where("report_type", "==", "Found").get();
                     const itemsFound = foundSnapshot.size; // Count of found items
-        
+
                     users.push({
                         username: userData.username,
                         itemsFound: itemsFound, // Number of items found by the user
                         userId: userId // Store the user ID for later use
                     });
                 });
-        
+
                 // Wait for all promises to resolve
                 await Promise.all(itemCountPromises);
-        
+
                 // Sort users by items found
                 users.sort((a, b) => b.itemsFound - a.itemsFound);
-        
+
                 // Find the current user index
                 const currentUserIndex = users.findIndex(user => user.userId === currentUserId);
-        
+
                 let usersToDisplay;
-        
+
                 // Logic to determine which users to display
                 if (currentUserIndex <= 4) {
                     // If user is in the top 5, show the first 5 users
@@ -223,7 +228,7 @@ const dashboardApp = Vue.createApp({
                     // If user is beyond 5th place, show the user in the third position
                     const startIndex = currentUserIndex - 2; // 2 users above
                     const endIndex = currentUserIndex + 3;   // 2 users below
-        
+
                     // Adjust indices to prevent going out of bounds
                     if (startIndex < 0) {
                         // If too high, adjust to start at 0
@@ -235,27 +240,27 @@ const dashboardApp = Vue.createApp({
                         usersToDisplay = users.slice(startIndex, endIndex);
                     }
                 }
-        
+
                 // Display the leaderboard in the HTML
                 const leaderboardDataElement = document.getElementById("leaderboardData");
                 leaderboardDataElement.innerHTML = ""; // Clear existing data
-        
+
                 usersToDisplay.forEach((user, index) => {
                     const row = document.createElement("tr");
-        
+
                     // Only highlight the current user
                     if (user.userId === currentUserId) {
                         console.log("Highlighting user:", user.username); // Log user being highlighted
                         row.classList.add("highlight-current-user"); // Add highlight class for current user
                         row.classList.add("congratulations"); // Optional additional styling for animation
-        
+
                         // Trigger confetti over the current user's row
                         setTimeout(() => {
                             // Get the bounding box of the row to position confetti
                             const rowPosition = row.getBoundingClientRect();
                             const xPosition = (rowPosition.left + rowPosition.right) / 2 / window.innerWidth;
                             const yPosition = (rowPosition.top + rowPosition.bottom) / 2 / window.innerHeight;
-        
+
                             confetti({
                                 particleCount: 100,
                                 spread: 70,
@@ -267,7 +272,7 @@ const dashboardApp = Vue.createApp({
                             });
                         }, 500); // Add a delay to allow row rendering
                     }
-        
+
                     row.innerHTML = `
                         <td>${index + 1}</td>
                         <td>${user.username}${user.userId === currentUserId ? ' (You)' : ''}</td>
@@ -275,13 +280,13 @@ const dashboardApp = Vue.createApp({
                     `;
                     leaderboardDataElement.appendChild(row);
                 });
-        
-        
+
+
             } catch (error) {
                 console.error("Error fetching and ranking users:", error);
             }
         },
-        
+
 
 
 
@@ -351,7 +356,7 @@ const dashboardApp = Vue.createApp({
                         labels: ['Success Rate', 'Failure Rate'],
                         datasets: [{
                             data: [data.successRate, 100 - data.successRate],
-                            backgroundColor: ['#FFC0CB', '#8caee7'],
+                            backgroundColor: ['#208220', '#FF2B2B'],
                             borderColor: '#ffffff',
                             borderWidth: 2,
                             hoverOffset: 8, // Adds a 3D effect on hover
@@ -371,7 +376,7 @@ const dashboardApp = Vue.createApp({
                                     font: {
                                         size: 14
                                     },
-                    
+
                                 }
                             },
                             title: {
@@ -383,7 +388,7 @@ const dashboardApp = Vue.createApp({
                                     family: 'Arial', // Keep the font family
                                 },
                                 color: 'black',  // Keep the font color
-                               
+
                                 align: 'start', // Align the title to the start
                                 position: 'top' // Position the title above the chart
                             },
@@ -464,9 +469,10 @@ const dashboardApp = Vue.createApp({
                         {
                             label: 'Items Found',
                             data: foundCounts,
-                            borderColor: '#FFC0CB',
+                            borderColor: '#208220',
                             fill: false,
-                            backgroundColor: 'rgba(255, 192, 203, 0.2)', // Add a light background color
+                            backgroundColor: 'transparent',
+                            // backgroundColor: 'rgba(255, 192, 203, 0.2)', // Add a light background color
                             pointRadius: 5, // Adjust the radius of the points
                             fill: true, // Fill the area under the line
                             tension: 0.3, // Smooth the line
@@ -474,9 +480,10 @@ const dashboardApp = Vue.createApp({
                         {
                             label: 'Items Lost',
                             data: lostCounts,
-                            borderColor: '#4D81DA',
+                            borderColor: '#FF2B2B',
                             fill: false,
-                            backgroundColor: 'rgba(77, 129, 218, 0.2)', // Add a light background color
+                            backgroundColor: 'transparent',
+                            // backgroundColor: 'rgba(255, 192, 203, 0.2)', // Add a light background color
                             pointRadius: 5, // Adjust the radius of the points
                             fill: true, // Fill the area under the line
                             tension: 0.3, // Smooth the line
