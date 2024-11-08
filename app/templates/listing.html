@@ -60,9 +60,6 @@
                         <div class="card custom-width">
                             <div class="card-body">
 
-                                <!-- Form structure with Vue binding -->
-
-
                                 <!-- Header Styling -->
                                 <h2 class="d-flex justify-content-center align-items-center fs-1 fs-md-2"
                                     style="color: black; margin-bottom: 10px;">
@@ -93,6 +90,7 @@
                                         <input type="text" v-model="formData.item_name" class="form-control"
                                             id="item_name" placeholder="Enter Item Name" required>
                                     </div>
+
                                     <!-- Item Type -->
                                     <div class="mb-3">
                                         <label for="item_type" class="form-label">Item Type: <span
@@ -108,6 +106,7 @@
                                             <option value="Other">Other</option>
                                         </select>
                                     </div>
+                                    
                                     <!-- Item Description + Characters check -->
                                     <div class="mb-3">
                                         <label for="item_description" class="form-label">Item Description: <span

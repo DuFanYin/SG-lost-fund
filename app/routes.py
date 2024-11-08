@@ -46,7 +46,7 @@ def dash_board():
     return render_template('dash_board.html')
 
 
-@main.route('/listing', methods=['POST', 'GET'])
+@main.route('/listing')
 def listing():
     
     return render_template('listing.html')
