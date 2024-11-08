@@ -4,12 +4,12 @@
 }
 
 .navbar-brand {
-    color: #007bff; 
+    color: #D30000; 
     font-size: 1.25rem;
 }
 
 .navbar-brand:hover {
-    color: #0056b3;
+    color: #D30000;
     text-decoration: none;
 }
 
@@ -20,11 +20,11 @@
 }
 
 .nav-link:hover {
-    color: #007bff !important;
+    color: #D30000 !important;
 }
 
 .nav-link.active {
-    color: #007bff !important; 
+    color: #D30000 !important; 
     position: relative;
     font-weight: bold;
 }
@@ -36,7 +36,7 @@
     left: 0;
     width: 100%;
     height: 3px;
-    background-color: #007bff; 
+    background-color: #D30000; 
     border-radius: 2px;
 }
 
@@ -55,7 +55,7 @@
 
 .dropdown-item:hover {
     background-color: #f1f1f1 !important;
-    color: red !important;
+    color: #D30000 !important;
 }
 
 .navbar-nav .nav-item .nav-link i {
