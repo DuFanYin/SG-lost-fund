@@ -1,5 +1,8 @@
 import { db } from './firebaseConfig.js';
 
+let currentDocumentId = null;
+
+
 // Added for UI Tooltip
 document.addEventListener("DOMContentLoaded", function () {
     // Initialize Bootstrap tooltips
@@ -22,79 +25,149 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Add event listener for submitting the review
+    // Pass the dynamic documentId to the saveCommentToFirebase function
+    // const submitReviewButton = document.getElementById('submitReview');
+    // if (submitReviewButton) {
+    //     submitReviewButton.addEventListener('click', () => saveCommentToFirebase(documentId));
+    // }
     const submitReviewButton = document.getElementById('submitReview');
     if (submitReviewButton) {
-        submitReviewButton.addEventListener('click', saveCommentToFirebase);
+        submitReviewButton.addEventListener('click', () => saveCommentToFirebase(currentDocumentId));
     }
+
 });
 
 // Function to save comment to Firestore
 async function saveCommentToFirebase() {
     try {
-        console.log('Saving comment...');  // Check if the function is triggered
+        console.log('Saving comment...');
 
-        // Get the current user's UID from sessionStorage (or use Firebase auth)
-        const uid = sessionStorage.getItem('uid'); // Replace with Firebase auth if needed
+        const uid = sessionStorage.getItem('uid');
         if (!uid) {
             console.error('User is not authenticated.');
             return;
         }
 
-        // Retrieve the current username from Firestore based on the UID
         const username = await getUsername(uid);
         if (!username) {
             console.error('Username not found.');
             return;
         }
 
-        // Ensure the review description exists and retrieve the review text
         const reviewDescription = document.getElementById("reviewDescription");
         if (!reviewDescription) {
             console.error('Review input field not found.');
             return;
         }
-        console.log('Review input field found.');
 
-        // Trim whitespace and get the value of the textarea
         const message = reviewDescription.value.trim();
-        console.log('Message:', message); // Check the value entered in the textarea
-
-        // Check if message is empty after trimming whitespace
         if (!message) {
-            console.error('Review message is required.');
+            // console.error('Review message is required.');
+            console.warn('Review message is required.');
             return;
         }
 
-        // Get the current timestamp for the review
-        const timestamp = new Date().toISOString();
+        // const timestamp = new Date().toISOString();
+        // const commentId = `${timestamp}`;
 
-        // Construct the comment data object
+        // Generate the comment ID in the format 'DD-MM-YYYY_HH_MM'
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const commentId = `${day}-${month}-${year}_${hours}_${minutes}`;
+
         const commentData = {
-            [`${timestamp}`]: {
-                userId: uid,
-                username: username,
-                message: message
-            }
+            userId: uid,
+            username: username,
+            message: message,
+            // timestamp: timestamp
         };
 
-        // Get the document ID of the item being commented on (this should be dynamic based on your logic)
-        const documentId = "7leD9T5L7pxPOW592IMH"; // Example, replace with dynamic ID
+        if (!currentDocumentId) {
+            console.error('Document ID is not set.');
+            return;
+        }
 
-        // Save the comment to Firestore under the relevant listing
-        const listingRef = db.collection('listings').doc(documentId);
+        const listingRef = db.collection('listings').doc(currentDocumentId);
 
         await listingRef.update({
-            comments: firebase.firestore.FieldValue.arrayUnion(commentData)
+            [`comments.${commentId}`]: commentData
         });
 
         console.log('Comment saved successfully!');
-        // Optionally, close the modal after saving
         const reviewModal = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
         reviewModal.hide();
+
+        displayComment(commentData);
+        reviewDescription.value = '';
+
     } catch (error) {
         console.error('Error saving comment:', error);
     }
+}
+
+
+// function displayComment(commentData) {
+//     const commentSection = document.getElementById('comment-section');
+//     if (!commentSection) {
+//         console.error('Comment section not found.');
+//         return;
+//     }
+
+//     const commentElement = document.createElement('div');
+//     commentElement.classList.add('comment');
+
+//     commentElement.innerHTML = `
+//         <p><strong>${sanitizeHTML`${commentData.username}`}</strong> (${new Date(commentData.timestamp).toLocaleString()}):</p>
+//         <p>${sanitizeHTML`${commentData.message}`}</p>
+//         <hr>
+//     `;
+
+//     commentSection.appendChild(commentElement);
+// }
+
+function displayComment(commentData) {
+    let commentSection = document.getElementById('comment-section');
+    if (!commentSection) {
+        console.error('Comment section not found. Creating a new one.');
+        commentSection = document.createElement('div');
+        commentSection.id = 'comment-section';
+        document.getElementById('info-panel').appendChild(commentSection);
+    }
+
+    const commentElement = document.createElement('div');
+    // commentElement.classList.add('comment');
+    commentElement.classList.add('comment', 'mb-3', 'p-2', 'border', 'rounded', 'd-flex', 'align-items-start');
+
+
+    // commentElement.innerHTML = `
+    //     <p><strong>${sanitizeHTML`${commentData.username}`}</strong> (${new Date().toLocaleString()}):</p>
+    //     <p>${sanitizeHTML`${commentData.message}`}</p>
+    //     <hr>
+    // `;
+
+    const userProfileLink = `./user-profile.html?uid=${commentData.userId}`;
+    const userAvatar = commentData.avatarURL || 'https://via.placeholder.com/40'; // Placeholder image if no avatar is available
+
+    commentElement.innerHTML = `
+        <div class="d-flex align-items-start">
+            <img src="${userAvatar}" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+            <div>
+                <a href="${userProfileLink}" class="fw-bold text-primary">${sanitizeHTML`${commentData.username}`}</a>
+                <span class="text-muted">(${new Date(commentData.timestamp).toLocaleString()})</span>
+                <p class="mb-1">${sanitizeHTML`${commentData.message}`}</p>
+            </div>
+        </div>
+    `;
+
+    // Align comment box with the "Comments" heading
+    commentElement.style.maxWidth = '100%';
+    commentElement.style.marginLeft = '0';
+
+    commentSection.appendChild(commentElement);
 }
 
 // Function to fetch the username from Firestore based on the UID
@@ -334,17 +407,18 @@ async function renderMapWithFeatures(centerPosition) {
 
         infoPanel.innerHTML = '';
         const content = `
-            <div class="info-panel-content">
-                <img style="width: 100%; height: auto;" src="${imageURL}">
-                    <div style="padding: 20px;">
-                        <h2>${item_name}</h2><p>${item_description}</p>
-                        <p>
-                            <b>${report_type} On:</b> ${found_timestamp}<br />
-                            <b>Email:</b> ${user.email}<br />
-                            <b>Handoff Method:</b> ${handoff_method}<br />
-                            <b>Handoff Location:</b> ${handoff_location}<br />
-                        </p>
+            <div class="info-panel-content p-3 text-center">
+                <img style="width: 100%; height: auto; border-radius: 10px; border: 2px solid #ddd;" src="${imageURL}">
+                <div style="padding: 20px;">
+                    <h2>${item_name}</h2>
+                    <p>${item_description}</p>
+                    <div class="d-flex flex-column align-items-start">
+                        <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${found_timestamp}</p>
+                        <p><i class="fas fa-envelope text-danger"></i> <b>Email:</b> <a href="mailto:${user.email}">${user.email}</a></p>
+                        <p><i class="fas fa-handshake text-danger"></i> <b>Handoff Method:</b> ${handoff_method}</p>
+                        <p><i class="fas fa-map-marker-alt text-danger"></i> <b>Handoff Location:</b> ${handoff_location}</p>
                     </div>
+                </div>
             </div>`;
 
         infoPanel.innerHTML = content;
@@ -358,7 +432,7 @@ async function renderMapWithFeatures(centerPosition) {
         infoPanel.style.boxShadow = '-2px 0px 5px rgba(0, 0, 0, 0.3)';
         infoPanel.style.overflowY = 'auto';
         infoPanel.style.zIndex = '3';
-
+        infoPanel.style.left = '0px'; // Ensure it's positioned correctly
 
         const closeButton = document.createElement('button');
         closeButton.textContent = 'Close';
@@ -659,7 +733,7 @@ function addItemInfo(data, item) {
 
         infoPanel.innerHTML = '';
         const content = `
-            <div class="info-panel-content">
+            <div class="info-panel-content p-3">
                 <img style="width: 100%; height: auto;" src="${imageURL}">
                     <div style="padding: 20px;">
                         <h2>${item_name}</h2><p>${item_description}</p>
@@ -669,6 +743,8 @@ function addItemInfo(data, item) {
                             <b>Handoff Method:</b> ${handoff_method}<br />
                             <b>Handoff Location:</b> ${handoff_location}<br />
                         </p>
+
+                        <h2>Comments</h2>
 
                         <!-- Write a Comment Button -->
                         <button id="write-review-btn" class="btn btn-primary">
@@ -680,14 +756,16 @@ function addItemInfo(data, item) {
                     <div class="modal-dialog modal-lg custom-modal-right">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="reviewModalLabel">Write a Review</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <h5 class="modal-title" id="reviewModalLabel">Write a Comment</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="fas fa-times-circle text-danger"></i>
+                                </button>
                             </div>
                             <div class="modal-body">
                                 <form id="reviewForm">
                                     <div class="mb-3">
                                         <label for="reviewDescription" class="form-label">Description</label>
-                                        <textarea class="form-control" id="reviewDescription" rows="5" placeholder="Enter description"></textarea>
+                                        <textarea class="form-control" id="reviewDescription" rows="5" placeholder="Enter comments"></textarea>
                                     </div>
                                 </form>
                             </div>
@@ -711,7 +789,24 @@ function addItemInfo(data, item) {
         infoPanel.style.overflowY = 'auto';
         infoPanel.style.zIndex = '3';
 
+        const documentId = item.itemid; // Retrieve the documentId dynamically
+        currentDocumentId = documentId; // Store it globally
+        console.log('Current Document ID:', currentDocumentId);
 
+        // Fetch and display existing comments for the listing
+        await fetchComments(documentId);
+
+        // Add event listener for the review button
+        const reviewButton = document.getElementById('write-review-btn');
+        if (reviewButton) {
+            reviewButton.addEventListener('click', () => {
+                const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'), {
+                    backdrop: false,
+                    keyboard: true
+                });
+                reviewModal.show();
+            });
+        }
         const closeButton = document.createElement('button');
         closeButton.textContent = 'Close';
         closeButton.classList.add('close-button');
@@ -728,17 +823,86 @@ function addItemInfo(data, item) {
         map.setCenter(position);
         adjustPanelsForScreenSize();
 
-        // JavaScript for Modal Button and Submission
-        const reviewButton = document.getElementById('write-review-btn');
-        if (reviewButton) {
-            reviewButton.addEventListener('click', () => {
-                const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'), {
-                    backdrop: false,  // Disable backdrop
-                    keyboard: true
+        // Define the handler function separately
+        async function handleReviewSubmit() {
+            const description = document.getElementById('reviewDescription').value.trim();
+            if (!description) {
+                console.error('Review message is required.');
+                alert('Please enter a review message before submitting.');
+                return;
+            }
+
+            console.log("Description:", description);
+
+            const uid = sessionStorage.getItem('uid');
+            if (!uid) {
+                console.error('User is not authenticated.');
+                return;
+            }
+
+            const username = await getUsername(uid);
+            if (!username) {
+                console.error('Username not found.');
+                return;
+            }
+
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const commentId = `${day}-${month}-${year}_${hours}_${minutes}`;
+
+            const commentData = {
+                userId: uid,
+                username: username,
+                message: description,
+                timestamp: new Date().toISOString(),
+            };
+
+            if (!currentDocumentId) {
+                console.error('Document ID is not set.');
+                return;
+            }
+
+            const listingRef = db.collection('listings').doc(currentDocumentId);
+
+            try {
+                console.log('Saving comment...');
+                await listingRef.update({
+                    [`comments.${commentId}`]: commentData
                 });
-                reviewModal.show();
-            });
+
+                console.log('Comment saved successfully!');
+                const reviewModal = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
+                reviewModal.hide();
+
+                displayComment(commentData);
+                document.getElementById('reviewDescription').value = '';
+
+            } catch (error) {
+                console.error('Error saving comment:', error);
+            }
         }
+
+        // Detach existing event listener and attach only once
+        const submitReviewButton = document.getElementById('submitReview');
+        if (submitReviewButton) {
+            submitReviewButton.removeEventListener('click', handleReviewSubmit);
+            submitReviewButton.addEventListener('click', handleReviewSubmit);
+        }
+
+
+        // document.getElementById('submitReview').addEventListener('click', () => {
+        //     const description = document.getElementById('reviewDescription').value.trim();
+        //     if (!description) {
+        //         console.error('Review message is required.');
+        //         alert('Please enter a review message before submitting.');
+        //         return;
+        //     }
+        //     saveCommentToFirebase();
+        // });
 
         // document.getElementById('submitReview').addEventListener('click', () => {
         //     const description = document.getElementById('reviewDescription').value;
@@ -746,56 +910,126 @@ function addItemInfo(data, item) {
         //     document.getElementById('reviewForm').reset();
         //     bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
         // }
-        document.getElementById('submitReview').addEventListener('click', async () => {
-            const description = document.getElementById('reviewDescription').value;
-            console.log("Description:", description);
+        // document.getElementById('submitReview').addEventListener('click', async () => {
+        //     const description = document.getElementById('reviewDescription').value;
+        //     console.log("Description:", description);
 
-            // Save the comment to Firebase if you want it to be persistent.
-            // Assuming you have a function `saveCommentToFirebase` to handle the database operation.
-            const commentData = {
-                description,
-                timestamp: new Date().toISOString(),
-                user: user.uid // assuming `user` is the logged-in user's data
-            };
-            await saveCommentToFirebase(targetUid, commentData); // replace with actual saving function
+        //     // Save the comment to Firebase if you want it to be persistent.
+        //     // Assuming you have a function `saveCommentToFirebase` to handle the database operation.
+        //     const commentData = {
+        //         description,
+        //         timestamp: new Date().toISOString(),
+        //         user: user.uid // assuming `user` is the logged-in user's data
+        //     };
+        //     await saveCommentToFirebase(targetUid, commentData); // replace with actual saving function
 
-            // Display the comment in the info panel
-            const commentSection = document.getElementById('comment-section');
-            if (!commentSection) {
-                const newCommentSection = document.createElement('div');
-                newCommentSection.id = 'comment-section';
-                infoPanel.appendChild(newCommentSection);
-            }
+        //     // Display the comment in the info panel
+        //     const commentSection = document.getElementById('comment-section');
+        //     if (!commentSection) {
+        //         const newCommentSection = document.createElement('div');
+        //         newCommentSection.id = 'comment-section';
+        //         infoPanel.appendChild(newCommentSection);
+        //     }
 
-            // Add the comment to the section
-            const commentElement = document.createElement('p');
-            commentElement.textContent = `${description}`;
-            document.getElementById('comment-section').appendChild(commentElement);
+        //     // Add the comment to the section
+        //     const commentElement = document.createElement('p');
+        //     commentElement.textContent = `${description}`;
+        //     document.getElementById('comment-section').appendChild(commentElement);
 
-            // Clear the form and hide the modal
-            document.getElementById('reviewForm').reset();
-            bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
-        });
-
-
-
-
+        //     // Clear the form and hide the modal
+        //     document.getElementById('reviewForm').reset();
+        //     bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+        // });
 
         // Function to fetch the username from Firestore based on the UID
-        async function getUsername(uid) {
+        // async function getUsername(uid) {
+        //     try {
+        //         const userDoc = await db.collection('users').doc(uid).get();
+        //         if (userDoc.exists) {
+        //             return userDoc.data().username;
+        //         } else {
+        //             console.error('User not found in Firestore.');
+        //             return null;
+        //         }
+        //     } catch (error) {
+        //         console.error('Error fetching username:', error);
+        //         return null;
+        //     }
+        // }
+
+
+        // Fetch and display comments when showing the InfoPanel
+        // Fetch and display comments when showing the InfoPanel
+        // async function fetchComments(documentId) {
+        //     try {
+        //         const listingRef = db.collection('listings').doc(documentId);
+        //         const doc = await listingRef.get();
+
+        //         if (doc.exists) {
+        //             const data = doc.data();
+        //             const comments = data.comments || {};
+
+        //             const commentSection = document.getElementById('comment-section');
+        //             commentSection.innerHTML = ''; // Clear previous comments
+
+        //             // Display each comment
+        //             Object.values(comments).forEach(displayComment);
+        //         } else {
+        //             console.error('Listing not found.');
+        //         }
+        //     } catch (error) {
+        //         console.error('Error fetching comments:', error);
+        //     }
+        // }
+
+        async function fetchComments(documentId) {
             try {
-                const userDoc = await db.collection('users').doc(uid).get();
-                if (userDoc.exists) {
-                    return userDoc.data().username;
+                const listingRef = db.collection('listings').doc(documentId);
+                const doc = await listingRef.get();
+
+                if (doc.exists) {
+                    const data = doc.data();
+                    const comments = data.comments || {};
+
+                    let commentSection = document.getElementById('comment-section');
+                    if (!commentSection) {
+                        // console.error('Comment section not found. Creating a new one.');
+                        console.log('Comment section not found. Creating a new one.');
+                        commentSection = document.createElement('div');
+                        commentSection.id = 'comment-section';
+                        document.getElementById('info-panel').appendChild(commentSection);
+                    }
+
+                    commentSection.innerHTML = ''; // Clear previous comments
+
+                    // Check if there are no comments
+                    if (Object.keys(comments).length === 0) {
+                        const noCommentsMessage = document.createElement('p');
+                        noCommentsMessage.textContent = 'No comments found';
+                        noCommentsMessage.style.color = '#666'; // Optional styling
+                        noCommentsMessage.style.fontStyle = 'italic'; // Optional styling
+                        commentSection.appendChild(noCommentsMessage);
+                        return;
+                    }
+
+                    // Display each comment
+                    // Object.values(comments).forEach(displayComment);
+
+                    // Sort comments by timestamp (latest first)
+                    const sortedComments = Object.values(comments).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                    // Display each sorted comment
+                    sortedComments.forEach(displayComment);
+
                 } else {
-                    console.error('User not found in Firestore.');
-                    return null;
+                    console.error('Listing not found.');
                 }
             } catch (error) {
-                console.error('Error fetching username:', error);
-                return null;
+                console.error('Error fetching comments:', error);
             }
         }
+
+
 
         // Event listener for the comment submission
         document.getElementById("write-review-btn").addEventListener("click", saveCommentToFirebase);

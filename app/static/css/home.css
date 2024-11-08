@@ -225,16 +225,22 @@ p {
 
 /* INFO PANEL */
 #info-panel {
-    width: 250px;
+    width: calc(20% + 20px);
+    min-width: 250px;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.95);
     box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3);
     padding: 20px;
     overflow-y: auto;
     position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 3;
+    display: block; /* Ensure it is displayed */
+    opacity: 1; /* Ensure it is fully visible */
     transition: transform 0.3s ease;
-    display: inline-block;
 }
+
 /* a. CLOSE BUTTON FOR INFO PANEL */
 .close-button {
     background-color: #ff5c5c;
@@ -268,4 +274,52 @@ p {
     top: 10%;
     transform: none !important; /* Ensure the modal doesn't center itself automatically */
     width: 500px; /* Optional: Set width to control its size */
+}
+
+/* Styles for the comment section */
+#comment-section {
+    padding-bottom: 20px; /* Add space at the bottom of the comments section */
+}
+
+/* Styles for individual comments */
+.comment {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+/* Ensure space between the last comment and the bottom of the panel */
+#comment-section {
+    padding: 10px;
+    margin-top: 20px;
+    max-width: 100%;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+}
+
+.comment {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.comment img.rounded-circle {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+#info-panel {
+    z-index: 9999;
+}
+
+.comment p {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
