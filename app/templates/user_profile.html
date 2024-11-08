@@ -36,7 +36,8 @@
     <!-- Navbar placeholder -->
     <div id="navbar-placeholder"></div>
 
-    <div id='profile' class="container" data-default-profile-url="{{ url_for('static', filename='img/profile-icon.jpg') }}">
+    <div id='profile' class="container"
+        data-default-profile-url="{{ url_for('static', filename='img/profile-icon.jpg') }}">
         <!-- Vue wrapper with dynamic background -->
         <div class="main-wrapper">
             <div class="row justify-content-center">
@@ -50,7 +51,7 @@
 
                                 <!-- Profile image -->
 
-                                    <img class="profile-img img-fluid" :src="profileImageURL" alt="Profile Image">
+                                <img class="profile-img img-fluid" :src="profileImageURL" alt="Profile Image">
 
                             </div>
                         </div>
@@ -110,31 +111,32 @@
                             <p class="text-center animated-text">Items You Have Found</p>
 
                             <div class="row">
-                                <div class="col-md-4 mb-4" v-for="item in paginatedItems" :key="item.file">
-                                    <div class="card">
-                                        <img :src="'path_to_image_folder/' + item.file" class="card-img-top"
-                                            alt="Item Image">
-                                        <div class="card-body">
-                                            <h3 class="card-title" v-text="item.item_name"
-                                                style="text-align: center; border-bottom: 2px solid grey; padding-bottom: 5px;">
-                                            </h3>
-                                            <p><strong><i class="bi bi-card-text"></i> Description:</strong> <span
-                                                    v-text="item.item_description"></span></p>
-                                            <p><strong><i class="bi bi-clock"></i> Found Timestamp:</strong> <span
-                                                    v-text="formatTimestamp(item.found_timestamp)"></span></p>
-                                            <p><strong><i class="bi bi-geo-alt"></i> Handoff Location:</strong>
-                                                <span v-text="item.handoff_location"></span>
-                                            </p>
-                                            <p><strong><i class="bi bi-hand-thumbs-up"></i> Handoff Method:</strong>
-                                                <span v-text="item.handoff_method"></span>
-                                            </p>
-                                            <p><strong><i class="bi bi-tag"></i> Item Type:</strong> <span
-                                                    class="badge badge-custom" v-text="item.item_type"></span></p>
-                                                    <button class="btn btn-danger archive-button" @click="archiveItem(item)"
-                                                    v-if="!item.archived">
-                                                    Complete
-                                                </button>
-                                            <!-- <p><strong>Report Type</strong> <span v-text="item.report_type"></span> -->
+                                <div class="col-md-4 mb-4" v-for="item in paginatedItems" :key="item.id">
+                                    <div class="hero">
+                                        <!-- Listing Image -->
+                                        <img class="hero-profile-img" :src="item.imageURL" alt="Listing Image">
+                                
+                                        <!-- Skewed Gradient Background -->
+                                        <div class="hero-description-bk"></div>
+                                
+                                        <!-- User Profile Picture -->
+                                        <div class="hero-logo">
+                                            <img :src="item.profileImageURL" style="background:black" alt="User Profile Picture">
+                                        </div>
+                                
+                                        <!-- Item Description -->
+                                        <div class="hero-description">
+                                            <p v-text="item.item_description"></p>
+                                        </div>
+                                
+                                        <!-- Timestamp -->
+                                        <div class="hero-date">
+                                            <p v-text="formatTimestamp(item.found_timestamp)"></p>
+                                        </div>
+                                
+                                        <!-- Button -->
+                                        <div class="hero-btn">
+                                            <a href="#">Learn More</a>
                                         </div>
                                     </div>
                                 </div>
@@ -161,8 +163,7 @@
                             <div class="row">
                                 <div class="col-md-4 mb-4" v-for="item in paginatedLostItems" :key="item.file">
                                     <div class="card">
-                                        <img :src="'path_to_image_folder/' + item.file" class="card-img-top"
-                                            alt="Item Image">
+                                        <img :src="item.imageURL" class="card-img-top" alt="Item Image">
                                         <div class="card-body">
                                             <h3 class="card-title" v-text="item.item_name"
                                                 style="text-align: center; border-bottom: 1px solid lightgrey; padding-bottom: 5px;">
@@ -179,12 +180,17 @@
                                             </p>
                                             <p><strong><i class="bi bi-tag"></i> Item Type:</strong> <span
                                                     class="badge badge-custom" v-text="item.item_type"></span></p>
-                                            <button class="btn btn-danger archive-button" @click="archiveItem(item)"
-                                                v-if="!item.archived">
-                                                Complete
-                                            </button>
-                                            <!-- <p><strong>Report Type</strong> <span v-text="item.report_type"></span> -->
-                                            </p>
+                                                    <button class="btn btn-danger archive-button" @click="confirmArchive(item)" v-if="!item.archived">
+                                                        Complete
+                                                    </button>
+                                            
+                                            <div v-if="showConfirmation && itemToConfirm === item" class="confirmation-overlay">
+                                                <p>Are you sure you want to complete this item?</p>
+                                                <button @click="archiveConfirmedItem" class="btn btn-success">Yes</button>
+                                                <button @click="closeConfirmation" class="btn btn-secondary">No</button>
+                                            </div>
+            
+
                                         </div>
                                     </div>
                                 </div>
@@ -221,9 +227,10 @@
                             <form>
                                 <div class="mb-3">
                                     <label for="profileImage" class="form-label">Profile Image</label>
-                                    <input type="file" class="form-control" id="profileImage" @change="handleFileUpload">
+                                    <input type="file" class="form-control" id="profileImage"
+                                        @change="handleFileUpload">
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label for="profileName" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="profileName" v-model="tempUsername">

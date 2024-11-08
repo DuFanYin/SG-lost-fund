@@ -21,6 +21,8 @@ const profile = Vue.createApp({
             selectedBorder: localStorage.getItem('selectedBorder') || '',  // Use cached value on load
             selectedBackground: localStorage.getItem('selectedBackground') || '',  // Use cached value on load
             profileImageURL: sessionStorage.getItem('profileImageURL') || defaultProfileURL, // Use the Flask default URL
+            showConfirmation: false, // State to show or hide the confirmation popup
+        itemToConfirm: null, // Store the item that needs confirmation
         };
     },
     created() {
@@ -125,10 +127,10 @@ const profile = Vue.createApp({
         },
         async uploadProfileImage() {
             if (!this.profileImageFile) return;
-    
+        
             const storageRef = storage.ref().child(`profile_images/${this.uid}`);
             const uploadTask = storageRef.put(this.profileImageFile);
-    
+        
             // Track the upload progress
             uploadTask.on('state_changed',
                 (snapshot) => {
@@ -138,24 +140,38 @@ const profile = Vue.createApp({
                     console.error("Error uploading image:", error);
                 },
                 async () => {
+                    // Get the download URL after upload completes
                     const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-                    this.updateProfileImageURL(downloadURL);
+                    this.updateProfileImageURL(downloadURL); // Update Firestore with the URL
                 }
             );
         },
         updateProfileImageURL(downloadURL) {
             const userRef = db.collection('users').doc(this.uid);
+        
+            // Update Firestore with the new profile image URL
             userRef.update({ profileImageURL: downloadURL })
                 .then(() => {
-                    console.log("Profile image updated successfully.");
-                    this.profileImageURL = downloadURL; // Update Vue data
+                    console.log("Profile image URL added to Firestore successfully.");
+                    this.profileImageURL = downloadURL; // Update Vue data to show new image
                     sessionStorage.setItem('profileImageURL', downloadURL); // Store in sessionStorage
                 })
                 .catch((error) => {
                     console.error("Error updating profile image URL:", error);
                 });
         },
-        
+        confirmArchive(item) {
+            this.itemToConfirm = item;  // Set the item to be confirmed
+            this.showConfirmation = true; // Show the confirmation dialog
+        },
+        archiveConfirmedItem() {
+            this.archiveItem(this.itemToConfirm);  // Archive the confirmed item
+            this.closeConfirmation(); // Close the confirmation dialog
+        },
+        closeConfirmation() {
+            this.showConfirmation = false;  // Hide the confirmation dialog
+            this.itemToConfirm = null;      // Clear the selected item
+        },
         archiveItem(item) {
             // Reference to the specific item document in Firestore
             const itemRef = db.collection('listings').doc(item.id); // Assume `id` is the document ID
@@ -273,14 +289,40 @@ const profile = Vue.createApp({
         // Display all found and lost items based on the current UID
         fetchItems() {
             const listingsRef = db.collection('listings');
+            
             listingsRef
                 .where('uid', '==', this.uid)
                 .get()
-                .then((querySnapshot) => {
+                .then(async (querySnapshot) => {
                     this.foundItems = [];
                     this.lostItems = [];
-                    querySnapshot.forEach((doc) => {
+                    
+                    // Use Promise.all to fetch user data asynchronously for all listings
+                    const items = await Promise.all(querySnapshot.docs.map(async (doc) => {
                         const item = { ...doc.data(), id: doc.id }; // Spread data and include document ID
+                        
+                        console.log("Fetching profile image for UID:", item.uid);
+        
+                        // Fetch the profileImageURL for each user based on the listing's uid
+                        if (item.uid) { // Ensure uid is available
+                            const userDoc = await db.collection('users').doc(item.uid).get();
+                            if (userDoc.exists) {
+                                item.profileImageURL = userDoc.data().profileImageURL || this.defaultProfileURL;
+                                console.log("Fetched profileImageURL:", item.profileImageURL);
+                            } else {
+                                item.profileImageURL = this.defaultProfileURL; // Fallback to default profile URL if user doesn't exist
+                                console.log("User document not found. Using default profile image.");
+                            }
+                        } else {
+                            item.profileImageURL = this.defaultProfileURL; // Fallback for missing uid
+                            console.log("UID missing. Using default profile image.");
+                        }
+                        console.log("Profile Image URL:", item.profileImageURL);
+                        return item;
+                    }));
+        
+                    // Separate found and lost items based on the report type
+                    items.forEach(item => {
                         if (item.report_type === 'Found' && !item.archived) {
                             this.foundItems.push(item);
                         } else if (item.report_type === 'Lost' && !item.archived) {
@@ -292,6 +334,8 @@ const profile = Vue.createApp({
                     console.error("Error fetching items:", error);
                 });
         },
+        
+        
 
         openEditModal() {
             this.tempUsername = this.username;
