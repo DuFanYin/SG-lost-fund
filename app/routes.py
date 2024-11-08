@@ -48,32 +48,8 @@ def dash_board():
 
 @main.route('/listing', methods=['POST', 'GET'])
 def listing():
-    if request.method == "POST":
-        # Check if the file is part of the request
-        if 'file' not in request.files:
-            return jsonify({"error": "No file part in the request"}), 400
-
-        file = request.files['file']
-        
-        # If no file is selected
-        if file.filename == '':
-            return jsonify({"error": "No file selected"}), 400
-
-        # Check if the file is allowed
-        if file and allowed_file(file.filename):
-            # Generate a unique filename with timestamp
-            filename = secure_filename(file.filename)
-            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')  # Get current timestamp
-            new_filename = f"{timestamp}_{filename}"
-            file_path = os.path.join(UPLOAD_FOLDER, new_filename)
-            file.save(file_path)
-
-            # Return the file path to be stored in Firestore
-            return jsonify({"filePath": f"/{UPLOAD_FOLDER}/{new_filename}"}), 200
-        else:
-            return jsonify({"error": "File type not allowed"}), 400
-    else:
-        return render_template('listing.html')
+    
+    return render_template('listing.html')
 
 
 
