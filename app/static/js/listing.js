@@ -167,36 +167,39 @@ Vue.createApp({
         'formData.location': function (newLocation) {
             if (newLocation.trim() !== "") {
                 const geocoder = new google.maps.Geocoder();
-
+    
                 // Geocode the entered location
                 geocoder.geocode({ address: newLocation }, (results, status) => {
-                    if (status === "OK" && results.length > 0) {
-                        const foundLocation = results[0].geometry.location;
-
-                        // Center the map on the found location and zoom in
-                        this.map.setCenter(foundLocation);
-                        this.map.setZoom(15); // Adjust zoom level as needed
-
-                        // Move the marker to the found location
-                        this.marker.setPosition(foundLocation);
-
-                        // Update formData coordinates
-                        this.formData.coordinates.lat = foundLocation.lat();
-                        this.formData.coordinates.lng = foundLocation.lng();
-
-                        // Update the input fields with the new coordinates
-                        document.getElementById('lat').value = this.formData.coordinates.lat;
-                        document.getElementById('lng').value = this.formData.coordinates.lng;
-
-                        console.log("Auto-zoomed to location:", this.formData.coordinates);
+                    if (status === "OK" && Array.isArray(results) && results.length > 0) {
+                        const foundLocation = results[0].geometry?.location;
+    
+                        if (foundLocation) {
+                            // Center the map on the found location and zoom in
+                            this.map.setCenter(foundLocation);
+                            this.map.setZoom(15);
+    
+                            // Move the marker to the found location
+                            this.marker.setPosition(foundLocation);
+    
+                            // Update formData coordinates
+                            this.formData.coordinates.lat = foundLocation.lat();
+                            this.formData.coordinates.lng = foundLocation.lng();
+    
+                            // Update the input fields with the new coordinates
+                            document.getElementById('lat').value = this.formData.coordinates.lat;
+                            document.getElementById('lng').value = this.formData.coordinates.lng;
+    
+                            console.log("Auto-zoomed to location:", this.formData.coordinates);
+                        } else {
+                            console.log("Found location is undefined.");
+                        }
                     } else {
-                        // If the location is not found, simply do nothing (no alert).
-                        console.log("Location not found or incomplete input.");
+                        console.log("Geocode was not successful or results array is empty.");
                     }
                 });
             }
         }
-    },
+    },    
 
     mounted() {
         // Attach initMap to the global window object

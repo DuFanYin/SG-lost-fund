@@ -571,14 +571,32 @@ async function calculateDistances(data, origin) {
                     const results = response.rows[0].elements;
                     for (let j = 0; j < results.length; j++) {
                         const element = results[j];
-                        const distanceText = element.distance.text;
-                        const distanceVal = element.distance.value;
-                        const distanceObject = {
-                            itemid: items[j],
-                            distanceText: distanceText,
-                            distanceVal: distanceVal,
-                        };
-                        distances.push(distanceObject);
+
+
+                        // Add a guard clause to check for the 'distance' object
+                        // error handling for map in the post listing form
+                        if (element.status === "OK" && element.distance) {
+                            const distanceText = element.distance.text;
+                            const distanceVal = element.distance.value;
+
+                            const distanceObject = {
+                                itemid: items[j],
+                                distanceText: distanceText,
+                                distanceVal: distanceVal,
+                            };
+
+                            distances.push(distanceObject);
+                        } else {
+                            console.warn(`Distance data is unavailable for item ID ${items[j]} (status: ${element.status})`);
+                        }
+                        // const distanceText = element.distance.text;
+                        // const distanceVal = element.distance.value;
+                        // const distanceObject = {
+                        //     itemid: items[j],
+                        //     distanceText: distanceText,
+                        //     distanceVal: distanceVal,
+                        // };
+                        // distances.push(distanceObject);
                     }
                     resolve(distances);
                 }
