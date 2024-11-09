@@ -112,33 +112,38 @@
 
                             <div class="row">
                                 <div class="col-md-4 mb-4" v-for="item in paginatedItems" :key="item.id">
-                                    <div class="hero">
-                                        <!-- Listing Image -->
+                                    <div class="hero" v-if="!item.expanded">
                                         <img class="hero-profile-img" :src="item.imageURL" alt="Listing Image">
-                                
-                                        <!-- Skewed Gradient Background -->
                                         <div class="hero-description-bk"></div>
-                                
-                                        <!-- User Profile Picture -->
                                         <div class="hero-logo">
-                                            <img :src="item.profileImageURL" style="background:black" alt="User Profile Picture">
+                                            <img :src="item.profileImageURL" style="background:black"
+                                                alt="User Profile Picture">
                                         </div>
-                                
-                                        <!-- Item Description -->
                                         <div class="hero-description">
-                                            <p v-text="item.item_description"></p>
+                                            <p v-text="item.item_name"></p>
                                         </div>
-                                
-                                        <!-- Timestamp -->
-                                        <div class="hero-date">
-                                            <p v-text="formatTimestamp(item.found_timestamp)"></p>
-                                        </div>
-                                
-                                        <!-- Button -->
-                                        <div class="hero-btn">
-                                            <a href="#">Learn More</a>
-                                        </div>
+                                        <button class="hero-btn" @click="toggleExpand(item)">
+                                            Expand
+                                        </button>
                                     </div>
+
+                                    <div v-else class="card-content-expanded hero">
+                                        <h3 class="card-title" v-text="item.item_name"
+                                            style="text-align: center; border-bottom: 1px solid lightgrey; padding-bottom: 5px;">
+                                        </h3>
+                                        <p><strong><i class="bi bi-card-text"></i> Description:</strong> <span
+                                                v-text="item.item_description"></span></p>
+                                        <p><strong><i class="bi bi-clock"></i> Found Timestamp:</strong> <span
+                                                v-text="formatTimestamp(item.found_timestamp)"></span></p>
+                                        <p><strong><i class="bi bi-geo-alt"></i> Handoff Location:</strong> <span
+                                                v-text="item.handoff_location"></span></p>
+                                        <p><strong><i class="bi bi-hand-thumbs-up"></i> Handoff Method:</strong> <span
+                                                v-text="item.handoff_method"></span></p>
+                                        <button class="btn btn-secondary" @click="toggleExpand(item)">
+                                            Collapse
+                                        </button>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -180,16 +185,19 @@
                                             </p>
                                             <p><strong><i class="bi bi-tag"></i> Item Type:</strong> <span
                                                     class="badge badge-custom" v-text="item.item_type"></span></p>
-                                                    <button class="btn btn-danger archive-button" @click="confirmArchive(item)" v-if="!item.archived">
-                                                        Complete
-                                                    </button>
-                                            
-                                            <div v-if="showConfirmation && itemToConfirm === item" class="confirmation-overlay">
+                                            <button class="btn btn-danger archive-button" @click="confirmArchive(item)"
+                                                v-if="!item.archived">
+                                                Complete
+                                            </button>
+
+                                            <div v-if="showConfirmation && itemToConfirm === item"
+                                                class="confirmation-overlay">
                                                 <p>Are you sure you want to complete this item?</p>
-                                                <button @click="archiveConfirmedItem" class="btn btn-success">Yes</button>
+                                                <button @click="archiveConfirmedItem"
+                                                    class="btn btn-success">Yes</button>
                                                 <button @click="closeConfirmation" class="btn btn-secondary">No</button>
                                             </div>
-            
+
 
                                         </div>
                                     </div>

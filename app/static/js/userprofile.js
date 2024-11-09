@@ -66,6 +66,10 @@ const profile = Vue.createApp({
         },
     },
     methods: {
+        toggleExpand(item) {
+            item.expanded = !item.expanded; // Toggle the expanded state
+        },
+        
         fetchUserData() {
             const userRef = db.collection('users').doc(this.uid);
             userRef.get().then((doc) => {
@@ -299,7 +303,7 @@ const profile = Vue.createApp({
                     
                     // Use Promise.all to fetch user data asynchronously for all listings
                     const items = await Promise.all(querySnapshot.docs.map(async (doc) => {
-                        const item = { ...doc.data(), id: doc.id }; // Spread data and include document ID
+                        const item = { ...doc.data(), id: doc.id, expanded: false }; // Spread data and include document ID
                         
                         console.log("Fetching profile image for UID:", item.uid);
         
