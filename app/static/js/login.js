@@ -40,7 +40,7 @@ Vue.createApp({
                     sessionStorage.setItem('profiledesc', userData.profiledesc);  // Ensure this line is executed
                     sessionStorage.setItem('email', userData.email); // Ensure this line is executed
 
-                    sessionStorage.setItem('profileImageURL', userData.profileImageURL || "{{ url_for('static', filename='img/profile-icon.jpg') }}"); // Set a default if it doesn't exist
+                    sessionStorage.setItem('profileImageURL', userData.profileImageURL || "https://firebasestorage.googleapis.com/v0/b/wad2project-db69b.firebasestorage.app/o/profile_images%2Fprofile-icon.jpg?alt=media&token=54252fe9-e3f0-4cd3-b97c-dc8bc19dd85b"); // Set a default if it doesn't exist
 
                        // Cache selectedBorder and selectedBackground in localStorage
                     localStorage.setItem('selectedBorder', userData.selectedborder || '');

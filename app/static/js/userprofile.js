@@ -20,7 +20,7 @@ const profile = Vue.createApp({
             currentPageLost: 1,// Current page for pagination of lost items
             selectedBorder: localStorage.getItem('selectedBorder') || '',  // Use cached value on load
             selectedBackground: localStorage.getItem('selectedBackground') || '',  // Use cached value on load
-            profileImageURL: sessionStorage.getItem('profileImageURL') || defaultProfileURL, // Use the Flask default URL
+            profileImageURL: sessionStorage.getItem('profileImageURL') || '', // Use the Flask default URL
             showConfirmation: false, // State to show or hide the confirmation popup
         itemToConfirm: null, // Store the item that needs confirmation
         };

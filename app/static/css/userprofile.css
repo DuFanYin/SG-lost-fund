@@ -157,11 +157,11 @@
 }
 
 /* Hide "Edit Profile" text between 768px and 992px */
-@media (max-width: 992px) and (min-width: 768px) {
+/* @media (max-width: 992px) and (min-width: 768px) {
     .edit-text {
         font-size: 10px;
     }
-}
+} */
 
 .archive-button {
     float: right;             /* Moves the button to the right side */
