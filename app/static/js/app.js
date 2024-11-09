@@ -67,9 +67,6 @@ async function saveCommentToFirebase() {
             return;
         }
 
-        // const timestamp = new Date().toISOString();
-        // const commentId = `${timestamp}`;
-
         // Generate the comment ID in the format 'DD-MM-YYYY_HH_MM'
         const now = new Date();
         const day = String(now.getDate()).padStart(2, '0');
@@ -93,15 +90,44 @@ async function saveCommentToFirebase() {
 
         const listingRef = db.collection('listings').doc(currentDocumentId);
 
+        // Retrieve the listing ownerId
+        const listingDoc = await listingRef.get();
+        const ownerId = listingDoc.data().uid;  // assuming 'ownerId' is stored in the listing
+
+        // Add the comment to the listing document
         await listingRef.update({
             [`comments.${commentId}`]: commentData
         });
 
         console.log('Comment saved successfully!');
+
+        // If the comment is from someone other than the owner, send a notification to the owner
+        if (uid !== ownerId) {
+            const itemName = listingDoc.data().item_name;  // assuming 'item_name' exists in the listing document
+
+            const notificationData = {
+                message: `${username} commented on your listing "${itemName}"`,
+                timestamp: new Date().toISOString(),
+                itemName: itemName,  // Use item_name instead of listingId
+            };
+
+            const ownerRef = db.collection('users').doc(ownerId);
+
+            await ownerRef.update({
+                notifications: firebase.firestore.FieldValue.arrayUnion(notificationData)
+            });
+
+            console.log('Notification sent to the owner.');
+        }
+
+        // Hide the review modal after saving the comment
         const reviewModal = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
         reviewModal.hide();
 
+        // Display the newly posted comment
         displayComment(commentData);
+
+        // Clear the review description field
         reviewDescription.value = '';
 
     } catch (error) {
@@ -264,6 +290,7 @@ function sanitizeHTML(strings) {
     return result;
 }
 
+
 function userLocation() {
     const defaultPos = { lat: 1.3521, lng: 103.8198 }; // Singapore center
     if (navigator.geolocation) {
@@ -287,6 +314,7 @@ function userLocation() {
 };
 window.userLocation = userLocation;
 
+
 function showLoadingScreen() {
     const loading = document.getElementById('loading');
     if (loading) {
@@ -296,6 +324,8 @@ function showLoadingScreen() {
         console.error('Loading screen element not found.');
     }
 }
+
+
 function hideLoadingScreen() {
     const loading = document.getElementById('loading');
     if (loading) {
@@ -314,6 +344,7 @@ function hideLoadingScreen() {
         console.error('Map container element not found.');
     }
 }
+
 
 async function renderMapWithFeatures(centerPosition) {
     showLoadingScreen();
@@ -515,6 +546,7 @@ function imageExists(url, callback) {
     img.src = url;
 }
 
+
 function addCustomMarker() {
     map.data.setStyle((feature) => {
         const item_type = feature.getProperty("item_type");
@@ -545,6 +577,7 @@ function addCustomMarker() {
         };
     });
 }
+
 
 async function calculateDistances(data, origin) {
 
@@ -597,6 +630,7 @@ async function calculateDistances(data, origin) {
     });
     return distancesList;
 }
+
 
 function showItemsList(data, items, categoryArray, statusArray, datesArray) {
     const panel = document.getElementById('panel');
@@ -669,6 +703,7 @@ function showItemsList(data, items, categoryArray, statusArray, datesArray) {
     card.style.zIndex = 2;
     document.getElementById('arrow').src = "../static/img/arrow_left.png"
 }
+
 
 function addItemInfo(data, item) {
     const temp = document.createElement('div');
@@ -1042,6 +1077,7 @@ function addItemInfo(data, item) {
     panel.appendChild(hrElement);
 }
 
+
 function adjustPanelsForScreenSize() {
     const infoPanel = document.getElementById('info-panel');
     const panel = document.getElementById('panel');
@@ -1059,6 +1095,7 @@ function adjustPanelsForScreenSize() {
     }
 }
 window.addEventListener('resize', adjustPanelsForScreenSize);
+
 
 function applyFilters(panel, data) {
     card.style.zIndex = 2;
@@ -1099,6 +1136,7 @@ function applyFilters(panel, data) {
 
     applyFiltersToMap(data);
 }
+
 
 function applyFiltersToMap(data) {
     const selectedCategory = document.getElementById('category-filter').value;
