@@ -108,8 +108,6 @@
                         <!-- Found Items Content -->
                         <div class="tab-pane fade show active" id="found-items" role="tabpanel"
                             aria-labelledby="found-items-tab">
-                            <p class="text-center animated-text">Items You Have Found</p>
-
                             <div class="row">
                                 <div class="col-md-4 mb-4" v-for="item in paginatedItems" :key="item.id">
                                     <div class="hero" v-if="!item.expanded">
@@ -140,8 +138,20 @@
                                         <p><strong><i class="bi bi-hand-thumbs-up"></i> Handoff Method:</strong> <span
                                                 v-text="item.handoff_method"></span></p>
                                         <button class="btn btn-secondary" @click="toggleExpand(item)">
-                                            Collapse
+                                            Return
                                         </button>
+                                        <button class="hero-btn archive-button" @click="confirmArchive(item)"
+                                        v-if="!item.archived">
+                                        Complete
+                                    </button>
+
+                                    <div v-if="showConfirmation && itemToConfirm === item"
+                                    class="confirmation-overlay">
+                                    <p>Are you sure you want to complete this item?</p>
+                                    <button @click="archiveConfirmedItem"
+                                        class="btn btn-success">Yes</button>
+                                    <button @click="closeConfirmation" class="btn btn-secondary">No</button>
+                                </div>
                                     </div>
 
                                 </div>
