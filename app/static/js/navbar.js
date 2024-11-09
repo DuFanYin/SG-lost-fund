@@ -18,7 +18,8 @@ const app = Vue.createApp({
             backgroundItems: [
                 { name: 'Background 1', points: 200, image: '../static/img/background1.webp', field: 'background1', selected: false },
                 { name: 'Background 2', points: 200, image: '../static/img/background2.webp', field: 'background2', selected: false }
-            ]
+            ],
+            confirmationMessage: '', // Message to show in the confirmation modal
         };
     },
     computed: {
@@ -140,9 +141,14 @@ const app = Vue.createApp({
                         [item.field]: true,
                         points: this.points  // Save the updated points back to Firestore
                     }, { merge: true });
-        
+                    
                     // Update session storage with the new points value
                     sessionStorage.setItem('points', this.points);
+
+                    this.confirmationMessage = `You have successfully purchased ${item.name}!`;
+
+                    const purchaseConfirmationModal = new bootstrap.Modal(document.getElementById('purchaseConfirmationModal'));
+                    purchaseConfirmationModal.show();
         
                     console.log(`Purchased ${item.name} for ${item.points} points`);
                 } catch (error) {
