@@ -62,7 +62,7 @@ const profile = Vue.createApp({
             return this.lostItems.slice(start, end);
         },
         charactersRemaining() {
-            return `${165 - this.tempProfiledesc.length} characters remaining`;
+            return `${100 - this.tempProfiledesc.length} characters remaining`;
         },
     },
     methods: {

@@ -110,7 +110,7 @@
                         <div class="tab-pane fade show active" id="found-items" role="tabpanel"
                             aria-labelledby="found-items-tab">
                             <div class="row">
-                                <div class="col-md-4 mb-4" v-for="item in paginatedItems" :key="item.id">
+                                <div class="col-lg-4 col-md-6 mb-4" v-for="item in paginatedItems" :key="item.id">
                                     <div class="hero" v-if="!item.expanded">
                                         <img class="hero-profile-img" :src="item.imageURL" alt="Listing Image">
                                         <div class="hero-description-bk"></div>
@@ -127,16 +127,16 @@
                                     </div>
 
                                     <div v-else class="card-content-expanded hero">
-                                        <h3 class="card-title" v-text="item.item_name"
+                                        <h3 class="card-title list-item-name" v-text="item.item_name"
                                             style="text-align: center; border-bottom: 1px solid lightgrey; padding-bottom: 5px;">
                                         </h3>
-                                        <p><strong><i class="bi bi-card-text"></i> Description:</strong> <span
+                                        <p><strong class="list-text"><i class="bi bi-card-text"></i> Description:</strong> <span class="list-text"
                                                 v-text="item.item_description"></span></p>
-                                        <p><strong><i class="bi bi-clock"></i> Found Timestamp:</strong> <span
+                                        <p><strong><i class="bi bi-clock"></i> Found Timestamp:</strong> <span class="list-text"
                                                 v-text="formatTimestamp(item.found_timestamp)"></span></p>
-                                        <p><strong><i class="bi bi-geo-alt"></i> Handoff Location:</strong> <span
+                                        <p><strong><i class="bi bi-geo-alt"></i> Handoff Location:</strong> <span class="list-text"
                                                 v-text="item.handoff_location"></span></p>
-                                        <p><strong><i class="bi bi-hand-thumbs-up"></i> Handoff Method:</strong> <span
+                                        <p><strong><i class="bi bi-hand-thumbs-up"></i> Handoff Method:</strong> <span class="list-text"
                                                 v-text="item.handoff_method"></span></p>
 
 
