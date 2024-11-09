@@ -3,6 +3,7 @@ import { db, GeoPoint, storage } from './firebaseConfig.js';
 Vue.createApp({
     data() {
         return {
+            currentStep: 1,
             formData: {
                 type: 'found', // Default type
                 item_name: '',
@@ -30,8 +31,29 @@ Vue.createApp({
         };
     },
     methods: {
+        nextStep() {
+            if (this.currentStep < 3) {
+                this.currentStep++;
+                if (this.currentStep === 2) {
+                    this.$nextTick(() => {
+                        this.initMap();
+                    });
+                }
+            }
+        },
+        previousStep() {
+            if (this.currentStep > 1) {
+                this.currentStep--;
+                if (this.currentStep === 2) {
+                    this.$nextTick(() => {
+                        this.initMap();
+                    });
+                }
+            }
+        },
         validateDateTime() {
             const date = new Date(this.formData.datetime);
+            
             if (isNaN(date.getTime())) {
                 this.dateError = "Please select a valid date and time.";
             } else {
@@ -51,7 +73,14 @@ Vue.createApp({
                 this.characterCount = 200;
             }
         },
+
         initMap() {
+            const mapDiv = document.getElementById('map');
+            if (!mapDiv) {
+                console.error('Map container element not found.');
+                return;
+            }
+
             // Center of Singapore
             const singapore = { lat: 1.3521, lng: 103.8198 };
 
@@ -82,6 +111,7 @@ Vue.createApp({
                 document.getElementById('lat').value = this.formData.coordinates.lat;
                 document.getElementById('lng').value = this.formData.coordinates.lng;
             });
+            google.maps.event.trigger(this.map, 'resize');
         },
         async submitForm() {
             const uid = sessionStorage.getItem('uid');
@@ -167,28 +197,28 @@ Vue.createApp({
         'formData.location': function (newLocation) {
             if (newLocation.trim() !== "") {
                 const geocoder = new google.maps.Geocoder();
-    
+
                 // Geocode the entered location
                 geocoder.geocode({ address: newLocation }, (results, status) => {
                     if (status === "OK" && Array.isArray(results) && results.length > 0) {
                         const foundLocation = results[0].geometry?.location;
-    
+
                         if (foundLocation) {
                             // Center the map on the found location and zoom in
                             this.map.setCenter(foundLocation);
                             this.map.setZoom(15);
-    
+
                             // Move the marker to the found location
                             this.marker.setPosition(foundLocation);
-    
+
                             // Update formData coordinates
                             this.formData.coordinates.lat = foundLocation.lat();
                             this.formData.coordinates.lng = foundLocation.lng();
-    
+
                             // Update the input fields with the new coordinates
                             document.getElementById('lat').value = this.formData.coordinates.lat;
                             document.getElementById('lng').value = this.formData.coordinates.lng;
-    
+
                             console.log("Auto-zoomed to location:", this.formData.coordinates);
                         } else {
                             console.log("Found location is undefined.");
@@ -199,13 +229,11 @@ Vue.createApp({
                 });
             }
         }
-    },    
+    },
 
     mounted() {
         // Attach initMap to the global window object
         window.initMap = this.initMap;
-
-
 
         // Initialize the map after Vue instance is mounted
 
