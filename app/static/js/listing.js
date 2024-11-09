@@ -1,4 +1,4 @@
-import { db, GeoPoint , storage } from './firebaseConfig.js';
+import { db, GeoPoint, storage } from './firebaseConfig.js';
 
 Vue.createApp({
     data() {
@@ -161,6 +161,43 @@ Vue.createApp({
             this.characterCount = 0;
         }
     },
+
+    // auto zooms into the location and display the coordinates
+    watch: {
+        'formData.location': function (newLocation) {
+            if (newLocation.trim() !== "") {
+                const geocoder = new google.maps.Geocoder();
+
+                // Geocode the entered location
+                geocoder.geocode({ address: newLocation }, (results, status) => {
+                    if (status === "OK" && results.length > 0) {
+                        const foundLocation = results[0].geometry.location;
+
+                        // Center the map on the found location and zoom in
+                        this.map.setCenter(foundLocation);
+                        this.map.setZoom(15); // Adjust zoom level as needed
+
+                        // Move the marker to the found location
+                        this.marker.setPosition(foundLocation);
+
+                        // Update formData coordinates
+                        this.formData.coordinates.lat = foundLocation.lat();
+                        this.formData.coordinates.lng = foundLocation.lng();
+
+                        // Update the input fields with the new coordinates
+                        document.getElementById('lat').value = this.formData.coordinates.lat;
+                        document.getElementById('lng').value = this.formData.coordinates.lng;
+
+                        console.log("Auto-zoomed to location:", this.formData.coordinates);
+                    } else {
+                        // If the location is not found, simply do nothing (no alert).
+                        console.log("Location not found or incomplete input.");
+                    }
+                });
+            }
+        }
+    },
+
     mounted() {
         // Attach initMap to the global window object
         window.initMap = this.initMap;
