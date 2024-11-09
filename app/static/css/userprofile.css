@@ -237,7 +237,7 @@
 }
 
 .hero-description-bk {
-    background-image: linear-gradient(0deg, #3f5efb, #fc466b);
+    background-image: linear-gradient(0deg, #e75d5d, #ca0d33);
     border-radius: 30px;
     position: absolute;
     top: 55%;
@@ -283,14 +283,24 @@
     bottom: 10%;
     padding: 5px 10px;
     font-size: 14px;
-    border: 1px solid #cf1111;
-    background-color: red;
+    border: 1px solid #f9f9f9;
+    background-color: rgb(45, 34, 190);
+    border-radius: 15px;
 }
 
-.hero-btn a {
-    color: #fff;
-    text-decoration: none;
+.complete {
+    position: absolute;
+    color: #e0dddd;
+    right: 15px;
+    bottom: 10%;
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 1px solid #f9f9f9;
+    background-color: rgb(34, 190, 68);
+    border-radius: 15px;
 }
+
+
 
 /* Media query for smaller screens */
 @media (max-width: 576px) {
