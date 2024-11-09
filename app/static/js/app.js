@@ -10,44 +10,31 @@ document.addEventListener("DOMContentLoaded", function () {
     tooltipTriggerList.forEach(tooltipTriggerEl => {
         new bootstrap.Tooltip(tooltipTriggerEl);
     });
-
-    // Add event listener to the review button (write-review-btn)
-    const reviewButton = document.getElementById('write-review-btn');
-    if (reviewButton) {
-        reviewButton.addEventListener('click', () => {
-            const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'), {
-                backdrop: false,  // Disable backdrop
-                keyboard: true
-            });
-
-            // Show modal when the button is clicked
-            reviewModal.show();
-        });
-    }
-
-    // Pass the dynamic documentId to the saveCommentToFirebase function
-    // const submitReviewButton = document.getElementById('submitReview');
-    // if (submitReviewButton) {
-    //     submitReviewButton.addEventListener('click', () => saveCommentToFirebase(documentId));
-    // }
-    const submitReviewButton = document.getElementById('submitReview');
-    if (submitReviewButton) {
-        submitReviewButton.removeEventListener('click', saveCommentToFirebase); // Remove any existing event listeners
-        submitReviewButton.addEventListener('click', saveCommentToFirebase); // Add the event listener to call the saveCommentToFirebase function
-    }
-
 });
 
-// Function to save comment to Firestore
-async function saveCommentToFirebase() {
+async function handleSubmitReview() {
     const description = document.getElementById('reviewDescription').value.trim();
+
     if (!description) {
         console.error('Review message is required.');
         alert('Please enter a review message before submitting.');
-        return;
+        return; // Prevent the form from submitting if no message is entered
     }
 
-    console.log("Description:", description);
+    await saveCommentToFirebase(description); // Pass description to the save function
+}
+
+
+// Function to save comment to Firestore
+async function saveCommentToFirebase(description) {
+    // const description = document.getElementById('reviewDescription').value.trim();
+    // if (!description) {
+    //     console.error('Review message is required.');
+    //     alert('Please enter a review message before submitting.');
+    //     return;
+    // }
+
+    // console.log("Description:", description);
 
     const uid = sessionStorage.getItem('uid');
     if (!uid) {
@@ -67,7 +54,10 @@ async function saveCommentToFirebase() {
     const year = now.getFullYear();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    const commentId = `${day}-${month}-${year}_${hours}_${minutes}`;
+    const seconds = String(now.getSeconds()).padStart(2, '0'); // Include seconds to ensure uniqueness
+    const commentId = `${day}-${month}-${year}_${hours}_${minutes}_${seconds}`;
+
+    // const commentId = `${day}-${month}-${year}_${hours}_${minutes}`;
 
     const commentData = {
         userId: uid,
@@ -91,6 +81,9 @@ async function saveCommentToFirebase() {
         });
 
         console.log('Comment saved successfully!');
+
+        // Fetch and display the latest comments after saving the new comment
+        await fetchComments(currentDocumentId);
 
         // Fetch the listing ownerId and send a notification if needed
         const listingDoc = await listingRef.get();
@@ -137,6 +130,12 @@ function displayComment(commentData) {
         commentSection = document.createElement('div');
         commentSection.id = 'comment-section';
         document.getElementById('info-panel').appendChild(commentSection);
+    }
+
+    // Remove "No comments found" message if it exists
+    const noCommentsMessage = document.getElementById('no-comments-message');
+    if (noCommentsMessage) {
+        noCommentsMessage.remove();
     }
 
     const commentElement = document.createElement('div');
@@ -845,10 +844,31 @@ function addItemInfo(data, item) {
         map.setCenter(position);
         adjustPanelsForScreenSize();
 
+        // const submitReviewButton = document.getElementById('submitReview');
+        // if (submitReviewButton) {
+        //     submitReviewButton.removeEventListener('click', handleSubmitReview); // Remove any existing event listeners
+        //     submitReviewButton.addEventListener('click', () => handleSubmitReview()); // Add the event listener to handle submit
+        // }
         const submitReviewButton = document.getElementById('submitReview');
         if (submitReviewButton) {
-            submitReviewButton.removeEventListener('click', saveCommentToFirebase); // Remove any existing event listeners
-            submitReviewButton.addEventListener('click', saveCommentToFirebase); // Add the event listener to call the saveCommentToFirebase function
+            submitReviewButton.removeEventListener('click', handleSubmitReview);
+            submitReviewButton.addEventListener('click', async () => {
+                await handleSubmitReview(); // Await the submission process
+                // Close the review modal
+                const reviewModalInstance = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
+                reviewModalInstance.hide();
+
+                // Show the success modal
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                successModal.show();
+
+                setTimeout(() => {
+                    successModal.hide();
+                }, 2000);
+            });
         }
 
 
@@ -875,6 +895,7 @@ function addItemInfo(data, item) {
                     // Check if there are no comments
                     if (Object.keys(comments).length === 0) {
                         const noCommentsMessage = document.createElement('p');
+                        noCommentsMessage.id = 'no-comments-message';
                         noCommentsMessage.textContent = 'No comments found';
                         noCommentsMessage.style.color = '#666'; // Optional styling
                         noCommentsMessage.style.fontStyle = 'italic'; // Optional styling
@@ -886,7 +907,15 @@ function addItemInfo(data, item) {
                     // Object.values(comments).forEach(displayComment);
 
                     // Sort comments by timestamp (latest first)
-                    const sortedComments = Object.values(comments).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    // const sortedComments = Object.values(comments).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                    // // Display each sorted comment
+                    // sortedComments.forEach(displayComment);
+
+                    // Sort comments by timestamp (latest first)
+                    const sortedComments = Object.values(comments).sort(
+                        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+                    );
 
                     // Display each sorted comment
                     sortedComments.forEach(displayComment);
@@ -997,5 +1026,3 @@ function applyFiltersToMap(data) {
         data.overrideStyle(feature, { visible: visible });
     });
 }
-
-
