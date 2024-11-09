@@ -61,32 +61,7 @@
     width: 100%;
 }
 
-/* @media (max-width: 576px) {
-    .profile-img {
-        max-width: 30px;
-    }
-} */
 
-/* .card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-    background: linear-gradient(135deg, #ffffff, #f9f9f9);
-}
-
-.card img {
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-}
-
-.card-body {
-    padding: 20px;
-}
-
-.card .badge {
-    margin-bottom: 0;
-} */
 
 .badge-custom {
     background-color: #007bff;
@@ -137,7 +112,7 @@
 .profile_description {
     white-space: normal;
     word-wrap: break-word;
-    max-width: 70%; /* Default width for larger screens */
+    max-width: 90%; /* Default width for larger screens */
 }
 
 
@@ -157,7 +132,7 @@
     }
     .profile_description {
         font-size: 12px;
-
+        max-width: 100%; /* Make the profile description full width on smaller screens */
     }
 }
 
@@ -166,9 +141,7 @@
         font-size: 18px;
     }
     .profile_description {
-        max-width: 70%; /* Make it even narrower on very small screens */
-        margin: 0 auto; /* Center the text within the container */
-        text-align: center; /* Center-align text */
+        max-width: 100%; /* Make it even narrower on very small screens */
     }
 }
 
@@ -177,7 +150,7 @@
         font-size: 16px;
     }
     .profile_description {
-        max-width: 90%; /* Make it even narrower on very small screens */
+        max-width: 80%;/* Make it even narrower on very small screens */
         margin: 0 auto; /* Center the text within the container */
         text-align: center; /* Center-align text */
     }
@@ -186,7 +159,7 @@
 /* Hide "Edit Profile" text between 768px and 992px */
 @media (max-width: 992px) and (min-width: 768px) {
     .edit-text {
-        display: none;
+        font-size: 10px;
     }
 }
 
@@ -328,4 +301,18 @@
     height: 100%;
     object-fit: contain; /* or you can try scale-down */
     object-position: center; /* Center the image within the square */
+}
+
+.list-text{
+    font-size: 14px
+}
+
+.list-item-name{
+    font-size: 28px
+}
+
+@media (max-width: 992px) and (min-width: 768px) {
+    .list-text{
+        font-size: 14px
+    }
 }

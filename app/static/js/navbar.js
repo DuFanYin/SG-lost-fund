@@ -157,6 +157,8 @@ const app = Vue.createApp({
             } else if (item.purchased) {
                 console.log(`Selected ${item.name}`);
             } else {
+                const insufficientPointsModal = new bootstrap.Modal(document.getElementById('insufficientPointsModal'));
+                insufficientPointsModal.show();
                 console.log("Not enough points to purchase this item");
             }
         },
