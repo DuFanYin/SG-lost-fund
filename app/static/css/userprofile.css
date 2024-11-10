@@ -277,13 +277,13 @@
 
     .complete {
         position: absolute;
-        color: #e0dddd;
+        color: #000000;
         right: 15px;
         bottom: 10%;
         padding: 5px 10px;
         font-size: 14px;
         border: 1px solid #f9f9f9;
-        background-color: rgb(34, 190, 68);
+        background-color:  #fef5f3;
         border-radius: 15px;
     }
 
@@ -318,7 +318,7 @@
 
     .card-content-expanded {
         padding: 15px;
-        background-color: #f8f9fa; /* Optional: Set background color */
+        background-color: #f59090; /* Optional: Set background color */
         word-wrap: break-word;
         overflow: hidden;
         border-radius: 10px; /* Optional: Rounded corners */
@@ -332,13 +332,13 @@
 
     .return {
         position: absolute;
-        color: #e0dddd;
+        color: #000000;
         left: 15px;
         top: 2%;
         padding: 5px 10px;
         font-size: 14px;
         border: 1px solid #f9f9f9;
-        background-color: rgb(34, 190, 68);
+        background-color:  #fef5f3;
         border-radius: 15px;
     }
 

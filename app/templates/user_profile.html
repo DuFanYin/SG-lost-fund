@@ -132,7 +132,7 @@
                                         </button>
                                     </div>
 
-                                    <div v-else class="card-content-expanded hero">
+                                    <div v-else class="card-content-expanded hero" :style="expandedCardBackgroundStyle(item)">
                                         <h3 class="card-title list-item-name" v-text="item.item_name"
                                             style="text-align: center; border-bottom: 1px solid lightgrey; padding-bottom: 5px;">
                                         </h3>

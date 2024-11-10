@@ -45,6 +45,25 @@ const profile = Vue.createApp({
 
     // Pagination Controls
     computed: {
+
+        expandedCardBackgroundStyle() {
+            return (item) => {
+                switch (item.item_type) {
+                    case 'Electronics':
+                        return { backgroundColor: '#ffcccc' }; // Light red for Electronics
+                    case 'Clothing':
+                        return { backgroundColor: '#cce6ff' }; // Light blue for Clothing
+                    case 'Furniture':
+                        return { backgroundColor: '#fff2cc' }; // Light yellow for Furniture
+                    case 'Books':
+                        return { backgroundColor: '#e6ffe6' }; // Light green for Books
+                    case 'Jewelry':
+                        return { backgroundColor: '#f5e6ff' }; // Light purple for Jewelry
+                    default:
+                        return { backgroundColor: '#f2f2f2' }; // Light grey for Others
+                }
+            };
+        },
         itemBackgroundStyle() {
             return (item) => {
                 switch (item.item_type) {
