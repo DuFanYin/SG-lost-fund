@@ -1,4 +1,7 @@
 requests==2.28.1
-Flask==2.2.2                # Flask framework
+              # Flask framework
 firebase-admin==5.2.0       # Firebase Admin SDK for server-side interactions
 gunicorn==20.1.0            # WSGI HTTP Server for UNIX, useful for deploying Flask apps
+
+Flask==2.0.3
+Werkzeug==2.0.3
