@@ -36,7 +36,9 @@
 <body>
     <!-- Navbar placeholder -->
     <div id="navbar-placeholder"></div>
-
+    <!-- Load the JavaScript to include the Navbar -->
+    <script type='module' src="../static/js/navbar.js"></script>
+    
     <div id='profile' class="container"
         data-default-profile-url="{{ url_for('static', filename='img/profile-icon.jpg') }}">
         <!-- Vue wrapper with dynamic background -->
@@ -297,8 +299,7 @@
     <!-- Load the JavaScript to include the footer -->
     <script src="../static/js/footer.js"></script>
 
-    <!-- Load the JavaScript to include the Navbar -->
-    <script type='module' src="../static/js/navbar.js"></script>
+    
 
     <!-- userprofile.js-->
     <script type='module' src="../static/js/userprofile.js"></script>
