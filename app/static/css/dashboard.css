@@ -22,9 +22,6 @@ body {
     min-width: 100px; /* Ensures proper width */
 }
 
-.pie-chart-container {
-    position: relative;
-}
 
 .form-select-sm {
     width: auto;
@@ -69,6 +66,7 @@ body {
 .grey_border_top {
     border: 2px solid #d8d5d5;
     /* Adds a dark border around the box */
+    border-radius: 20px;
 }
 
 .grey_border_bottom {
@@ -285,7 +283,7 @@ html {
 .shadow {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
     /* Adjust shadow parameters as needed */
-    border-radius: 8px;
+
     /* Optional: adds rounded corners */
     padding: 16px;
     /* Optional: adds padding within the div */
@@ -310,13 +308,273 @@ html {
     50% { transform: scale(1.1); }
 }
 
-
-.background-color{
-    background-color: rgb(237, 237, 237);
-}
-
 .line {
     border-top: 6px solid #B30000; /* Change this to the desired thickness and color */
     padding-top: 10px; /* Optional: Add padding to the top for spacing */
     margin-top: 10px; /* Optional: Add margin if needed */
+}
+.background-color{
+background-color: #fef5f3; /* Light pink-beige background */}
+
+
+
+
+.subscription-card {
+    padding: 20px;
+    background-color: #fff7f5; /* Light pink background */
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    min-height: 200px;  /* Minimum height to maintain uniformity */
+
+}
+
+
+/* Icon circle styling */
+.icon-circle1 {
+    width: 50px;
+    height: 50px;
+    background-color: #f3e7ff; /* Light purple background */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    padding: 30px;  /* Increase padding to make the circle bigger */
+
+
+ 
+}
+
+/* Icon circle styling */
+.icon-circle2 {
+    width: 50px;
+    height: 50px;
+    background-color: #dcf8fa; 
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    padding: 30px;
+}
+
+/* Icon circle styling */
+.icon-circle3 {
+    width: 50px;
+    height: 50px;
+    background-color: #fbedf2; 
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    padding: 30px;
+}
+
+
+
+.icon-tag1 {
+    font-size: 24px;
+    color: #6A0DAD; /* Purple icon color */
+}
+
+
+.icon-tag2 {
+    font-size: 24px;
+    color: #6daabf; /* Purple icon color */
+}
+
+
+.icon-tag3 {
+    font-size: 24px;
+    color: #e0a3b6; /* Purple icon color */
+}
+
+/* Subscription info styling */
+.registered-users h2, .lost-item-reports h2, .recovered-items h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333; /* Dark text color */
+}
+
+.registered-users p, .lost-item-reports p, .recovered-items p {
+    margin: 0;
+    font-size: 18px;
+    color: #666; /* Gray text color */
+}
+
+
+
+.card-content {
+    padding: 30px; /* Adds padding around the content */
+    display: flex;
+    align-items: center;
+    justify-content: center;  /* Centers content vertically */
+}
+
+.card-header {
+    background-color: #f8f9fa; /* Light background */
+    border-bottom: 1px solid #ddd; /* Subtle border for separation */
+}
+
+.trophy-icon {
+    width: 30px;
+    height: 30px;
+}
+
+h1.text-dark {
+    font-size: 1.5rem; /* Adjust font size if needed */
+}
+.leaderboard-bg{
+    background-color: #f5e9e4;
+    padding-top: 20px;
+    border-radius: 5px;
+    padding-bottom: 0px;
+}
+
+.subscription-card1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 15px;
+
+}
+
+
+
+.chart-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: black;
+}
+
+.dropdown-container{
+    margin-top: -10px; /* Adjust the value as needed */
+    width: 100%; /* Ensure the dropdown is responsive */
+
+}
+.dropdown-container select {
+    max-width: 120px;
+}
+
+@media (max-width: 768px) {
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dropdown-container select {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .chart-title {
+        text-align: left;
+        font-size: 1rem;
+    }
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+}
+
+
+
+
+
+/* Ensure the subscription card is responsive */
+.subscription-card2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;      
+}
+
+@media (max-width: 576px) {
+    .subscription-card2 {
+        height: auto; /* Ensure height is based on content */
+        min-height: auto; /* Ensure no minimum height is forcing the card to a fixed size */
+    }
+}
+
+.trophy-icon {
+    width: 40px;
+    height: auto;
+}
+
+/* Flexbox layout for trophy, title, and trophy icons */
+.subscription-card2 .d-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap; /* Allows wrapping of elements on smaller screens */
+}
+
+/* Adjust the title font size for smaller screens */
+@media (max-width: 768px) {
+    .subscription-card2 .d-flex h1 {
+        font-size: 28px;
+    }
+}
+
+/* Responsive table */
+.table-responsive {
+
+    overflow-x: auto; /* Ensures the table is scrollable on small screens */
+    -webkit-overflow-scrolling: touch;  /* Enables smooth scrolling on mobile devices */
+    max-width: 100%;      /* Ensure it doesn't exceed the parent container's width */
+}
+@media (max-width: 768px) {
+    .table-responsive {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+/* Make sure the leaderboard message looks good */
+.overlay-message h3 {
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    .overlay-message h3 {
+        font-size: 16px;
+    }
+}
+@media (max-width: 300px) {
+    .table-responsive {
+        font-size: 12px; /* Adjust font size for very small screens */
+    }
+
+    .table th, .table td {
+        padding: 4px; /* Reduce padding to fit content */
+    }
+
+    .table {
+        width: 100%;
+    }
+}
+.table {
+    table-layout: fixed; /* Ensures table columns don't overflow */
+    word-wrap: break-word;
+}
+
+/* Adjust table styling for smaller widths */
+@media (max-width: 480px) {
+    .table th, .table td {
+        padding: 6px; /* Reduce padding slightly */
+    }
+}
+
+@media (max-width: 768px) {
+    .table th, .table td {
+        padding: 8px; /* Slightly larger padding for tablets */
+    }
 }

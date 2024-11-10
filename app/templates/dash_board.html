@@ -65,101 +65,136 @@
                 <div class="wave"></div>
 
                 <!-- First Row (4-4-4) -->
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <div class="grey_border_top w-100 mb-3 mt-3 shadow"
-                            style="background-color: #610000; color: white;">
-                            <br> <i class="fas fa-users fa-2x"></i>
-                            <span class="box-title">Total Number of Registered Users
-                                <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
-                                    title="This number represents the total number of users who have signed up on the platform."></i>
-                            </span>
-                            <p id="boldNumber" v-text="totalUsers"></p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <div class="grey_border_top w-100 mb-3 mt-3 shadow"
-                            style="background-color: #610000; color: white;">
-                            <br><i class="fas fa-book icon-large fa-2x"></i>
-                            <span class="box-title">Total Lost Item Reports
-                                <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
-                                    title="This number represents the total number of lost item reports across all users."></i>
-                            </span>
-                            <p id="boldNumber" v-text="lostItemReports"></p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <div class="grey_border_top w-100 mb-3 mt-3 shadow"
-                            style="background-color: #610000; color: white;">
-                            <br> <i class="fas fa-thumbs-up fa-2x"></i>
-                            <span class="box-title">Total Number of Recovered Items
-                                <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
-                                    title="This number represents the total number of recovered items across all users."></i>
-                            </span>
-                            <p id="boldNumber" v-text="recoveredItems"></p>
+               <!-- First Row with Subscription Cards (4-4-4) -->
+               <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="subscription-card shadow mb-3 mt-3 bg-white">
+                        <div class="card-content">
+                            <div class="icon-circle1">
+                                <i class="fas fa-users fa-2x icon-tag1"></i>
+                            </div>
+                            <div class="registered-users">
+                                <h2 id="boldNumber" v-text="totalUsers"></h2>
+                                <div class="info-line">
+                                    <p>Total Number of Registered Users</p>
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                       title="This number represents the total number of users who have signed up on the platform."></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="subscription-card shadow w-100 mb-3 mt-3 bg-white">
+                        <div class="card-content">
+                            <div class="icon-circle2">
+                                <i class="fas fa-book fa-2x icon-tag2"></i>
+                            </div>
+                            <div class="lost-item-reports">
+                                <h2 id="boldNumber" v-text="lostItemReports"></h2>
+                                <div class="info-line">
+                                    <p>Total Lost Item Reports</p>
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                       title="This number represents the total number of lost item reports across all users."></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                    <div class="subscription-card shadow w-100 mb-3 mt-3 bg-white">
+                        <div class="card-content">
+                            <div class="icon-circle3">
+                                <i class="fas fa-thumbs-up fa-2x icon-tag3"></i>
+                            </div>
+                            <div class="recovered-items">
+                                <h2 id="boldNumber" v-text="recoveredItems"></h2>
+                                <div class="info-line">
+                                    <p>Total Number of Recovered Items</p>
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    title="This number represents the total number of recovered items across all users."></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
 
                 <!-- Second Row (7-5) -->
                 <div class="row">
+              
+                    <div class="col-lg-8 col-md-8 col-sm-12">
+                        <!-- Leaderboard Content -->
+                        <div class="subscription-card2 leaderboard shadow w-100 mt-3 mb-3 bg-white d-flex flex-column flex-fill">
+                            <!-- First row: Trophy, Leaderboard title, Trophy in a single horizontal row -->
+                            <div class="d-flex align-items-center justify-content-center flex-wrap m-1">
+                                <img src="static/img/trophy2.png" alt="trophy" class="trophy-icon me-2" style="width: 40px; height: auto;" />
+                                <h1 class="text-center text-dark mb-0" style="font-size: 35px; font-weight:bold;">Leaderboard</h1>
+                                <img src="static/img/trophy2.png" alt="trophy" class="trophy-icon ms-2" style="width: 40px; height: auto;"/>
+                            </div>
+                        
+                            <!-- Congratulations message, stacked vertically below the title row -->
+                            <div v-if="isLoggedIn" class="pulsing-text text-center">
+                                🎉 Congratulations to our top performers! 🎉
+                            </div>
+                    
+                            <!-- Table with leaderboard data, stacked vertically below the message -->
+                            <div v-if="isLoggedIn" class="w-100">
+                                <div class="table-responsive">
+                                    <table class="table table-hover text-white shadow w-100 border border-secondary">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Ranking</th>
+                                                <th>Username</th>
+                                                <th class="text-wrap">Number of Items Found</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="leaderboardData">
+                                            <!-- Dynamic Content Here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                    
+                            <!-- Message when not logged in, stacked vertically below the title row -->
+                            <div v-else class="overlay-message text-center">
+                                <h3><i class="fas fa-lock"></i> Login Access Required. Please <a href="/login">login</a> to view it.</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    
                     <div class="col-lg-4 col-md-4 col-sm-12 d-flex flex-column">
-                        <div class="p-1 rounded-3 flex-fill shadow grey_border_top position-relative bg-white line">
-                            <div class="container-fluid py-2 chart-container pie-chart-container position-relative">
-                                <canvas id="pieChart" style="width: 100%; height: 400px;"></canvas>
-                                <div class="dropdown-container position-absolute top-0 end-0 p-2">
-                                    <select class="form-select form-select-sm" v-model="selectedReportType"
-                                        @change="updatePieChart">
+                        <div class="subscription-card1 shadow w-100 mb-3 mt-3 bg-white flex-fill">
+                            <div class="card-content position-relative">
+                                <!-- Title and Dropdown Container -->
+                                <div class="dropdown-container">
+                                    <select class="form-select form-select-sm" v-model="selectedReportType" @change="updatePieChart">
                                         <option disabled value="">Select Status</option>
                                         <option value="Found">Found</option>
                                         <option value="Lost">Lost</option>
                                     </select>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-8 col-md-8 col-sm-12">
-                        <!-- Leaderboard Content -->
-                        <div class="leaderboard grey_border_top mt-3 shadow bg-white line">
-                            <div class="d-flex align-items-center justify-content-center mb-3">
-                                <img src="static/img/trophy2.png" alt="trophy" class="trophy-icon me-2" />
-                                <h1 class="text-center text-dark mb-0">Leaderboard</h1>
-                                <img src="static/img/trophy2.png" alt="trophy" class="trophy-icon ms-2" />
-                            </div>
-                            <div v-if="isLoggedIn">
-                                <div class="pulsing-text">
-                                    🎉 Congratulations to our top performers! 🎉
+                    
+                                <div class="container-fluid py-2 chart-container pie-chart-container position-relative">
+                                    <canvas id="pieChart"></canvas>
                                 </div>
-
-                                <!-- Table with full width and grey border -->
-                                <table class="table table-hover text-white shadow w-100 border border-secondary">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Ranking</th>
-                                            <th>Username</th>
-                                            <th class="text-wrap">Number of Items Found</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="leaderboardData">
-                                        <!-- Dynamic Content Here -->
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div v-else class="overlay-message">
-                                <h3><i class="fas fa-lock"></i> Login Access Required. Please <a href="/login">login</a>
-                                    to view it.</h3>
                             </div>
                         </div>
                     </div>
-
+                    
+                    
 
                 </div>
 
                 <!-- Third Row (6-6) -->
                 <div class="row my-3">
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="p-1 rounded-3 flex-fill shadow grey_border_top mb-3 bg-white line">
+                        <div class=" subscription-card shadow w-100 mb-3 mt-3flex-fill bg-white ">
                             <div class="container-fluid py-2 chart-container">
                                 <canvas id="lineChart" style="width: 100%; height: 400px;"></canvas>
                             </div>
@@ -167,7 +202,7 @@
                     </div>
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="p-1 rounded-3 flex-fill shadow grey_border_top bg-white line">
+                        <div class=" subscription-card shadow w-100 mb-3 mt-3flex-fill bg-white ">
                             <div class="container-fluid py-2 chart-container">
                                 <canvas id="barChart" style="width: 100%; height: 400px;"></canvas>
                             </div>

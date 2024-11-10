@@ -102,8 +102,8 @@ const dashboardApp = Vue.createApp({
                     this.barChartInstance.update();
                 } else {
                     const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-                    gradient.addColorStop(0, '#820000'); // Darkest red at the top
-                    gradient.addColorStop(1, '#ff7878'); // Lightest red at the bottom
+                    gradient.addColorStop(0, '#a3423c'); // Darkest red at the top
+                    gradient.addColorStop(1, '#f07c6c'); // Lightest red at the bottom
 
 
                     this.barChartInstance = new Chart(ctx, {
@@ -356,7 +356,7 @@ const dashboardApp = Vue.createApp({
                         labels: ['Success Rate', 'Failure Rate'],
                         datasets: [{
                             data: [data.successRate, 100 - data.successRate],
-                            backgroundColor: ['#208220', '#FF2B2B'],
+                            backgroundColor: ['#66b272', '#e87b6a'],
                             borderColor: '#ffffff',
                             borderWidth: 2,
                             hoverOffset: 8, // Adds a 3D effect on hover
@@ -383,7 +383,7 @@ const dashboardApp = Vue.createApp({
                                 display: true,
                                 text: `Rates ${this.selectedReportType} Items`,
                                 font: {
-                                    size: 25, // Adjusted font size for better alignment with dropdown
+                                    size: 20, // Adjusted font size for better alignment with dropdown
                                     weight: 'bold', // Keep the text bold
                                     family: 'Arial', // Keep the font family
                                 },
@@ -469,7 +469,7 @@ const dashboardApp = Vue.createApp({
                         {
                             label: 'Items Found',
                             data: foundCounts,
-                            borderColor: '#208220',
+                            borderColor: '#66b272',
                             fill: false,
                             backgroundColor: 'transparent',
                             // backgroundColor: 'rgba(255, 192, 203, 0.2)', // Add a light background color
@@ -480,7 +480,7 @@ const dashboardApp = Vue.createApp({
                         {
                             label: 'Items Lost',
                             data: lostCounts,
-                            borderColor: '#FF2B2B',
+                            borderColor: '#f07c6c',
                             fill: false,
                             backgroundColor: 'transparent',
                             // backgroundColor: 'rgba(255, 192, 203, 0.2)', // Add a light background color
