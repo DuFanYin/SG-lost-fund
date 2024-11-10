@@ -14,16 +14,6 @@ if not firebase_admin._apps:
 
 db = firestore.client()
 
-UPLOAD_FOLDER = 'uploads/'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
-# Ensure the upload folder exists
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 @main.route('/')
 def index():
     return render_template('home.html')
