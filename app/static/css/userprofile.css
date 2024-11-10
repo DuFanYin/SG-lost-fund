@@ -136,6 +136,8 @@
     }
 }
 
+
+
 @media (max-width: 768px) { /* Medium screens (Bootstrap md) */
     .profile_name {
         font-size: 18px;
@@ -195,12 +197,13 @@
     display: inline-block;
     position: relative;
     width: 100%; /* Make it responsive to parent container */
-    max-width: 400px; /* Set a maximum width */
+    max-width: 100%; /* Set a maximum width */
     height: auto; /* Adjust height based on content */
     aspect-ratio: 1; /* Maintain a square ratio */
     border-radius: 30px;
     overflow: hidden;
     box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
+    
 }
 
 .hero-profile-img {
@@ -277,10 +280,6 @@
 
 /* Media query for smaller screens */
 @media (max-width: 576px) {
-    .hero {
-        max-width: 300px;
-        margin: 20px;
-    }
     .hero-logo {
         height: 50px;
         width: 50px;

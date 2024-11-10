@@ -139,8 +139,8 @@
                     <!-- Border Shop Tab Content -->
                     <div class="tab-pane fade show active" id="borderShop" role="tabpanel" aria-labelledby="border-tab">
                         <div class="row g-4 shop-section border-shop" id="border-shop">
-                            <div class="col-md-4" v-for="item in borderItems" :key="item.name">
-                                <div class="card border-primary">
+                            <div class="col-lg-4 col-md-6" v-for="item in borderItems" :key="item.name">
+                                <div class="card border-danger">
                                     <img :src="item.image" class="card-img-top item-img" :alt="item.name">
                                     <div class="card-body text-center">
                                         <h5 class="card-title" v-text="item.name"></h5>
@@ -164,7 +164,7 @@
                     <div class="tab-pane fade" id="backgroundShop" role="tabpanel" aria-labelledby="background-tab">
                         <div class="row g-4 shop-section background-shop" id="background-shop">
                             <div class="col-md-4" v-for="item in backgroundItems" :key="item.name">
-                                <div class="card border-primary">
+                                <div class="card border-danger">
                                     <img :src="item.image" class="card-img-top item-img" :alt="item.name">
                                     <div class="card-body text-center">
                                         <h5 class="card-title" v-text="item.name"></h5>
