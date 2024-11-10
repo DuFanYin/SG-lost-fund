@@ -12,29 +12,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-async function handleSubmitReview() {
-    const description = document.getElementById('reviewDescription').value.trim();
-
+async function saveCommentToFirebase(description) {
     if (!description) {
         console.error('Review message is required.');
         alert('Please enter a review message before submitting.');
-        return; // Prevent the form from submitting if no message is entered
+        return;
     }
-
-    await saveCommentToFirebase(description); // Pass description to the save function
-}
-
-
-// Function to save comment to Firestore
-async function saveCommentToFirebase(description) {
-    // const description = document.getElementById('reviewDescription').value.trim();
-    // if (!description) {
-    //     console.error('Review message is required.');
-    //     alert('Please enter a review message before submitting.');
-    //     return;
-    // }
-
-    // console.log("Description:", description);
 
     const uid = sessionStorage.getItem('uid');
     if (!uid) {
@@ -54,16 +37,14 @@ async function saveCommentToFirebase(description) {
     const year = now.getFullYear();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0'); // Include seconds to ensure uniqueness
+    const seconds = String(now.getSeconds()).padStart(2, '0');
     const commentId = `${day}-${month}-${year}_${hours}_${minutes}_${seconds}`;
-
-    // const commentId = `${day}-${month}-${year}_${hours}_${minutes}`;
 
     const commentData = {
         userId: uid,
         username: username,
         message: description,
-        timestamp: new Date().toISOString(),
+        timestamp: now.toISOString(),
     };
 
     if (!currentDocumentId) {
@@ -75,28 +56,22 @@ async function saveCommentToFirebase(description) {
 
     try {
         console.log('Saving comment...');
-        // Add the comment to the listing document
         await listingRef.update({
             [`comments.${commentId}`]: commentData
         });
 
         console.log('Comment saved successfully!');
-
-        // Fetch and display the latest comments after saving the new comment
         await fetchComments(currentDocumentId);
 
-        // Fetch the listing ownerId and send a notification if needed
         const listingDoc = await listingRef.get();
         const ownerId = listingDoc.data().ownerId;
 
-        // Only send notification if the comment is not by the owner
         if (uid !== ownerId) {
             const itemName = listingDoc.data().item_name;
-
             const notificationData = {
                 message: `${username} commented on your listing "${itemName}"`,
                 timestamp: new Date().toISOString(),
-                itemName: itemName, // Pass the item name for the notification
+                itemName: itemName,
             };
 
             const ownerRef = db.collection('users').doc(ownerId);
@@ -107,14 +82,7 @@ async function saveCommentToFirebase(description) {
             console.log('Notification sent to the owner.');
         }
 
-        // Hide the review modal after saving the comment
-        const reviewModal = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
-        reviewModal.hide();
-
-        // Display the newly posted comment
         displayComment(commentData);
-
-        // Clear the review description input field
         document.getElementById('reviewDescription').value = '';
 
     } catch (error) {
@@ -122,47 +90,6 @@ async function saveCommentToFirebase(description) {
     }
 }
 
-
-function displayComment(commentData) {
-    let commentSection = document.getElementById('comment-section');
-    if (!commentSection) {
-        console.error('Comment section not found. Creating a new one.');
-        commentSection = document.createElement('div');
-        commentSection.id = 'comment-section';
-        document.getElementById('info-panel').appendChild(commentSection);
-    }
-
-    // Remove "No comments found" message if it exists
-    const noCommentsMessage = document.getElementById('no-comments-message');
-    if (noCommentsMessage) {
-        noCommentsMessage.remove();
-    }
-
-    const commentElement = document.createElement('div');
-    // commentElement.classList.add('comment');
-    commentElement.classList.add('comment', 'mb-3', 'p-2', 'border', 'rounded', 'd-flex', 'align-items-start');
-
-
-    const userProfileLink = `./user-profile.html?uid=${commentData.userId}`;
-    const userAvatar = commentData.avatarURL || 'https://via.placeholder.com/40'; // Placeholder image if no avatar is available
-
-    commentElement.innerHTML = `
-        <div class="d-flex align-items-start">
-            <img src="${userAvatar}" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px;">
-            <div>
-                <a href="${userProfileLink}" class="fw-bold text-primary">${sanitizeHTML`${commentData.username}`}</a>
-                <span class="text-muted">(${new Date(commentData.timestamp).toLocaleString()})</span>
-                <p class="mb-1">${sanitizeHTML`${commentData.message}`}</p>
-            </div>
-        </div>
-    `;
-
-    // Align comment box with the "Comments" heading
-    commentElement.style.maxWidth = '100%';
-    commentElement.style.marginLeft = '0';
-
-    commentSection.appendChild(commentElement);
-}
 
 // Function to fetch the username from Firestore based on the UID
 async function getUsername(uid) {
@@ -691,7 +618,90 @@ function showItemsList(data, items, categoryArray, statusArray, datesArray) {
 }
 
 
+
+function displayComment(commentData) {
+    let commentSection = document.getElementById('comment-section');
+
+    // Remove "No comments found" message if it exists
+    const noCommentsMessage = document.getElementById('no-comments-message');
+    if (noCommentsMessage) {
+        noCommentsMessage.remove();
+    }
+
+    const commentElement = document.createElement('div');
+    // commentElement.classList.add('comment');
+    commentElement.classList.add('comment', 'mb-3', 'p-2', 'border', 'rounded', 'd-flex', 'align-items-start');
+
+
+    const userProfileLink = `./user-profile.html?uid=${commentData.userId}`;
+    const userAvatar = commentData.avatarURL || 'https://via.placeholder.com/40'; // Placeholder image if no avatar is available
+
+    commentElement.innerHTML = `
+        <div class="d-flex align-items-start">
+            <img src="${userAvatar}" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+            <div>
+                <a href="${userProfileLink}" class="fw-bold text-primary">${sanitizeHTML`${commentData.username}`}</a>
+                <span class="text-muted">(${new Date(commentData.timestamp).toLocaleString()})</span>
+                <p class="mb-1">${sanitizeHTML`${commentData.message}`}</p>
+            </div>
+        </div>
+    `;
+
+    // Align comment box with the "Comments" heading
+    commentElement.style.maxWidth = '100%';
+    commentElement.style.marginLeft = '0';
+
+    commentSection.appendChild(commentElement);
+}
+
 function addItemInfo(data, item) {
+
+    async function fetchComments(documentId) {
+        try {
+            const listingRef = db.collection('listings').doc(documentId);
+            const doc = await listingRef.get();
+
+            if (doc.exists) {
+                const data = doc.data();
+                const comments = data.comments || {};
+
+                let commentSection = document.getElementById('comment-section');
+                if (!commentSection) {
+                    console.log('loading comment section');
+                    commentSection = document.createElement('div');
+                    commentSection.id = 'comment-section';
+                    document.getElementById('info-panel').appendChild(commentSection);
+                }
+
+                commentSection.innerHTML = ''; // Clear previous comments
+
+                // Check if there are no comments
+                if (Object.keys(comments).length === 0) {
+                    const noCommentsMessage = document.createElement('p');
+                    noCommentsMessage.id = 'no-comments-message';
+                    noCommentsMessage.textContent = 'No comments found';
+                    noCommentsMessage.style.color = '#666'; // Optional styling
+                    noCommentsMessage.style.fontStyle = 'italic'; // Optional styling
+                    commentSection.appendChild(noCommentsMessage);
+                    return;
+                }
+
+                const sortedComments = Object.values(comments).sort(
+                    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+                );
+
+                // Display each sorted comment
+                sortedComments.forEach(displayComment);
+
+            } else {
+                console.error('Listing not found.');
+            }
+        } catch (error) {
+            console.error('Error fetching comments:', error);
+        }
+    }
+
+
     const temp = document.createElement('div');
     const tempBody = document.createElement('div');
 
@@ -851,14 +861,16 @@ function addItemInfo(data, item) {
         // }
         const submitReviewButton = document.getElementById('submitReview');
         if (submitReviewButton) {
-            submitReviewButton.removeEventListener('click', handleSubmitReview);
+            submitReviewButton.removeEventListener('click', saveCommentToFirebase);
             submitReviewButton.addEventListener('click', async () => {
-                await handleSubmitReview(); // Await the submission process
-                // Close the review modal
-                const reviewModalInstance = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
-                reviewModalInstance.hide();
+                const description = document.getElementById('reviewDescription').value.trim();
+                await saveCommentToFirebase(description);
 
-                // Show the success modal
+                const reviewModalInstance = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
+                if (reviewModalInstance) {
+                    reviewModalInstance.hide();
+                }
+
                 const successModal = new bootstrap.Modal(document.getElementById('successModal'), {
                     backdrop: 'static',
                     keyboard: false
@@ -871,67 +883,15 @@ function addItemInfo(data, item) {
             });
         }
 
-
-        async function fetchComments(documentId) {
-            try {
-                const listingRef = db.collection('listings').doc(documentId);
-                const doc = await listingRef.get();
-
-                if (doc.exists) {
-                    const data = doc.data();
-                    const comments = data.comments || {};
-
-                    let commentSection = document.getElementById('comment-section');
-                    if (!commentSection) {
-                        // console.error('Comment section not found. Creating a new one.');
-                        console.log('Comment section not found. Creating a new one.');
-                        commentSection = document.createElement('div');
-                        commentSection.id = 'comment-section';
-                        document.getElementById('info-panel').appendChild(commentSection);
-                    }
-
-                    commentSection.innerHTML = ''; // Clear previous comments
-
-                    // Check if there are no comments
-                    if (Object.keys(comments).length === 0) {
-                        const noCommentsMessage = document.createElement('p');
-                        noCommentsMessage.id = 'no-comments-message';
-                        noCommentsMessage.textContent = 'No comments found';
-                        noCommentsMessage.style.color = '#666'; // Optional styling
-                        noCommentsMessage.style.fontStyle = 'italic'; // Optional styling
-                        commentSection.appendChild(noCommentsMessage);
-                        return;
-                    }
-
-                    // Display each comment
-                    // Object.values(comments).forEach(displayComment);
-
-                    // Sort comments by timestamp (latest first)
-                    // const sortedComments = Object.values(comments).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-                    // // Display each sorted comment
-                    // sortedComments.forEach(displayComment);
-
-                    // Sort comments by timestamp (latest first)
-                    const sortedComments = Object.values(comments).sort(
-                        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-                    );
-
-                    // Display each sorted comment
-                    sortedComments.forEach(displayComment);
-
-                } else {
-                    console.error('Listing not found.');
-                }
-            } catch (error) {
-                console.error('Error fetching comments:', error);
-            }
+        const writeReviewButton = document.getElementById("write-review-btn");
+        if (writeReviewButton) {
+            writeReviewButton.removeEventListener("click", async () => {
+                const description = document.getElementById('reviewDescription').value.trim();
+                await saveCommentToFirebase(description);
+            });
         }
-
-
-
-        // Event listener for the comment submission
-        document.getElementById("write-review-btn").addEventListener("click", saveCommentToFirebase);
+        
+        
 
     });
 
