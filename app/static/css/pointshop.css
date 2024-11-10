@@ -23,7 +23,33 @@
 }
 
 #pointShopModal .modal-content {
-    background: rgb(224,222,235);
-    background: linear-gradient(90deg, rgba(224,222,235,1) 15%, rgba(229,228,240,1) 50%, rgba(224,222,235,1) 85%);
+    background: #fef5f3;
 }
 
+.border-danger {
+    border-width: 3px !important; /* Adjust thickness as desired */
+}
+
+/* Background color for the entire tab bar */
+#shopTab {
+    background-color: #f8d7da; /* Light red background for the tab bar */
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* Styling for individual tabs */
+#shopTab .nav-link {
+    color: #495057; /* Text color */
+    background-color: #ffffff; /* Background color for inactive tabs */
+    border: 1px solid transparent;
+    border-radius: 5px;
+    margin: 0 5px;
+    transition: background-color 0.3s ease;
+}
+
+/* Active tab styling */
+#shopTab .nav-link.active {
+    color: #ffffff !important; 
+    background-color: #d9534f; /* Background color for active tab */
+    border-color: #d9534f;
+}
