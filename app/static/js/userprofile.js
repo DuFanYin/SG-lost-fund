@@ -1,4 +1,4 @@
-import { auth, db, storage} from '../js/firebaseConfig.js';
+import { auth, db, storage } from '../js/firebaseConfig.js';
 
 const profile = Vue.createApp({
     data() {
@@ -22,8 +22,9 @@ const profile = Vue.createApp({
             selectedBackground: localStorage.getItem('selectedBackground') || '',  // Use cached value on load
             profileImageURL: sessionStorage.getItem('profileImageURL') || '', // Use the Flask default URL
             showConfirmation: false, // State to show or hide the confirmation popup
-        itemToConfirm: null, // Store the item that needs confirmation
-        tempItem: {}, // Temporary object to hold item data for editing
+            itemToConfirm: null, // Store the item that needs confirmation
+            tempItem: {}, // Temporary object to hold item data for editing
+            loading: true, // new loading state property
         };
     },
     created() {
@@ -104,7 +105,7 @@ const profile = Vue.createApp({
         },
     },
     methods: {
-        
+
 
         openEditListingModal(item) {
             this.tempItem = { ...item }; // Create a shallow copy of the item for temporary edits
@@ -113,7 +114,7 @@ const profile = Vue.createApp({
 
         saveListingChanges() {
             const itemRef = db.collection('listings').doc(this.tempItem.id);
-    
+
             itemRef.update({
                 item_name: this.tempItem.item_name,
                 item_description: this.tempItem.item_description,
@@ -121,17 +122,19 @@ const profile = Vue.createApp({
                 handoff_location: this.tempItem.handoff_location,
                 handoff_method: this.tempItem.handoff_method,
             })
-            .then(() => {
-                console.log("Listing updated successfully");
-                // Update the local array with the modified item
-                const index = this.foundItems.findIndex(item => item.id === this.tempItem.id);
-                if (index !== -1) {
-                    this.foundItems[index] = { ...this.tempItem };
-                }
-            })
-            .catch(error => {
-                console.error("Error updating listing:", error);
-            });
+                .then(() => {
+                    console.log("Listing updated successfully");
+                    // Update the local array with the modified item
+                    const index = this.foundItems.findIndex(item => item.id === this.tempItem.id);
+                    if (index !== -1) {
+                        this.foundItems[index] = { ...this.tempItem };
+                    }
+                    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+                })
+                .catch(error => {
+                    console.error("Error updating listing:", error);
+                });
         },
 
 
@@ -148,7 +151,7 @@ const profile = Vue.createApp({
         toggleExpand(item) {
             item.expanded = !item.expanded; // Toggle the expanded state
         },
-        
+
         fetchUserData() {
             const userRef = db.collection('users').doc(this.uid);
             userRef.get().then((doc) => {
@@ -164,7 +167,7 @@ const profile = Vue.createApp({
                 console.error("Error fetching user data:", error);
             });
         },
-        
+
         handleFileUpload(event) {
             const file = event.target.files[0];
             if (file) {
@@ -174,19 +177,19 @@ const profile = Vue.createApp({
                 });
             }
         },
-    
+
         resizeImageToSquare(file, callback) {
             const img = new Image();
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 img.onload = () => {
                     const side = Math.min(img.width, img.height); // Crop to the smallest side for a square
                     canvas.width = side;
                     canvas.height = side;
-                    
+
                     ctx.drawImage(
                         img,
                         (img.width - side) / 2, // Center horizontally
@@ -198,7 +201,7 @@ const profile = Vue.createApp({
                         side, // Destination width
                         side // Destination height
                     );
-    
+
                     // Convert canvas to blob
                     canvas.toBlob((blob) => {
                         callback(blob);
@@ -210,10 +213,10 @@ const profile = Vue.createApp({
         },
         async uploadProfileImage() {
             if (!this.profileImageFile) return;
-        
+
             const storageRef = storage.ref().child(`profile_images/${this.uid}`);
             const uploadTask = storageRef.put(this.profileImageFile);
-        
+
             // Track the upload progress
             uploadTask.on('state_changed',
                 (snapshot) => {
@@ -231,7 +234,7 @@ const profile = Vue.createApp({
         },
         updateProfileImageURL(downloadURL) {
             const userRef = db.collection('users').doc(this.uid);
-        
+
             // Update Firestore with the new profile image URL
             userRef.update({ profileImageURL: downloadURL })
                 .then(() => {
@@ -258,13 +261,13 @@ const profile = Vue.createApp({
         archiveItem(item) {
             // Reference to the specific item document in Firestore
             const itemRef = db.collection('listings').doc(item.id); // Assume `id` is the document ID
-    
+
             // Update the 'archived' field to true
             itemRef.update({ archived: true })
                 .then(() => {
                     console.log(`Item ${item.item_name} archived successfully.`);
                     item.archived = true; // Update locally
-    
+
                     // Remove the item from the appropriate array
                     if (item.report_type === 'Found') {
                         this.foundItems = this.foundItems.filter(i => i.id !== item.id);
@@ -372,20 +375,20 @@ const profile = Vue.createApp({
         // Display all found and lost items based on the current UID
         fetchItems() {
             const listingsRef = db.collection('listings');
-            
+            this.loading = true; // Set loading to true when starting to fetch items
             listingsRef
                 .where('uid', '==', this.uid)
                 .get()
                 .then(async (querySnapshot) => {
                     this.foundItems = [];
                     this.lostItems = [];
-                    
+
                     // Use Promise.all to fetch user data asynchronously for all listings
                     const items = await Promise.all(querySnapshot.docs.map(async (doc) => {
                         const item = { ...doc.data(), id: doc.id, expanded: false }; // Spread data and include document ID
-                        
+
                         console.log("Fetching profile image for UID:", item.uid);
-        
+
                         // Fetch the profileImageURL for each user based on the listing's uid
                         if (item.uid) { // Ensure uid is available
                             const userDoc = await db.collection('users').doc(item.uid).get();
@@ -403,7 +406,7 @@ const profile = Vue.createApp({
                         console.log("Profile Image URL:", item.profileImageURL);
                         return item;
                     }));
-        
+
                     // Separate found and lost items based on the report type
                     items.forEach(item => {
                         if (item.report_type === 'Found' && !item.archived) {
@@ -412,13 +415,15 @@ const profile = Vue.createApp({
                             this.lostItems.push(item);
                         }
                     });
+                    this.loading = false; // Set loading to false once items are loaded
                 })
                 .catch((error) => {
                     console.error("Error fetching items:", error);
+                    this.loading = false; // Ensure loading is set to false even if there's an error
                 });
         },
-        
-        
+
+
 
         openEditModal() {
             this.tempUsername = this.username;
@@ -444,6 +449,8 @@ const profile = Vue.createApp({
                 console.log("Profile successfully updated!");
                 sessionStorage.setItem('username', this.username);
                 sessionStorage.setItem('profiledesc', this.profiledesc);
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
             }).catch((error) => {
                 console.error("Error updating profile: ", error);
             });
