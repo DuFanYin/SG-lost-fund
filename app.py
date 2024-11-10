@@ -91,7 +91,6 @@ def pointshop():
 def create_app():
     app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
     app.register_blueprint(main)
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.secret_key = os.urandom(24)
     return app
 
