@@ -4,8 +4,8 @@ body {
     min-height: 100vh;
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: #fef5f3 !important;
-}
+    background-color: #fef5f3 !important;}
+
 
 /* Content area to grow and take up remaining space */
 .content {
@@ -103,7 +103,7 @@ hr {
 }
 
 #progressbar li.active:before {
-    background: #27AE60;
+    background: #f07c6c;
     color: white;
 }
 
@@ -119,7 +119,7 @@ hr {
 }
 
 #progressbar li.active:after {
-    background: #27AE60;
+    background: #f07c6c;
 }
 
 #progressbar li:first-child:after {
@@ -148,6 +148,7 @@ hr {
 .btn-outline-secondary,
 .btn-success {
     padding: 12px 35px;
+    background-color: #66b272;
 }
 
 .btn {
@@ -229,6 +230,8 @@ hr {
     position: absolute;
     left: 10px;
     font-size: 1.2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: white;
 }
 
 input[type="text"] {
@@ -237,9 +240,9 @@ input[type="text"] {
     font-size: 1rem;
     border: none;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     outline: none;
-    color: #333;
+    color: black;
+    background-color: white;
 }
 
 input[type="text"]:focus {
@@ -264,3 +267,33 @@ input[type="text"]::placeholder {
 .input-group-text i {
     font-size: 1.2rem; 
 }
+
+/* Apply border on page load */
+.custom-input {
+    border: 2px solid #66b272; /* Green border color */
+    border-radius: 8px; /* Rounded corners */
+    padding-left: 10px; /* Padding for text inside the input */
+}
+
+/* Change border color on focus */
+.custom-input:focus {
+    border-color: #4e9a3f; /* Darker green when focused */
+    box-shadow: 0 0 5px rgba(102, 178, 114, 0.6); /* Light green glow */
+}
+
+/* Style the input group */
+.input-group-text {
+    background-color: #f4f4f4; /* Light grey background for the icon */
+    border-right: 2px solid #66b272; /* Matching border to the input box */
+    border-top-left-radius: 8px; /* Rounded corners on the left */
+    border-bottom-left-radius: 8px; /* Rounded corners on the left */
+}
+
+/* Optional: Style the label with some margin */
+.form-label {
+    font-weight: 600; /* Bold label */
+    font-size: 14px; /* Slightly larger font size */
+    margin-bottom: 8px; /* Space between label and input */
+}
+
+

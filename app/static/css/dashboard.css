@@ -28,13 +28,13 @@ body {
 }
 
 
-.grey_border .leaderboard {
+.leaderboard {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 10px;
 }
 
 .leaderboard {
@@ -152,7 +152,7 @@ body {
 .table td {
     font-size: 0.875rem;
     /* Adjust this value as needed */
-    padding: 12px;
+    padding: 8px;
     text-align: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     white-space: normal;
@@ -282,8 +282,6 @@ html {
 
 .shadow {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
-    /* Adjust shadow parameters as needed */
-
     /* Optional: adds rounded corners */
     padding: 16px;
     /* Optional: adds padding within the div */
@@ -320,7 +318,6 @@ background-color: #fef5f3; /* Light pink-beige background */}
 
 
 .subscription-card {
-    padding: 20px;
     background-color: #fff7f5; /* Light pink background */
     border-radius: 15px;
     display: flex;
@@ -484,10 +481,6 @@ h1.text-dark {
     position: relative;
     width: 100%;
 }
-
-
-
-
 
 /* Ensure the subscription card is responsive */
 .subscription-card2 {
