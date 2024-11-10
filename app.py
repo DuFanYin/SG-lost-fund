@@ -95,3 +95,7 @@ def create_app():
     return app
 
 app = create_app()  # Vercel will use this `app` variable to run the Flask application
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -23,6 +23,7 @@ const profile = Vue.createApp({
             profileImageURL: sessionStorage.getItem('profileImageURL') || '', // Use the Flask default URL
             showConfirmation: false, // State to show or hide the confirmation popup
         itemToConfirm: null, // Store the item that needs confirmation
+        tempItem: {}, // Temporary object to hold item data for editing
         };
     },
     created() {
@@ -44,6 +45,24 @@ const profile = Vue.createApp({
 
     // Pagination Controls
     computed: {
+        itemBackgroundStyle() {
+            return (item) => {
+                switch (item.item_type) {
+                    case 'Electronics':
+                        return { backgroundImage: 'linear-gradient(0deg, #e75d5d, #ca0d33)' }; // Red gradient
+                    case 'Clothing':
+                        return { backgroundImage: 'linear-gradient(0deg, #4a90e2, #0033cc)' }; // Blue gradient
+                    case 'Furniture':
+                        return { backgroundImage: 'linear-gradient(0deg, #f2c94c, #e6b800)' }; // Yellow gradient
+                    case 'Books':
+                        return { backgroundImage: 'linear-gradient(0deg, #6fcf97, #33cc33)' }; // Green gradient
+                    case 'Jewelry':
+                        return { backgroundImage: 'linear-gradient(0deg, #bb6bd9, #9900cc)' }; // Purple gradient
+                    default:
+                        return { backgroundImage: 'linear-gradient(0deg, #b3b3b3, #808080)' }; // Grey gradient for others
+                }
+            };
+        },
         backgroundStyle() {
             return {
                 backgroundImage: this.selectedBackground ? `url(${this.selectedBackground})` : '',
@@ -66,6 +85,47 @@ const profile = Vue.createApp({
         },
     },
     methods: {
+        
+
+        openEditListingModal(item) {
+            this.tempItem = { ...item }; // Create a shallow copy of the item for temporary edits
+            new bootstrap.Modal(document.getElementById('editListingModal')).show(); // Show the modal
+        },
+
+        saveListingChanges() {
+            const itemRef = db.collection('listings').doc(this.tempItem.id);
+    
+            itemRef.update({
+                item_name: this.tempItem.item_name,
+                item_description: this.tempItem.item_description,
+                found_timestamp: this.tempItem.found_timestamp,
+                handoff_location: this.tempItem.handoff_location,
+                handoff_method: this.tempItem.handoff_method,
+            })
+            .then(() => {
+                console.log("Listing updated successfully");
+                // Update the local array with the modified item
+                const index = this.foundItems.findIndex(item => item.id === this.tempItem.id);
+                if (index !== -1) {
+                    this.foundItems[index] = { ...this.tempItem };
+                }
+            })
+            .catch(error => {
+                console.error("Error updating listing:", error);
+            });
+        },
+
+
+
+
+
+
+
+
+
+
+
+
         toggleExpand(item) {
             item.expanded = !item.expanded; // Toggle the expanded state
         },

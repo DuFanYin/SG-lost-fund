@@ -38,7 +38,7 @@
     <div id="navbar-placeholder"></div>
     <!-- Load the JavaScript to include the Navbar -->
     <script type='module' src="../static/js/navbar.js"></script>
-    
+
     <div id='profile' class="container"
         data-default-profile-url="{{ url_for('static', filename='img/profile-icon.jpg') }}">
         <!-- Vue wrapper with dynamic background -->
@@ -111,11 +111,12 @@
                         <!-- Found Items Content -->
                         <div class="tab-pane fade show active" id="found-items" role="tabpanel"
                             aria-labelledby="found-items-tab">
-                            <div class="row">
-                                <div class="col-lg-4 col-md-6 mb-4 " v-for="item in paginatedItems" :key="item.id">
+                            <div class="row center-on-col-8">
+                                <div class="col-lg-4 col-md-6 col-8 mb-4 " v-for="item in paginatedItems"
+                                    :key="item.id">
                                     <div class="hero" v-if="!item.expanded">
                                         <img class="hero-profile-img" :src="item.imageURL" alt="Listing Image">
-                                        <div class="hero-description-bk"></div>
+                                        <div class="hero-description-bk" :style="itemBackgroundStyle(item)"></div>
                                         <div class="hero-logo">
                                             <img :src="item.profileImageURL" style="background:black"
                                                 alt="User Profile Picture">
@@ -123,6 +124,9 @@
                                         <div class="hero-description">
                                             <p v-text="item.item_name"></p>
                                         </div>
+                                        <button class="edit-listing" @click="openEditListingModal(item)">
+                                            Edit
+                                        </button>                                        
                                         <button class="hero-btn" @click="toggleExpand(item)">
                                             Expand
                                         </button>
@@ -132,33 +136,38 @@
                                         <h3 class="card-title list-item-name" v-text="item.item_name"
                                             style="text-align: center; border-bottom: 1px solid lightgrey; padding-bottom: 5px;">
                                         </h3>
-                                        <p><strong class="list-text"><i class="bi bi-card-text"></i> Description:</strong> <span class="list-text"
+                                        <p class="mb-1 mt-1"><strong class="list-text"><i class="bi bi-card-text"></i>
+                                                Description:</strong> <span class="list-text"
                                                 v-text="item.item_description"></span></p>
-                                        <p><strong><i class="bi bi-clock"></i> Found Timestamp:</strong> <span class="list-text"
-                                                v-text="formatTimestamp(item.found_timestamp)"></span></p>
-                                        <p><strong><i class="bi bi-geo-alt"></i> Handoff Location:</strong> <span class="list-text"
+                                        <p class="mb-1"><strong class="list-text"><i class="bi bi-clock"></i> Found
+                                                Timestamp:</strong> <span class="list-text"
+                                                v-text="formatTimestamp(item.found_timestamp)"></span>
+                                        </p>
+                                        <p class="mb-1"> <strong class="list-text"><i class="bi bi-geo-alt"></i> Handoff
+                                                Location:</strong> <span class="list-text"
                                                 v-text="item.handoff_location"></span></p>
-                                        <p><strong><i class="bi bi-hand-thumbs-up"></i> Handoff Method:</strong> <span class="list-text"
+                                        <p class="mb-2"><strong class="list-text"><i class="bi bi-hand-thumbs-up"></i>
+                                                Handoff Method:</strong> <span class="list-text"
                                                 v-text="item.handoff_method"></span></p>
 
 
-                                        <button class="btn btn-secondary" @click="toggleExpand(item)">
-                                            Return
-                                        </button>
 
+                                        <div class="button-container">
+                                            <button class="return return-button" @click="toggleExpand(item)">
+                                                Return
+                                            </button>
+                                            <button class="complete archive-button" @click="confirmArchive(item)"
+                                                v-if="!item.archived">
+                                                Complete
+                                            </button>
+                                        </div>
 
-                                        <button class="complete archive-button" @click="confirmArchive(item)"
-                                        v-if="!item.archived">
-                                        Complete
-                                    </button>
-
-                                    <div v-if="showConfirmation && itemToConfirm === item"
-                                    class="confirmation-overlay">
-                                    <p>Are you sure you want to complete this item?</p>
-                                    <button @click="archiveConfirmedItem"
-                                        class="btn btn-success">Yes</button>
-                                    <button @click="closeConfirmation" class="btn btn-secondary">No</button>
-                                </div>
+                                        <div v-if="showConfirmation && itemToConfirm === item"
+                                            class="confirmation-overlay">
+                                            <p>Are you sure you want to complete this item?</p>
+                                            <button @click="archiveConfirmedItem" class="btn btn-success">Yes</button>
+                                            <button @click="closeConfirmation" class="btn btn-secondary">No</button>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -235,6 +244,53 @@
                 </div>
             </div>
 
+            <!-- Edit Listing Modal Structure -->
+            <div class="modal fade" id="editListingModal" tabindex="-1" aria-labelledby="editListingModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editListingModalLabel">
+                                <i class="bi bi-pencil-fill"></i> Edit Listing
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Listing Editing Form -->
+                            <form>
+                                <div class="mb-3">
+                                    <label for="itemName" class="form-label">Item Name</label>
+                                    <input type="text" class="form-control" id="itemName" v-model="tempItem.item_name">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="itemDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="itemDescription" rows="3"
+                                        v-model="tempItem.item_description"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="handoffLocation" class="form-label">Handoff Location</label>
+                                    <input type="text" class="form-control" id="handoffLocation"
+                                        v-model="tempItem.handoff_location">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="handoffMethod" class="form-label">Handoff Method</label>
+                                    <select class="form-control" id="handoffMethod" v-model="tempItem.handoff_method">
+                                        <option value="Mail">Mail</option>
+                                        <option value="In-Person">In-Person</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" @click="saveListingChanges"
+                                data-bs-dismiss="modal">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <!-- Modal Structure -->
             <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
                 aria-hidden="true">
@@ -278,6 +334,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 
@@ -299,7 +357,7 @@
     <!-- Load the JavaScript to include the footer -->
     <script src="../static/js/footer.js"></script>
 
-    
+
 
     <!-- userprofile.js-->
     <script type='module' src="../static/js/userprofile.js"></script>

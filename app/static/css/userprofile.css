@@ -1,317 +1,429 @@
-.profileborder {
-    padding: 40px 20px;
-    margin-top: 20px;
-    min-height: 30vh;
-}
-
-.listborder {
-    border-top: 0;
-    min-height: 80vh;
-    margin-bottom: -60px;
-}
-
-.profile-img {
-    width: 170px;         /* Ensure fixed width */
-    height: 170px;        /* Ensure fixed height */
-    object-fit: cover;    /* Crop image to fill square */
-    border-radius: 15px;  /* Optional: add rounded corners */
-    z-index: 1;
-}
-
-
-.profile {
-    padding-left: 0;
-    text-align: center;
-}
-
-.profile_name {
-    font-size: 25px;
-    font-weight: bold;
-    line-height: 1;
-    margin-bottom: -20px;
-}
-
-.profile_username {
-    font-size: 16px;
-    line-height: 1;
-    margin-bottom: 10px;
-}
-
-.bg1 {
-    background-color: #f5eeee;
-}
-
-.bg2 {
-    background-color: #EAE7E6;
-}
-
-.modal-backdrop {
-    backdrop-filter: blur(5px);
-}
-
-.bg3 {
-    background-color: #000000; /* Fallback color */
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.main-wrapper {
-    min-height: 100vh; /* Ensure it covers full viewport height */
-    width: 100%;
-}
-
-
-
-.badge-custom {
-    background-color: #007bff;
-    color: white;
-    padding: 0.2em 0.6em;
-    font-size: 0.85em;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    text-transform: capitalize;
-}
-
-.animated-text {
-    font-size: 30px;
-    font-weight: bold;
-    color: #333;
-    animation: fadeIn 1.5s ease-in-out;
-}
-
-/* Animation */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
+    .profileborder {
+        padding: 40px 20px;
+        margin-top: 20px;
+        min-height: 30vh;
     }
 
-    100% {
-        opacity: 1;
-        transform: translateY(0);
+    .listborder {
+        border-top: 0;
+        min-height: 80vh;
+        margin-bottom: -60px;
     }
-}
 
-.profile-image-container {
-    position: relative;
-    width: fit-content;
-    margin: auto;
-}
-
-.border-overlay {
-    position: absolute;
-    top: -15px; /* Adjust to increase space above the profile image */
-    left: -15px; /* Adjust to increase space to the left */
-    width: calc(100% + 30px); /* Increase width beyond the container */
-    height: calc(100% + 30px); /* Increase height beyond the container */
-    z-index: 2;
-    pointer-events: none;
-}
-
-.profile_description {
-    white-space: normal;
-    word-wrap: break-word;
-    max-width: 90%; /* Default width for larger screens */
-}
-
-
-.redtext{
-    color: red;
-}
-
-@media (max-width: 1200px) {
-    .profile_description {
-        max-width: 100%; /* Make the profile description full width on smaller screens */
+    .profile-img {
+        width: 170px;         /* Ensure fixed width */
+        height: 170px;        /* Ensure fixed height */
+        object-fit: cover;    /* Crop image to fill square */
+        border-radius: 15px;  /* Optional: add rounded corners */
+        z-index: 1;
     }
-}
 
-@media (max-width: 992px) { /* Large screens (Bootstrap lg) */
+
+    .profile {
+        padding-left: 0;
+        text-align: center;
+    }
+
     .profile_name {
-        font-size: 22px;
+        font-size: 25px;
+        font-weight: bold;
+        line-height: 1;
+        margin-bottom: -20px;
     }
+
+    .profile_username {
+        font-size: 16px;
+        line-height: 1;
+        margin-bottom: 10px;
+    }
+
+    .bg1 {
+        background-color: #f5eeee;
+    }
+
+    .bg2 {
+        background-color: #EAE7E6;
+    }
+
+    .modal-backdrop {
+        backdrop-filter: blur(5px);
+    }
+
+    .bg3 {
+        background-color: #000000; /* Fallback color */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .main-wrapper {
+        min-height: 100vh; /* Ensure it covers full viewport height */
+        width: 100%;
+    }
+
+
+
+    .badge-custom {
+        background-color: #007bff;
+        color: white;
+        padding: 0.2em 0.6em;
+        font-size: 0.85em;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        text-transform: capitalize;
+    }
+
+    .animated-text {
+        font-size: 30px;
+        font-weight: bold;
+        color: #333;
+        animation: fadeIn 1.5s ease-in-out;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .profile-image-container {
+        position: relative;
+        width: fit-content;
+        margin: auto;
+    }
+
+    .border-overlay {
+        position: absolute;
+        top: -15px; /* Adjust to increase space above the profile image */
+        left: -15px; /* Adjust to increase space to the left */
+        width: calc(100% + 30px); /* Increase width beyond the container */
+        height: calc(100% + 30px); /* Increase height beyond the container */
+        z-index: 2;
+        pointer-events: none;
+    }
+
     .profile_description {
-        font-size: 12px;
-        max-width: 100%; /* Make the profile description full width on smaller screens */
+        white-space: normal;
+        word-wrap: break-word;
+        max-width: 90%; /* Default width for larger screens */
     }
-}
 
 
-
-@media (max-width: 768px) { /* Medium screens (Bootstrap md) */
-    .profile_name {
-        font-size: 18px;
+    .redtext{
+        color: red;
     }
-    .profile_description {
-        max-width: 100%; /* Make it even narrower on very small screens */
-    }
-}
 
-@media (max-width: 576px) { /* Small screens (Bootstrap sm) */
-    .profile_name {
+    @media (max-width: 1200px) {
+        .profile_description {
+            max-width: 100%; /* Make the profile description full width on smaller screens */
+        }
+    }
+
+    @media (max-width: 992px) { /* Large screens (Bootstrap lg) */
+        .profile_name {
+            font-size: 22px;
+        }
+        .profile_description {
+            font-size: 12px;
+            max-width: 100%; /* Make the profile description full width on smaller screens */
+        }
+    }
+
+
+
+    @media (max-width: 768px) { /* Medium screens (Bootstrap md) */
+        .profile_name {
+            font-size: 18px;
+        }
+        .profile_description {
+            max-width: 100%; /* Make it even narrower on very small screens */
+        }
+    }
+
+    @media (max-width: 576px) { /* Small screens (Bootstrap sm) */
+        .profile_name {
+            font-size: 16px;
+        }
+        .profile_description {
+            max-width: 80%;/* Make it even narrower on very small screens */
+            margin: 0 auto; /* Center the text within the container */
+            text-align: center; /* Center-align text */
+        }
+    }
+
+    /* Hide "Edit Profile" text between 768px and 992px */
+    /* @media (max-width: 992px) and (min-width: 768px) {
+        .edit-text {
+            font-size: 10px;
+        }
+    } */
+
+    .archive-button {
+        float: right;             /* Moves the button to the right side */
+        border-radius: 30%;       /* Applies a 30% border radius */
+        margin-top: 10px;         /* Adds a little space above the button */
+    }
+
+    .confirmation-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        width: 80%;
+        z-index: 10;
+    }
+
+    .confirmation-overlay p {
+        margin-bottom: 10px;
+    }
+
+    .confirmation-overlay button {
+        margin: 5px;
+    }
+
+    .hero {
+        display: inline-block;
+        position: relative;
+        width: 100%; /* Make it responsive to parent container */
+        height: auto; /* Adjust height based on content */
+        aspect-ratio: 1; /* Maintain a square ratio */
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-profile-img {
+        width: 100%;
+        height: 70%;
+        object-fit: cover;
+    }
+
+    .hero-description-bk {
+        background-image: linear-gradient(0deg, #e75d5d, #ca0d33);
+        border-radius: 30px;
+        position: absolute;
+        top: 55%;
+        left: -5px;
+        height: 65%;
+        width: 108%;
+        transform: skew(19deg, -9deg);
+    }
+
+    .hero-logo {
+        height: 60px;
+        width: 60px;
+        border-radius: 20px;
+        background-color: #fff;
+        position: absolute;
+        bottom: 30%;
+        left: 15px;
+        overflow: hidden;
+        box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    .hero-description {
+        position: absolute;
+        color: #fff;
+        font-weight: 900;
+        left: 90px;
+        bottom: 26%;
         font-size: 16px;
     }
-    .profile_description {
-        max-width: 80%;/* Make it even narrower on very small screens */
-        margin: 0 auto; /* Center the text within the container */
-        text-align: center; /* Center-align text */
-    }
-}
 
-/* Hide "Edit Profile" text between 768px and 992px */
-/* @media (max-width: 992px) and (min-width: 768px) {
-    .edit-text {
-        font-size: 10px;
-    }
-} */
-
-.archive-button {
-    float: right;             /* Moves the button to the right side */
-    border-radius: 30%;       /* Applies a 30% border radius */
-    margin-top: 10px;         /* Adds a little space above the button */
-}
-
-.confirmation-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    width: 80%;
-    z-index: 10;
-}
-
-.confirmation-overlay p {
-    margin-bottom: 10px;
-}
-
-.confirmation-overlay button {
-    margin: 5px;
-}
-
-.hero {
-    display: inline-block;
-    position: relative;
-    width: 100%; /* Make it responsive to parent container */
-    max-width: 100%; /* Set a maximum width */
-    height: auto; /* Adjust height based on content */
-    aspect-ratio: 1; /* Maintain a square ratio */
-    border-radius: 30px;
-    overflow: hidden;
-    box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
-    
-}
-
-.hero-profile-img {
-    width: 100%;
-    height: 70%;
-    object-fit: cover;
-}
-
-.hero-description-bk {
-    background-image: linear-gradient(0deg, #e75d5d, #ca0d33);
-    border-radius: 30px;
-    position: absolute;
-    top: 55%;
-    left: -5px;
-    height: 65%;
-    width: 108%;
-    transform: skew(19deg, -9deg);
-}
-
-.hero-logo {
-    height: 60px;
-    width: 60px;
-    border-radius: 20px;
-    background-color: #fff;
-    position: absolute;
-    bottom: 30%;
-    left: 15px;
-    overflow: hidden;
-    box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.7);
-}
-
-.hero-description {
-    position: absolute;
-    color: #fff;
-    font-weight: 900;
-    left: 90px;
-    bottom: 26%;
-    font-size: 16px;
-}
-
-.hero-date {
-    position: absolute;
-    color: #fff;
-    left: 15px;
-    bottom: 10%;
-    font-size: 14px;
-}
-
-.hero-btn {
-    position: absolute;
-    color: #e0dddd;
-    right: 15px;
-    bottom: 10%;
-    padding: 5px 10px;
-    font-size: 14px;
-    border: 1px solid #f9f9f9;
-    background-color: rgb(45, 34, 190);
-    border-radius: 15px;
-}
-
-.complete {
-    position: absolute;
-    color: #e0dddd;
-    right: 15px;
-    bottom: 10%;
-    padding: 5px 10px;
-    font-size: 14px;
-    border: 1px solid #f9f9f9;
-    background-color: rgb(34, 190, 68);
-    border-radius: 15px;
-}
-
-
-
-/* Media query for smaller screens */
-@media (max-width: 576px) {
-    .hero-logo {
-        height: 50px;
-        width: 50px;
-    }
-    .hero-description {
+    .hero-date {
+        position: absolute;
+        color: #fff;
+        left: 15px;
+        bottom: 10%;
         font-size: 14px;
-        left: 80px;
     }
-    .hero-date,
+
     .hero-btn {
-        font-size: 12px;
-        padding: 4px 8px;
+        position: absolute;
+        color: #000000;
+        right: 15px;
+        bottom: 10%;
+        padding: 5px 10px;
+        font-size: 14px;
+        border: 1px solid #f9f9f9;
+        background-color:  #fef5f3; /* Light pink-beige background */
+        border-radius: 15px;
     }
-}
 
-.hero-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* or you can try scale-down */
-    object-position: center; /* Center the image within the square */
-}
-
-.list-text{
-    font-size: 14px
-}
-
-.list-item-name{
-    font-size: 28px
-}
-
-@media (max-width: 992px) and (min-width: 768px) {
-    .list-text{
-        font-size: 14px
+    .edit-listing{
+        position: absolute;
+        color: #000000;
+        left: 15px;
+        bottom: 10%;
+        padding: 5px 15px;
+        font-size: 14px;
+        border: 1px solid #f9f9f9;
+        background-color: #fef5f3; /* Light pink-beige background */
+        border-radius: 15px;
     }
-}
+
+
+    .complete {
+        position: absolute;
+        color: #e0dddd;
+        right: 15px;
+        bottom: 10%;
+        padding: 5px 10px;
+        font-size: 14px;
+        border: 1px solid #f9f9f9;
+        background-color: rgb(34, 190, 68);
+        border-radius: 15px;
+    }
+
+
+
+    /* Media query for smaller screens */
+    @media (max-width: 576px) {
+        .hero-logo {
+            height: 50px;
+            width: 50px;
+        }
+        .hero-description {
+            font-size: 14px;
+            left: 80px;
+        }
+        .hero-date,
+        .hero-btn {
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+    }
+
+    .hero-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* or you can try scale-down */
+        object-position: center; /* Center the image within the square */
+    }
+
+
+
+
+    .card-content-expanded {
+        padding: 15px;
+        background-color: #f8f9fa; /* Optional: Set background color */
+        word-wrap: break-word;
+        overflow: hidden;
+        border-radius: 10px; /* Optional: Rounded corners */
+    }
+
+    .return-button {
+        float: left;             /* Moves the button to the right side */
+        border-radius: 30%;       /* Applies a 30% border radius */
+        margin-top: 2%;         /* Adds a little space above the button */
+    }
+
+    .return {
+        position: absolute;
+        color: #e0dddd;
+        left: 15px;
+        top: 2%;
+        padding: 5px 10px;
+        font-size: 14px;
+        border: 1px solid #f9f9f9;
+        background-color: rgb(34, 190, 68);
+        border-radius: 15px;
+    }
+
+    .card-content-expanded {
+        padding: 15px;
+        word-wrap: break-word; /* Break long words to prevent overflow */
+        overflow: hidden;      /* Hide any content that might overflow */
+    }
+    
+    .list-text {
+        white-space: nowrap;       /* Prevent text from wrapping to a new line */
+        overflow: hidden;          /* Hide overflow */
+        text-overflow: ellipsis;   /* Show ellipsis when text overflows */
+        display: block;            /* Ensure it applies as a block element */
+        width: 100%;               /* Make sure it takes the container's width */
+    }
+    
+
+    /* Center items only when col-8 is applied */
+    @media (max-width: 768px) {
+        .center-on-col-8 {
+            display: flex;
+            justify-content: center;
+        }
+    }
+
+
+    /* Extra Small (XS): Phones in portrait */
+
+    /* Small (SM): Phones in landscape */
+    @media (max-width: 767px) { 
+        /* Styles for screens between 576px and 767px */
+        .list-text{
+            font-size: 16px
+        }
+        
+        .list-item-name{
+            font-size: 28px
+        }
+    }
+
+    /* Medium (MD): Tablets */
+    @media (min-width: 768px) and (max-width: 991px) { 
+        /* Styles for screens between 768px and 991px */
+        .list-text{
+            font-size: 11px
+        }
+        
+        .list-item-name{
+            font-size: 18px
+        }
+    }
+
+    /* Large (LG): Desktops and larger tablets */
+    @media (min-width: 992px) and (max-width: 1199px) { 
+        /* Styles for screens between 992px and 1199px */
+        .list-text{
+            font-size: 10px
+        }
+        
+        .list-item-name{
+            font-size: 12px
+        }
+    }
+
+    /* Extra Large (XL): Larger desktops */
+    @media (min-width: 1200px) and (max-width: 1399px) { 
+        /* Styles for screens between 1200px and 1399px */
+        .list-text{
+            font-size: 13px
+        }
+        
+        .list-item-name{
+            font-size: 24px
+        }
+    }
+
+    /* Extra Extra Large (XXL): Very large screens */
+    @media (min-width: 1400px) { 
+        /* Styles for screens ≥1400px */
+        .list-text{
+            font-size: 15px
+        }
+        
+        .list-item-name{
+            font-size: 28px
+        }
+    }
