@@ -59,9 +59,7 @@ async function saveCommentToFirebase(description) {
         await listingRef.update({
             [`comments.${commentId}`]: commentData
         });
-
         console.log('Comment saved successfully!');
-        await fetchComments(currentDocumentId);
 
         const listingDoc = await listingRef.get();
         const ownerId = listingDoc.data().ownerId;
@@ -74,13 +72,15 @@ async function saveCommentToFirebase(description) {
                 itemName: itemName,
             };
 
-            const ownerRef = db.collection('users').doc(ownerId);
+            const ownerRef = db.collection('users').doc(uid);
             await ownerRef.update({
                 notifications: firebase.firestore.FieldValue.arrayUnion(notificationData)
             });
 
             console.log('Notification sent to the owner.');
         }
+
+        await fetchComments(currentDocumentId); // Fetch comments after saving and sending notification
 
         displayComment(commentData);
         document.getElementById('reviewDescription').value = '';
