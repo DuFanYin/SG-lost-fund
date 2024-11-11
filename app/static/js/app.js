@@ -637,7 +637,6 @@ async function displayComment(commentData) {
     }
 
     const commentElement = document.createElement('div');
-    // commentElement.classList.add('comment');
     commentElement.classList.add('comment', 'mb-3', 'p-2', 'border', 'rounded', 'd-flex', 'align-items-start');
 
     const commentuid = commentData.userId;
@@ -645,24 +644,31 @@ async function displayComment(commentData) {
 
     const userAvatar = await getUserAvatar(commentuid);
 
-    console.log(userAvatar)
-
     commentElement.innerHTML = `
         <div class="d-flex align-items-start">
             <img src="${userAvatar}" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px;">
             <div>
                 <a href="${userProfileLink}" class="fw-bold text-primary">${sanitizeHTML`${commentData.username}`}</a>
                 <span class="text-muted">(${new Date(commentData.timestamp).toLocaleString()})</span>
-                <p class="mb-1">${sanitizeHTML`${commentData.message}`}</p>
+                <p class="mb-1 comment-message">${sanitizeHTML`${commentData.message}`}</p>
+                <button class="btn btn-sm btn-link edit-comment" data-id="${commentData.id}">Edit</button>
+                <button class="btn btn-sm btn-link text-danger delete-comment" data-id="${commentData.id}">Delete</button>
             </div>
         </div>
     `;
 
-    // Align comment box with the "Comments" heading
-    commentElement.style.maxWidth = '100%';
-    commentElement.style.marginLeft = '0';
-
     commentSection.appendChild(commentElement);
+
+    // Event listener for edit
+    commentElement.querySelector('.edit-comment').addEventListener('click', () => {
+        editComment(commentData);
+    });
+
+    // Event listener for delete
+    commentElement.querySelector('.delete-comment').addEventListener('click', async () => {
+        await deleteComment(commentData.id);
+        commentElement.remove(); // Remove comment from the UI
+    });
 }
 
 async function fetchComments(documentId) {
@@ -709,6 +715,34 @@ async function fetchComments(documentId) {
         }
     } catch (error) {
         console.error('Error fetching comments:', error);
+    }
+}
+
+async function editComment(commentData) {
+    const newMessage = prompt('Edit your comment:', commentData.message);
+    if (newMessage && newMessage !== commentData.message) {
+        // Update Firestore with the new message
+        const listingRef = db.collection('listings').doc(documentId);
+        await listingRef.update({
+            [`comments.${commentData.id}.message`]: newMessage
+        });
+
+        // Update the comment's display on the page
+        const commentElement = document.querySelector(`[data-id="${commentData.id}"]`).closest('.comment');
+        commentElement.querySelector('.comment-message').textContent = sanitizeHTML`${newMessage}`;
+    }
+}
+
+// Delete Comment Function
+async function deleteComment(commentId) {
+    try {
+        const listingRef = db.collection('listings').doc(documentId);
+        await listingRef.update({
+            [`comments.${commentId}`]: firebase.firestore.FieldValue.delete()
+        });
+        console.log('Comment deleted successfully');
+    } catch (error) {
+        console.error('Error deleting comment:', error);
     }
 }
 
