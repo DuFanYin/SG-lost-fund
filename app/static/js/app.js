@@ -642,7 +642,7 @@ async function displayComment(commentData) {
 
     const commentuid = commentData.userId;
     const userProfileLink = `./other_profile?uid=${commentData.userId}`;
-   
+
     const userAvatar = await getUserAvatar(commentuid);
 
     console.log(userAvatar)
@@ -849,15 +849,39 @@ function addItemInfo(data, item) {
 
         // Add event listener for the review button
         const reviewButton = document.getElementById('write-review-btn');
+        
+        // added this to check if the user is login before being able to comment
         if (reviewButton) {
             reviewButton.addEventListener('click', () => {
-                const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'), {
-                    backdrop: false,
-                    keyboard: true
-                });
-                reviewModal.show();
+                const uid = sessionStorage.getItem('uid');
+
+                // Check if the user is logged in
+                if (!uid) {
+                    // Show the login modal if the user is not logged in
+                    const loginModal = new bootstrap.Modal(document.getElementById('commentsModal'), {
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    loginModal.show();
+                } else {
+                    const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'), {
+                        backdrop: false,
+                        keyboard: true
+                    });
+                    reviewModal.show();
+                }
             });
         }
+
+        // if (reviewButton) {
+        //     reviewButton.addEventListener('click', () => {
+        //         const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'), {
+        //             backdrop: false,
+        //             keyboard: true
+        //         });
+        //         reviewModal.show();
+        //     });
+        // }
         const closeButton = document.createElement('button');
         closeButton.textContent = 'Close';
         closeButton.classList.add('close-button');
@@ -915,6 +939,12 @@ function addItemInfo(data, item) {
     const hrElement = document.createElement("hr");
     panel.appendChild(hrElement);
 }
+
+// Redirection for the comments when user did not login and is redirected to the login
+async function startRedirectToLogin() {
+    window.location.href = '/login';
+}
+window.startRedirectToLogin = startRedirectToLogin; // Expose the function globally for the modal button
 
 
 function adjustPanelsForScreenSize() {
