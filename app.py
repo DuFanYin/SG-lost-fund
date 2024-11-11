@@ -88,6 +88,14 @@ def signup():
 def pointshop():
     return render_template('pointshop.html')
 
+@main.route('/other_profile')
+def other_profile():
+    uid = request.args.get('uid')  # Retrieve the uid from the URL
+    if uid:
+        return render_template('other_profile.html', uid=uid)
+    else:
+        return "UID not provided", 400  # Return an error if no UID is given
+
 def create_app():
     app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
     app.register_blueprint(main)
