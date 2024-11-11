@@ -1,4 +1,4 @@
-import {db} from '../js/firebaseConfig.js'; // Adjust the path according to your structure
+import { db } from '../js/firebaseConfig.js'; // Adjust the path according to your structure
 
 const app = Vue.createApp({
     data() {
@@ -9,6 +9,8 @@ const app = Vue.createApp({
             uid: sessionStorage.getItem('uid') || 0,
             showSpinner: false, // Control visibility of the loading spinner overlay
             userItems: {}, // Store the user's purchase status
+            unreadCount: 0,
+            notifications: [], // Store the list of notifications
             borderItems: [
                 { name: 'Border 1', points: 100, image: '../static/img/border1.png', field: 'border1', selected: false },
                 { name: 'Border 2', points: 100, image: '../static/img/border2.png', field: 'border2', selected: false },
@@ -29,6 +31,48 @@ const app = Vue.createApp({
         }
     },
     methods: {
+        async fetchNotifications() {
+            const userId = sessionStorage.getItem('uid');
+            if (!userId) return;
+    
+            try {
+                const userDoc = await db.collection('users').doc(userId).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    this.notifications = userData.notifications || [];
+    
+                    // Count the number of unread notifications
+                    this.unreadCount = this.notifications.filter(n => !n.read).length;
+                }
+            } catch (error) {
+                console.error("Error fetching notifications:", error);
+            }
+        },
+    
+        async markNotificationAsRead(index) {
+            const userId = sessionStorage.getItem('uid');
+            if (!userId) return;
+    
+            // Update the notification read status
+            this.notifications[index].read = true;
+            this.unreadCount = this.notifications.filter(n => !n.read).length;
+    
+            try {
+                // Update Firestore with the updated notifications list
+                await db.collection('users').doc(userId).update({
+                    notifications: this.notifications,
+                });
+            } catch (error) {
+                console.error("Error updating notifications:", error);
+            }
+        },
+    
+        showNotifications() {
+            const dropdownElement = document.getElementById('notificationDropdown');
+            const dropdown = new bootstrap.Dropdown(dropdownElement);
+            dropdown.toggle();
+        },
+
         logout() {
             sessionStorage.clear(); // Clear session storage on logout
             window.location.href = '/login'; // Redirect to login page
@@ -36,14 +80,14 @@ const app = Vue.createApp({
         setActiveTab(tab) {
             this.activeTab = tab; // Set active tab for dynamic styling
         },
-        
+
         setupRealTimeListener() {
             const userId = sessionStorage.getItem('uid'); // Assuming you store the user ID in session storage
             if (!userId) {
                 console.error("User ID not found in session storage");
                 return;
             }
-    
+
             db.collection('users').doc(userId)
                 .onSnapshot((doc) => {
                     if (doc.exists) {
@@ -57,7 +101,7 @@ const app = Vue.createApp({
                         this.borderItems.forEach(item => {
                             item.purchased = userData[item.field] || false;
                         });
-                        
+
                         // Update background items' purchase status
                         this.backgroundItems.forEach(item => {
                             item.purchased = userData[item.field] || false;
@@ -87,12 +131,12 @@ const app = Vue.createApp({
         async fetchUserItems() {
             const userId = sessionStorage.getItem('uid'); // Assuming user ID is stored in session storage
             if (!userId) return;
-        
+
             try {
                 const userDoc = await db.collection('users').doc(userId).get();
                 if (userDoc.exists) {
                     this.userItems = userDoc.data();
-        
+
                     // Set the purchased status for each item
                     this.borderItems.forEach(item => {
                         item.purchased = this.userItems[item.field] || false;
@@ -100,7 +144,7 @@ const app = Vue.createApp({
                     this.backgroundItems.forEach(item => {
                         item.purchased = this.userItems[item.field] || false;
                     });
-        
+
                     // Check if selectedborder exists and set the selected item
                     if (this.userItems.selectedborder) {
                         const selectedBorderImage = this.userItems.selectedborder;
@@ -110,7 +154,7 @@ const app = Vue.createApp({
                             }
                         });
                     }
-        
+
                     // Similarly, check for selectedbackground if needed
                     if (this.userItems.selectedbackground) {
                         const selectedBackgroundImage = this.userItems.selectedbackground;
@@ -120,28 +164,28 @@ const app = Vue.createApp({
                             }
                         });
                     }
-        
+
                 }
             } catch (error) {
                 console.error("Error fetching user items:", error);
             }
         },
-        
+
         async purchaseItem(item) {
             const userId = sessionStorage.getItem('uid');
-            
+
             if (this.points >= item.points && !item.purchased) {
                 // Deduct points and mark the item as purchased in Vue data
                 this.points -= item.points;
                 item.purchased = true;
-        
+
                 // Update Firestore to mark the item as purchased
                 try {
                     await db.collection('users').doc(userId).set({
                         [item.field]: true,
                         points: this.points  // Save the updated points back to Firestore
                     }, { merge: true });
-                    
+
                     // Update session storage with the new points value
                     sessionStorage.setItem('points', this.points);
 
@@ -149,7 +193,7 @@ const app = Vue.createApp({
 
                     const purchaseConfirmationModal = new bootstrap.Modal(document.getElementById('purchaseConfirmationModal'));
                     purchaseConfirmationModal.show();
-        
+
                     console.log(`Purchased ${item.name} for ${item.points} points`);
                 } catch (error) {
                     console.error("Error updating Firestore:", error);
@@ -168,18 +212,18 @@ const app = Vue.createApp({
                 console.error("User ID not found in session storage");
                 return;
             }
-        
+
             // Determine if it's a border or background selection
             const updateField = this.borderItems.includes(item) ? 'selectedborder' : 'selectedbackground';
-        
+
             try {
                 // Update Firestore with the selected item image source
                 await db.collection('users').doc(userId).set({
                     [updateField]: item.image
                 }, { merge: true });
-        
+
                 console.log(`Selected ${item.name} as ${updateField} with image ${item.image}`);
-        
+
                 // Update the selected status in Vue data
                 if (updateField === 'selectedborder') {
                     // Set the selected state only for the chosen border
@@ -192,13 +236,13 @@ const app = Vue.createApp({
                         backgroundItem.selected = (backgroundItem === item);
                     });
                 }
-        
+
             } catch (error) {
                 console.error("Error updating selected item in Firestore:", error);
             }
         },
-        
-        
+
+
         showPointShop() {
             const modalElement = document.getElementById('pointShopModal');
             const pointShopModal = new bootstrap.Modal(modalElement);
@@ -207,7 +251,7 @@ const app = Vue.createApp({
     },
     mounted() {
         console.log("Navbar mounted, isLoggedIn:", this.isLoggedIn);
-        console.log("Username:", this.username); 
+        console.log("Username:", this.username);
         console.log("Points:", this.points)
         console.log("uid:", this.uid)
         console.log("Border Items:", this.borderItems);
@@ -215,10 +259,11 @@ const app = Vue.createApp({
 
         this.fetchUserItems(); // Fetch purchase status when component is mounted
 
-        
+
 
         if (this.isLoggedIn) {
             this.setupRealTimeListener(); // Automatically call it here when the component mounts
+            this.fetchNotifications();
         }
 
         window.addEventListener('storage', (event) => {
@@ -234,6 +279,6 @@ fetch('/navbar')
     .then(response => response.text())
     .then(data => {
         document.getElementById('navbar-placeholder').innerHTML = data;
-        app.mount('#navbar-placeholder'); 
+        app.mount('#navbar-placeholder');
     })
     .catch(error => console.error('Error loading navbar:', error));
