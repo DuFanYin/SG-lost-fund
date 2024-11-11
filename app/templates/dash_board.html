@@ -61,7 +61,7 @@
     <div id="navbar-placeholder"></div>
     <div>
     <div class="background-color">
-        <div class="container-fluid mr-4 ml-4">
+        <div class="container-fluid">
             <!-- Dashboard content with Vue binding -->
             <div id="app" class="container-fluid">
 
@@ -220,17 +220,20 @@
                 </div>
             </div>
         </div>
+    </div>
+    </div>
 
-        <!-- Footer placeholder -->
-        
-    </div>
-    </div>
+
+
+     <!-- Footer placeholder -->
+     <div id="footer-placeholder" style="margin-top: auto; width: 100%;"></div>
+     
     <!-- External JavaScript Files -->
     <script type="module" src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <div id="footer-placeholder" style="margin-top: auto; width: 100%;"></div>
+  
 
     <!-- Load the JavaScript to include the footer -->
     <script src="../static/js/footer.js"></script>
