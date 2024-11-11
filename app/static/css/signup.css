@@ -34,18 +34,6 @@ body {
     animation: zoomPanBackground 30s ease-in-out infinite;
 }
 
-/* .background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: url('../static/img/loginBG.jpg') no-repeat center center fixed;
-    background-size: cover;
-    filter: blur(8px);
-    z-index: -1;
-} */
-
 #app {
     display: flex;
     justify-content: center;
@@ -54,42 +42,21 @@ body {
 }
 
 .signup-button {
-    background-color: blue;
+    background-color: #B22222;
     color: white;
     border: 1px solid black;
     display: inline-flex;
     border-radius: 50px;
     font-size: 20px;
     justify-content: center;
-    width: 80%;
+    width: 40%;
     align-items: center;
     font-weight: bold;
     padding: 10px;
 }
 
-/* Regular login button hover effect */
 .signup-button:hover {
-    background-color: darkblue;
-    /* Adjust the color as desired */
+    background-color: #CD5C5C;
     color: white;
-    border-color: darkblue;
     cursor: pointer;
 }
-
-/* static/styles.css
-body {
-    font-family: Arial, sans-serif;
-    max-width: 600px;
-    margin: 50px auto;
-    text-align: center;
-}
-
-form {
-    display: inline-block;
-    text-align: left;
-}
-
-label, input {
-    display: block;
-    margin-bottom: 10px;
-} */

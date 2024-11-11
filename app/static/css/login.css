@@ -43,7 +43,7 @@ body {
 }
 
 .login-button {
-    background-color: #D30000;
+    background-color: #B22222;
     color: white;
     border: 1px solid black;
     display: inline-flex;
@@ -84,41 +84,29 @@ body {
     align-items: center;
 }
 
-/* Regular login button hover effect */
 .login-button:hover {
-    background-color: #FA8072;
-    /* Adjust the color as desired */
+    background-color: #CD5C5C;
     color: white;
     cursor: pointer;
 }
 
-/* Google login button hover effect */
 .google-login-button:hover {
     background-color: #f0f0f0;
-    /* Adjust the color as desired */
     color: #000;
     border-color: #bbb;
     cursor: pointer;
 }
 
-/* Email input field focus effect */
 .input-group input[type="email"]:focus {
     background-color: #f0f0f0;
-    /* Light grey background color */
     border-color: #ccc;
-    /* Grey border color on focus */
     outline: none;
     box-shadow: 0 0 5px #aaa;
-    /* Subtle grey glowing effect */
 }
 
-/* Password input field focus effect */
 .input-group input[type="password"]:focus {
     background-color: #f0f0f0;
-    /* Light grey background color */
     border-color: #ccc;
-    /* Grey border color on focus */
     outline: none;
     box-shadow: 0 0 5px #aaa;
-    /* Subtle grey glowing effect */
 }
