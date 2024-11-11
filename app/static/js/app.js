@@ -518,14 +518,7 @@ async function calculateDistances(data, origin) {
                         } else {
                             console.warn(`Distance data is unavailable for item ID ${items[j]} (status: ${element.status})`);
                         }
-                        // const distanceText = element.distance.text;
-                        // const distanceVal = element.distance.value;
-                        // const distanceObject = {
-                        //     itemid: items[j],
-                        //     distanceText: distanceText,
-                        //     distanceVal: distanceVal,
-                        // };
-                        // distances.push(distanceObject);
+
                     }
                     resolve(distances);
                 }
@@ -854,11 +847,6 @@ function addItemInfo(data, item) {
         map.setCenter(position);
         adjustPanelsForScreenSize();
 
-        // const submitReviewButton = document.getElementById('submitReview');
-        // if (submitReviewButton) {
-        //     submitReviewButton.removeEventListener('click', handleSubmitReview); // Remove any existing event listeners
-        //     submitReviewButton.addEventListener('click', () => handleSubmitReview()); // Add the event listener to handle submit
-        // }
         const submitReviewButton = document.getElementById('submitReview');
         if (submitReviewButton) {
             submitReviewButton.removeEventListener('click', saveCommentToFirebase);
