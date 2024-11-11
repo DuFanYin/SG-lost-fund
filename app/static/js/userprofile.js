@@ -248,7 +248,20 @@ const profile = Vue.createApp({
         },
         archiveConfirmedItem() {
             this.archiveItem(this.itemToConfirm);  // Archive the confirmed item
+            this.incrementUserPoints(100); // Call the increment function
             this.closeConfirmation(); // Close the confirmation dialog
+        },
+        incrementUserPoints(points) {
+            const userRef = db.collection('users').doc(this.uid);
+            userRef.update({
+                points: firebase.firestore.FieldValue.increment(points) // Increment by 100 points
+            })
+            .then(() => {
+                console.log(`User points increased by ${points}`);
+            })
+            .catch((error) => {
+                console.error("Error updating points:", error);
+            });
         },
         closeConfirmation() {
             this.showConfirmation = false;  // Hide the confirmation dialog
