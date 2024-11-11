@@ -53,7 +53,7 @@ async function saveCommentToFirebase(description) {
     }
 
     const listingRef = db.collection('listings').doc(currentDocumentId);
-    
+
     try {
         console.log('Saving comment...');
         await listingRef.update({
@@ -547,7 +547,7 @@ function showItemsList(data, items, categoryArray, statusArray, datesArray) {
         return;
     }
 
-    while (panel.childNodes.length > 6) {
+    while (panel.childNodes.length > 8) {
         panel.removeChild(panel.lastChild);
     }
 
@@ -755,18 +755,21 @@ function addItemInfo(data, item) {
             document.body.appendChild(infoPanel);
         }
 
+
         infoPanel.innerHTML = '';
-        const content = `
-            <div class="info-panel-content p-3">
-                <img style="width: 100%; height: auto;" src="${imageURL}">
+        const content =
+
+            `<div class="info-panel-content p-3 text-center">
+                <img style="width: 100%; height: auto; border-radius: 10px; border: 2px solid #ddd;" src="${imageURL}">
                     <div style="padding: 20px;">
-                        <h2>${item_name}</h2><p>${item_description}</p>
-                        <p>
-                            <b>${report_type} On:</b> ${found_timestamp}<br />
-                            <b>Email:</b> <a href="mailto:${user.email}">${user.email}</a><br />
-                            <b>Handoff Method:</b> ${handoff_method}<br />
-                            <b>Handoff Location:</b> ${handoff_location}<br />
-                        </p>
+                        <h2>${item_name}</h2>
+                        <p>${item_description}</p>
+                        <div class="d-flex flex-column align-items-start">
+                            <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${found_timestamp}</p>
+                            <p><i class="fas fa-envelope text-danger"></i> <b>Email:</b> <a href="mailto:${user.email}">${user.email}</a></p>
+                            <p><i class="fas fa-handshake text-danger"></i> <b>Handoff Method:</b> ${handoff_method}</p>
+                            <p><i class="fas fa-map-marker-alt text-danger"></i> <b>Handoff Location:</b> ${handoff_location}</p>
+                        </div>
 
                         <h2>Comments</h2>
 
@@ -775,108 +778,109 @@ function addItemInfo(data, item) {
                             <i class="fas fa-pencil-alt"></i> Write a Comment
                         </button>
                     </div>
-                <!-- Modal Structure -->
-                <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg custom-modal-right">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="reviewModalLabel">Write a Comment</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                    <i class="fas fa-times-circle text-danger"></i>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="reviewForm">
-                                    <div class="mb-3">
-                                        <label for="reviewDescription" class="form-label">Description</label>
-                                        <textarea class="form-control" id="reviewDescription" rows="5" placeholder="Enter comments"></textarea>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" id="submitReview">Submit Review</button>
+                    <!-- Modal Structure -->
+                    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg custom-modal-right">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="reviewModalLabel">Write a Comment</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                        <i class="fas fa-times-circle text-danger"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="reviewForm">
+                                        <div class="mb-3">
+                                            <label for="reviewDescription" class="form-label">Description</label>
+                                            <textarea class="form-control" id="reviewDescription" rows="5" placeholder="Enter comments"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="submitReview">Submit Review</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>`;
 
-        infoPanel.innerHTML = content;
-        infoPanel.style.display = 'block';
-        infoPanel.style.position = 'absolute';
-        infoPanel.style.left = ' max(250px, calc(20% + 20px))';
-        infoPanel.style.height = '100%';
-        infoPanel.style.width = 'calc(20% + 20px)';
-        infoPanel.style.minWidth = '250px';
-        infoPanel.style.backgroundColor = '#fff';
-        infoPanel.style.boxShadow = '-2px 0px 5px rgba(0, 0, 0, 0.3)';
-        infoPanel.style.overflowY = 'auto';
-        infoPanel.style.zIndex = '3';
+                    infoPanel.innerHTML = content;
+                    infoPanel.style.display = 'block';
+                    infoPanel.style.position = 'absolute';
+                    infoPanel.style.left = ' max(250px, calc(20% + 20px))';
+                    infoPanel.style.height = '100%';
+                    infoPanel.style.width = 'calc(20% + 20px)';
+                    infoPanel.style.minWidth = '250px';
+                    infoPanel.style.backgroundColor = '#fff';
+                    infoPanel.style.boxShadow = '-2px 0px 5px rgba(0, 0, 0, 0.3)';
+                    infoPanel.style.overflowY = 'auto';
+                    infoPanel.style.zIndex = '3';
 
-        const documentId = item.itemid; // Retrieve the documentId dynamically
-        currentDocumentId = documentId; // Store it globally
-        console.log('Current Document ID:', currentDocumentId);
+                    const documentId = item.itemid; // Retrieve the documentId dynamically
+                    currentDocumentId = documentId; // Store it globally
+                    console.log('Current Document ID:', currentDocumentId);
 
-        // Fetch and display existing comments for the listing
-        await fetchComments(documentId);
+                    // Fetch and display existing comments for the listing
+                    await fetchComments(documentId);
 
-        // Add event listener for the review button
-        const reviewButton = document.getElementById('write-review-btn');
-        if (reviewButton) {
-            reviewButton.addEventListener('click', () => {
-                const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'), {
-                    backdrop: false,
-                    keyboard: true
-                });
-                reviewModal.show();
-            });
+                    // Add event listener for the review button
+                    const reviewButton = document.getElementById('write-review-btn');
+                    if (reviewButton) {
+                        reviewButton.addEventListener('click', () => {
+                            const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'), {
+                                backdrop: false,
+                                keyboard: true
+                            });
+                            reviewModal.show();
+                        });
         }
-        const closeButton = document.createElement('button');
-        closeButton.textContent = 'Close';
-        closeButton.classList.add('close-button');
-        closeButton.style.position = 'absolute';
-        closeButton.style.top = '10px';
-        closeButton.style.right = '10px';
+                    const closeButton = document.createElement('button');
+                    closeButton.textContent = 'Close';
+                    closeButton.classList.add('close-button');
+                    closeButton.style.position = 'absolute';
+                    closeButton.style.top = '10px';
+                    closeButton.style.right = '10px';
         closeButton.addEventListener('click', () => {
-            infoPanel.style.display = 'none';
-            document.getElementById('toggle-panel-button').classList.remove('hidden');
+                        infoPanel.style.display = 'none';
+                    document.getElementById('toggle-panel-button').classList.remove('hidden');
         });
-        infoPanel.appendChild(closeButton);
+                    infoPanel.appendChild(closeButton);
 
-        map.setZoom(zoomedInLevel);
-        map.setCenter(position);
-        adjustPanelsForScreenSize();
+                    map.setZoom(zoomedInLevel);
+                    map.setCenter(position);
+                    adjustPanelsForScreenSize();
 
-        const submitReviewButton = document.getElementById('submitReview');
-        if (submitReviewButton) {
-            submitReviewButton.removeEventListener('click', saveCommentToFirebase);
+                    const submitReviewButton = document.getElementById('submitReview');
+                    if (submitReviewButton) {
+                        submitReviewButton.removeEventListener('click', saveCommentToFirebase);
             submitReviewButton.addEventListener('click', async () => {
                 const description = document.getElementById('reviewDescription').value.trim();
-                await saveCommentToFirebase(description);
+                    await saveCommentToFirebase(description);
 
-                const reviewModalInstance = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
-                if (reviewModalInstance) {
-                    reviewModalInstance.hide();
+                    const reviewModalInstance = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
+                    if (reviewModalInstance) {
+                        reviewModalInstance.hide();
                 }
 
-                const successModal = new bootstrap.Modal(document.getElementById('successModal'), {
-                    backdrop: 'static',
+                    const successModal = new bootstrap.Modal(document.getElementById('successModal'), {
+                        backdrop: 'static',
                     keyboard: false
                 });
-                successModal.show();
+                    successModal.show();
 
                 setTimeout(() => {
-                    successModal.hide();
+                        successModal.hide();
                 }, 2000);
             });
         }
 
-        const writeReviewButton = document.getElementById("write-review-btn");
-        if (writeReviewButton) {
-            writeReviewButton.removeEventListener("click", async () => {
-                const description = document.getElementById('reviewDescription').value.trim();
-                await saveCommentToFirebase(description);
-            });
+                    const writeReviewButton = document.getElementById("write-review-btn");
+                    if (writeReviewButton) {
+                        writeReviewButton.removeEventListener("click", async () => {
+                            const description = document.getElementById('reviewDescription').value.trim();
+                            await saveCommentToFirebase(description);
+                        });
         }
 
 
@@ -884,93 +888,93 @@ function addItemInfo(data, item) {
     });
 
 
-    panel.appendChild(temp);
-    const hrElement = document.createElement("hr");
-    panel.appendChild(hrElement);
+                    panel.appendChild(temp);
+                    const hrElement = document.createElement("hr");
+                    panel.appendChild(hrElement);
 }
 
 
-function adjustPanelsForScreenSize() {
+                    function adjustPanelsForScreenSize() {
     const infoPanel = document.getElementById('info-panel');
-    const panel = document.getElementById('panel');
+                    const panel = document.getElementById('panel');
 
-    if (!infoPanel || !panel) return; // Guard clause if the panels don't exist yet
+                    if (!infoPanel || !panel) return; // Guard clause if the panels don't exist yet
 
     if (window.innerWidth >= 992) { // Medium breakpoint onwards
-        infoPanel.style.left = 'calc(20% + 20px)';
+                        infoPanel.style.left = 'calc(20% + 20px)';
 
     } else {
-        infoPanel.style.left = 0;
-        if (!infoPanel.classList.contains("hidden")) {
-            document.getElementById('toggle-panel-button').classList.add('hidden');
+                        infoPanel.style.left = 0;
+                    if (!infoPanel.classList.contains("hidden")) {
+                        document.getElementById('toggle-panel-button').classList.add('hidden');
         }
     }
 }
-window.addEventListener('resize', adjustPanelsForScreenSize);
+                    window.addEventListener('resize', adjustPanelsForScreenSize);
 
 
-function applyFilters(panel, data) {
-    card.style.zIndex = 2;
+                    function applyFilters(panel, data) {
+                        card.style.zIndex = 2;
 
-    const selectedCategory = document.getElementById('category-filter').value;
-    const selectedStatus = document.getElementById('status-filter').value;
-    const selectedDate = document.getElementById('date-filter').value;
-    let filteredItems = panel.originalItems;
+                    const selectedCategory = document.getElementById('category-filter').value;
+                    const selectedStatus = document.getElementById('status-filter').value;
+                    const selectedDate = document.getElementById('date-filter').value;
+                    let filteredItems = panel.originalItems;
 
-    if (selectedCategory !== 'all') {
-        filteredItems = filteredItems.filter((item) => {
-            const feature = data.getFeatureById(item.itemid);
-            return feature.getProperty('item_type') === selectedCategory;
-        });
+                    if (selectedCategory !== 'all') {
+                        filteredItems = filteredItems.filter((item) => {
+                            const feature = data.getFeatureById(item.itemid);
+                            return feature.getProperty('item_type') === selectedCategory;
+                        });
     }
 
-    if (selectedStatus !== 'all') {
-        filteredItems = filteredItems.filter((item) => {
-            const feature = data.getFeatureById(item.itemid);
-            return feature.getProperty('report_type') === selectedStatus;
-        });
+                    if (selectedStatus !== 'all') {
+                        filteredItems = filteredItems.filter((item) => {
+                            const feature = data.getFeatureById(item.itemid);
+                            return feature.getProperty('report_type') === selectedStatus;
+                        });
     }
 
-    if (selectedDate !== 'all') {
-        filteredItems = filteredItems.filter((item) => {
-            const feature = data.getFeatureById(item.itemid);
-            return feature.getProperty('found_timestamp').toDateString() === selectedDate;
-        });
+                    if (selectedDate !== 'all') {
+                        filteredItems = filteredItems.filter((item) => {
+                            const feature = data.getFeatureById(item.itemid);
+                            return feature.getProperty('found_timestamp').toDateString() === selectedDate;
+                        });
     }
 
     while (panel.childNodes.length > 6) {
-        panel.removeChild(panel.lastChild);
+                        panel.removeChild(panel.lastChild);
     }
 
     filteredItems.forEach((item) => {
-        addItemInfo(data, item);
+                        addItemInfo(data, item);
     });
 
-    applyFiltersToMap(data);
+                    applyFiltersToMap(data);
 }
 
 
-function applyFiltersToMap(data) {
+                    function applyFiltersToMap(data) {
     const selectedCategory = document.getElementById('category-filter').value;
-    const selectedStatus = document.getElementById('status-filter').value;
-    const selectedDates = document.getElementById('date-filter').value;
+                    const selectedStatus = document.getElementById('status-filter').value;
+                    const selectedDates = document.getElementById('date-filter').value;
 
     data.forEach((feature) => {
         const item_type = feature.getProperty('item_type');
-        const report_type = feature.getProperty('report_type');
-        const found_timestamp = feature.getProperty('found_timestamp');
+                    const report_type = feature.getProperty('report_type');
+                    const found_timestamp = feature.getProperty('found_timestamp');
 
-        let visible = true;
-        if (selectedCategory !== 'all' && item_type !== selectedCategory) {
-            visible = false;
+                    let visible = true;
+                    if (selectedCategory !== 'all' && item_type !== selectedCategory) {
+                        visible = false;
         }
-        if (selectedStatus !== 'all' && report_type !== selectedStatus) {
-            visible = false;
+                    if (selectedStatus !== 'all' && report_type !== selectedStatus) {
+                        visible = false;
         }
-        if (selectedDates !== 'all' && found_timestamp.toDateString() !== selectedDates) {
-            visible = false;
+                    if (selectedDates !== 'all' && found_timestamp.toDateString() !== selectedDates) {
+                        visible = false;
         }
 
-        data.overrideStyle(feature, { visible: visible });
+                    data.overrideStyle(feature, {visible: visible });
     });
 }
