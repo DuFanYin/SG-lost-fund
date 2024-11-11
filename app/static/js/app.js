@@ -618,8 +618,6 @@ function showItemsList(data, items, categoryArray, statusArray, datesArray) {
     document.getElementById('arrow').src = "../static/img/arrow_left.png"
 }
 
-
-
 function displayComment(commentData) {
     let commentSection = document.getElementById('comment-section');
 
@@ -743,7 +741,7 @@ function addItemInfo(data, item) {
     tempBody.appendChild(distanceElement);
 
     tempBody.innerHTML += `
-         <img src="${imageURL}" alt="Item Image" style="width: 100%; height: auto;">
+        <img src="${imageURL}" alt="Item Image" style="width: 100%; height: auto;">
         <p>${item_description}</br>
         Location: ${handoff_location}</br>
         ${report_type} on: ${found_timestamp}</br>
