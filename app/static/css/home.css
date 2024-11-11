@@ -307,3 +307,32 @@ p {
     white-space: normal;
     overflow-wrap: anywhere;
 }
+
+#write-review-btn {
+    margin-left: 8px; 
+}
+
+.info-panel-content img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9; /* Adjust the aspect ratio if needed */
+    object-fit: contain;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+}
+
+/* Standardize image size in both the info panel and sidebar */
+.info-panel-content img,
+#panel img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9; /* Adjust the aspect ratio if needed */
+    object-fit: contain;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+}
+
+.d-flex.flex-column.align-items-start p {
+    margin: 5px 0;
+    text-align: left;
+}

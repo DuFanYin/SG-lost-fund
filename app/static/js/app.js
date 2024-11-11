@@ -782,20 +782,24 @@ function addItemInfo(data, item) {
                 <img style="width: 100%; height: auto; border-radius: 10px; border: 2px solid #ddd;" src="${imageURL}">
                     <div style="padding: 20px;">
                         <h2>${item_name}</h2>
-                        <p>${item_description}</p>
                         <div class="d-flex flex-column align-items-start">
+                            <p><i class="fas fa-info-circle text-danger"></i> <b>Description:</b> ${item_description}</p>  
                             <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${found_timestamp}</p>
                             <p><i class="fas fa-envelope text-danger"></i> <b>Email:</b> <a href="mailto:${user.email}">${user.email}</a></p>
                             <p><i class="fas fa-handshake text-danger"></i> <b>Handoff Method:</b> ${handoff_method}</p>
                             <p><i class="fas fa-map-marker-alt text-danger"></i> <b>Handoff Location:</b> ${handoff_location}</p>
                         </div>
 
-                        <h2>Comments</h2>
+                        <hr>
+                        
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                             <h2 class="mb-0">Comments</h2>
 
-                        <!-- Write a Comment Button -->
-                        <button id="write-review-btn" class="btn btn-primary">
-                            <i class="fas fa-pencil-alt"></i> Write a Comment
-                        </button>
+                            <!-- Write a Comment Button -->
+                            <button id="write-review-btn" class="btn btn-danger ms-3">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                        </div>    
                     </div>
                     <!-- Modal Structure -->
                     <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
