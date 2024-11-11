@@ -53,7 +53,7 @@ async function saveCommentToFirebase(description) {
     }
 
     const listingRef = db.collection('listings').doc(currentDocumentId);
-
+    
     try {
         console.log('Saving comment...');
         await listingRef.update({
@@ -62,7 +62,7 @@ async function saveCommentToFirebase(description) {
         console.log('Comment saved successfully!');
 
         const listingDoc = await listingRef.get();
-        const ownerId = listingDoc.data().ownerId;
+        const ownerId = listingDoc.data().uid;
 
         if (uid !== ownerId) {
             const itemName = listingDoc.data().item_name;
