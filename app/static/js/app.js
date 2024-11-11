@@ -655,53 +655,53 @@ function displayComment(commentData) {
     commentSection.appendChild(commentElement);
 }
 
-function addItemInfo(data, item) {
+async function fetchComments(documentId) {
+    try {
+        const listingRef = db.collection('listings').doc(documentId);
+        const doc = await listingRef.get();
 
-    async function fetchComments(documentId) {
-        try {
-            const listingRef = db.collection('listings').doc(documentId);
-            const doc = await listingRef.get();
+        if (doc.exists) {
+            const data = doc.data();
+            const comments = data.comments || {};
 
-            if (doc.exists) {
-                const data = doc.data();
-                const comments = data.comments || {};
-
-                let commentSection = document.getElementById('comment-section');
-                if (!commentSection) {
-                    console.log('loading comment section');
-                    commentSection = document.createElement('div');
-                    commentSection.id = 'comment-section';
-                    document.getElementById('info-panel').appendChild(commentSection);
-                }
-
-                commentSection.innerHTML = ''; // Clear previous comments
-
-                // Check if there are no comments
-                if (Object.keys(comments).length === 0) {
-                    const noCommentsMessage = document.createElement('p');
-                    noCommentsMessage.id = 'no-comments-message';
-                    noCommentsMessage.textContent = 'No comments found';
-                    noCommentsMessage.style.color = '#666'; // Optional styling
-                    noCommentsMessage.style.fontStyle = 'italic'; // Optional styling
-                    commentSection.appendChild(noCommentsMessage);
-                    return;
-                }
-
-                const sortedComments = Object.values(comments).sort(
-                    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-                );
-
-                // Display each sorted comment
-                sortedComments.forEach(displayComment);
-
-            } else {
-                console.error('Listing not found.');
+            let commentSection = document.getElementById('comment-section');
+            if (!commentSection) {
+                console.log('loading comment section');
+                commentSection = document.createElement('div');
+                commentSection.id = 'comment-section';
+                document.getElementById('info-panel').appendChild(commentSection);
             }
-        } catch (error) {
-            console.error('Error fetching comments:', error);
-        }
-    }
 
+            commentSection.innerHTML = ''; // Clear previous comments
+
+            // Check if there are no comments
+            if (Object.keys(comments).length === 0) {
+                const noCommentsMessage = document.createElement('p');
+                noCommentsMessage.id = 'no-comments-message';
+                noCommentsMessage.textContent = 'No comments found';
+                noCommentsMessage.style.color = '#666'; // Optional styling
+                noCommentsMessage.style.fontStyle = 'italic'; // Optional styling
+                commentSection.appendChild(noCommentsMessage);
+                return;
+            }
+
+            const sortedComments = Object.values(comments).sort(
+                (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+            );
+
+            // Display each sorted comment
+            sortedComments.forEach(displayComment);
+
+        } else {
+            console.error('Listing not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching comments:', error);
+    }
+}
+
+
+function addItemInfo(data, item) {
 
     const temp = document.createElement('div');
     const tempBody = document.createElement('div');
