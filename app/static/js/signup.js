@@ -115,7 +115,8 @@ Vue.createApp({
                     border4: false,
                     background1: false,
                     background2: false,
-                    selectedbackground: ''
+                    selectedbackground: '',
+                    profileImageURL: 'https://firebasestorage.googleapis.com/v0/b/wad2project-db69b.firebasestorage.app/o/profile_images%2Fprofile-icon.jpg?alt=media&token=54252fe9-e3f0-4cd3-b97c-dc8bc19dd85b',
                     
                 });
 

@@ -625,7 +625,7 @@ function displayComment(commentData) {
     commentElement.classList.add('comment', 'mb-3', 'p-2', 'border', 'rounded', 'd-flex', 'align-items-start');
 
 
-    const userProfileLink = `./user-profile.html?uid=${commentData.userId}`;
+    const userProfileLink = `./other_profile?uid=${commentData.userId}`;
     const userAvatar = commentData.avatarURL || 'https://via.placeholder.com/40'; // Placeholder image if no avatar is available
 
     commentElement.innerHTML = `

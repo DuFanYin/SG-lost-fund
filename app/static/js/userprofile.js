@@ -18,9 +18,9 @@ const profile = Vue.createApp({
             currentPage: 1, // Current page for pagination
             itemsPerPage: 6, // Number of items to display per page
             currentPageLost: 1,// Current page for pagination of lost items
-            selectedBorder: localStorage.getItem('selectedBorder') || '',  // Use cached value on load
-            selectedBackground: localStorage.getItem('selectedBackground') || '',  // Use cached value on load
-            profileImageURL: sessionStorage.getItem('profileImageURL') || '', // Use the Flask default URL
+            selectedBorder: '',  // Use cached value on load
+            selectedBackground: '',  // Use cached value on load
+            profileImageURL: '', // Use the Flask default URL
             showConfirmation: false, // State to show or hide the confirmation popup
             itemToConfirm: null, // Store the item that needs confirmation
             tempItem: {}, // Temporary object to hold item data for editing
@@ -29,6 +29,7 @@ const profile = Vue.createApp({
     },
     created() {
         this.checkAuthStatus();
+        this.fetchUserData();
     },
     mounted() {
         // Apply the initial background when the component mounts
@@ -46,7 +47,6 @@ const profile = Vue.createApp({
 
     // Pagination Controls
     computed: {
-
         expandedCardBackgroundStyle() {
             return (item) => {
                 switch (item.item_type) {
@@ -144,15 +144,6 @@ const profile = Vue.createApp({
 
 
 
-
-
-
-
-
-
-
-
-
         toggleExpand(item) {
             item.expanded = !item.expanded; // Toggle the expanded state
         },
@@ -165,7 +156,7 @@ const profile = Vue.createApp({
                     this.username = data.username || 'username';
                     this.profiledesc = data.profiledesc || 'No Description';
                     this.profileImageURL = data.profileImageURL || this.profileImageURL; // Update profile image URL if it exists
-                    sessionStorage.setItem('profileImageURL', this.profileImageURL); // Save in sessionStorage
+                    console.log(profileImageURL);
                     console.log("User data updated.");
                 }
             }).catch((error) => {
