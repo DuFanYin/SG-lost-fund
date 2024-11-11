@@ -34,17 +34,17 @@ const otherProfile = Vue.createApp({
             return (item) => {
                 switch (item.item_type) {
                     case 'Electronics':
-                        return { backgroundColor: '#ffcccc' }; // Light red for Electronics
+                        return { backgroundColor: '#ca0d33' }; // Light red for Electronics
                     case 'Clothing':
-                        return { backgroundColor: '#cce6ff' }; // Light blue for Clothing
+                        return { backgroundColor: '#0033cc' }; // Light blue for Clothing
                     case 'Furniture':
-                        return { backgroundColor: '#fff2cc' }; // Light yellow for Furniture
+                        return { backgroundColor: '#e6b800' }; // Light yellow for Furniture
                     case 'Books':
-                        return { backgroundColor: '#e6ffe6' }; // Light green for Books
+                        return { backgroundColor: '#33cc33' }; // Light green for Books
                     case 'Jewelry':
-                        return { backgroundColor: '#f5e6ff' }; // Light purple for Jewelry
+                        return { backgroundColor: '#9900cc' }; // Light purple for Jewelry
                     default:
-                        return { backgroundColor: '#f2f2f2' }; // Light grey for Others
+                        return { backgroundColor: '#808080' }; // Light grey for Others
                 }
             };
         },

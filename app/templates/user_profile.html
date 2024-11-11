@@ -66,9 +66,9 @@
                             <div class="profile_description" v-text="profiledesc"></div>
                         </div>
                         <div class="col-12 col-md-3 text-center pt-md-0 pt-4">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            <button type="button" class="btn buttoncolor" data-bs-toggle="modal"
                                 data-bs-target="#editProfileModal" @click="openEditModal" style="border-radius: 30px;">
-                                <i class="bi bi-pencil-fill"></i> <span class="edit-text">Edit Profile</span>
+                                <i class="bi bi-pencil-fill"></i><strong> <span class="edit-text"> Edit Profile</span></strong>
                             </button>
                         </div>
                     </div>
@@ -177,9 +177,9 @@
 
                             <!-- Pagination Controls -->
                             <div class="d-flex justify-content-center mt-3">
-                                <button class="btn btn-primary me-2" @click="previousPage"
+                                <button class="btn buttoncolor me-2" @click="previousPage"
                                     :disabled="currentPage == 1">Previous</button>
-                                <button class="btn btn-primary" @click="nextPage"
+                                <button class="btn buttoncolor" @click="nextPage"
                                     :disabled="currentPage * itemsPerPage >= foundItems.length">Next</button>
                             </div>
                         </div>
@@ -252,9 +252,9 @@
 
                             <!-- Pagination Controls -->
                             <div class="d-flex justify-content-center mt-3">
-                                <button class="btn btn-primary me-2" @click="previousPageLost"
+                                <button class="btn buttoncolor me-2" @click="previousPageLost"
                                     :disabled="currentPageLost == 1">Previous</button>
-                                <button class="btn btn-primary" @click="nextPageLost"
+                                <button class="btn buttoncolor" @click="nextPageLost"
                                     :disabled="currentPageLost * itemsPerPage >= lostItems.length">Next</button>
                             </div>
                         </div>
