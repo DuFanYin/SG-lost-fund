@@ -64,22 +64,25 @@
 
                     <!-- Notification Bell Icon with Dropdown -->
                     <!-- Notification Badge -->
-                    <li v-if="isLoggedIn" class="nav-item dropdown d-flex align-items-center ms-3">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" id="notificationDropdown" data-bs-toggle="dropdown"
-                            aria-expanded="false" style="display: flex; align-items: center;">
+                    <li v-if="isLoggedIn" class="nav-item dropdown d-flex flex-column align-items-start ms-3">
+                        <!-- Notification Bell -->
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" id="notificationDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-bell"></i>
-                            <span v-if="notifications && notifications.length > 0" class="badge bg-danger"
+                            <span v-if="notifications && notifications.length > 0" class="badge bg-danger ms-2"
                                 v-text="unreadCount"></span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
-                            <li v-if="notifications && notifications.length === 0" class="dropdown-item">No new notifications</li>
+                    
+                        <!-- Notifications Dropdown -->
+                        <ul class="dropdown-menu dropdown-menu-end w-100 mt-2" aria-labelledby="notificationDropdown">
+                            <li v-if="notifications && notifications.length === 0" class="dropdown-item text-center">
+                                No new notifications
+                            </li>
                             <li v-for="(notification, index) in notifications" :key="index" class="dropdown-item">
-                                <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center">
                                     <!-- Notification message -->
-                                    <span @click="markNotificationAsRead(index)" 
-                                          :class="{ 'fw-bold': !notification.read }" 
-                                          v-text="notification.message">
-                                    </span>
+                                    <span @click="markNotificationAsRead(index)" :class="{ 'fw-bold': !notification.read }"
+                                        v-text="notification.message" class="flex-grow-1 text-break"></span>
                                     <!-- Delete button -->
                                     <button class="btn btn-danger btn-sm ms-2" @click.stop="deleteNotification(index)">
                                         <i class="bi bi-trash"></i>
@@ -88,7 +91,7 @@
                             </li>
                         </ul>
                     </li>
-                    
+
                     &nbsp; &nbsp; &nbsp; &nbsp;
 
                     <!-- Show Username dropdown if logged in -->
