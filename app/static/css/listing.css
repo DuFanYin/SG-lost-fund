@@ -4,7 +4,22 @@ body {
     min-height: 100vh;
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: #fef5f3 !important;}
+    background-color: #fef5f3 !important;
+    padding: 0;
+}
+   
+#footer-placeholder {
+    width: 100%;
+}
+
+html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    padding: 0;
+}
 
 
 /* Content area to grow and take up remaining space */

@@ -5,7 +5,9 @@ body {
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
+    padding: 0;
 }
+
 
 .container-fluid {
     flex: 1;
