@@ -1,5 +1,11 @@
 # WAD2 Project SG Lost & Found [G6T5]
 
+<p align="center">
+  <img src="./app/static/img/readmelogodisplay.jpg" alt="Lost and Found" width="400"/>
+  <br>
+</p>
+
+
 * Access our website thorugh this link (https://wad-2-ap5y.vercel.app/)
 * Youtube Demo Link: 
 
