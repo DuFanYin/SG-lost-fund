@@ -73,7 +73,7 @@ async function saveCommentToFirebase(description) {
                 read: false
             };
 
-            const ownerRef = db.collection('users').doc(uid);
+            const ownerRef = db.collection('users').doc(ownerId);
             await ownerRef.update({
                 notifications: firebase.firestore.FieldValue.arrayUnion(notificationData)
             });
