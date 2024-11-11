@@ -6,18 +6,6 @@ body {
     flex-direction: column;
 }
 
-/* .background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: url('../img/loginBG.jpg') no-repeat center center fixed;
-    background-size: cover;
-    filter: blur(8px);
-    z-index: -1;
-} */
-
 @keyframes zoomPanBackground {
     0% {
         transform: scale(1) translate(0, 0);
@@ -41,11 +29,9 @@ body {
     background: url('../img/loginBG.jpg') no-repeat center center;
     background-size: cover;
     filter: blur(5px);
-    /* Slightly reduced blur to make the image more visible */
     z-index: -2;
     animation: zoomPanBackground 30s ease-in-out infinite;
 }
-
 
 
 #app {
@@ -57,7 +43,7 @@ body {
 }
 
 .login-button {
-    background-color: blue;
+    background-color: #D30000;
     color: white;
     border: 1px solid black;
     display: inline-flex;
@@ -100,10 +86,9 @@ body {
 
 /* Regular login button hover effect */
 .login-button:hover {
-    background-color: darkblue;
+    background-color: #FA8072;
     /* Adjust the color as desired */
     color: white;
-    border-color: darkblue;
     cursor: pointer;
 }
 
