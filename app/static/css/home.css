@@ -12,15 +12,47 @@
     bottom:0;
 }
 
-.spinner {
-    border: 8px solid #f3f3f3; /* Light grey */
-    border-top: 8px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-}
+body {
+    background-color: #fef5f3;
+    overflow: hidden;
+    text-align: center;
+  }
+  
+  body, html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #loading {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    background-color: #fef5f3;
+    z-index: 9999; /* Ensure it appears above other elements */
+    display: none; /* Initially hidden */
+    }
+
+  .animation {
+    width: 100px;
+    height: 100px;
+    background-image: url('lego-animation.gif'); /* Replace with the actual GIF URL */
+    background-size: cover;
+    margin-bottom: 20px; /* Adds space between animation and text */
+  }
+  
+  .loading-text {
+    color: #333;
+    font-size: 40px;
+    font-weight: bold;
+    margin: 0;
+    text-align: center;
+  }
+  
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
