@@ -34,13 +34,13 @@ const app = Vue.createApp({
         async fetchNotifications() {
             const userId = sessionStorage.getItem('uid');
             if (!userId) return;
-    
+
             try {
                 const userDoc = await db.collection('users').doc(userId).get();
                 if (userDoc.exists) {
                     const userData = userDoc.data();
                     this.notifications = userData.notifications || [];
-    
+
                     // Count the number of unread notifications
                     // this.unreadCount = this.notifications.filter(n => !n.read).length;
                     this.unreadCount = (this.notifications || []).filter(n => !n.read).length;
@@ -53,15 +53,15 @@ const app = Vue.createApp({
                 this.notifications = []; // Ensure it's an empty array on error
             }
         },
-    
+
         async markNotificationAsRead(index) {
             const userId = sessionStorage.getItem('uid');
             if (!userId) return;
-    
+
             // Update the notification read status
             this.notifications[index].read = true;
             this.unreadCount = this.notifications.filter(n => !n.read).length;
-    
+
             try {
                 // Update Firestore with the updated notifications list
                 await db.collection('users').doc(userId).update({
@@ -71,7 +71,32 @@ const app = Vue.createApp({
                 console.error("Error updating notifications:", error);
             }
         },
-    
+        async deleteNotification(index) {
+            const userId = sessionStorage.getItem('uid');
+            if (!userId) {
+                console.error("User ID not found in session storage");
+                return;
+            }
+
+            try {
+                // Remove the notification from Vue's state
+                const notificationToDelete = this.notifications[index];
+                this.notifications.splice(index, 1);
+
+                // Update the unread count
+                this.unreadCount = this.notifications.filter(n => !n.read).length;
+
+                // Remove the notification from Firestore
+                await db.collection('users').doc(userId).update({
+                    notifications: firebase.firestore.FieldValue.arrayRemove(notificationToDelete),
+                });
+
+                console.log("Notification deleted successfully");
+            } catch (error) {
+                console.error("Error deleting notification:", error);
+            }
+        },
+
         showNotifications() {
             const dropdownElement = document.getElementById('notificationDropdown');
             const dropdown = new bootstrap.Dropdown(dropdownElement);

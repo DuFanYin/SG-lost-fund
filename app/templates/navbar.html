@@ -65,16 +65,21 @@
                                 v-text="unreadCount"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
-                            <li v-if="notifications && notifications.length === 0" class="dropdown-item">No new
-                                notifications</li>
-                            <li v-for="(notification, index) in notifications" :key="index" class="dropdown-item"
-                                @click="markNotificationAsRead(index)">
-                                <span v-if="!notification.read" class="fw-bold" v-text="notification.message"></span>
-                                <span v-else v-text="notification.message"></span>
+                            <li v-if="notifications && notifications.length === 0" class="dropdown-item">No new notifications</li>
+                            <li v-for="(notification, index) in notifications" :key="index" class="dropdown-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <!-- Notification message -->
+                                    <span @click="markNotificationAsRead(index)" 
+                                          :class="{ 'fw-bold': !notification.read }" 
+                                          v-text="notification.message">
+                                    </span>
+                                    <!-- Delete button -->
+                                    <button class="btn btn-danger btn-sm ms-2" @click.stop="deleteNotification(index)">Delete</button>
+                                </div>
                             </li>
                         </ul>
                     </li>
-
+                    
                     <!-- <li v-if="isLoggedIn" class="nav-item dropdown d-flex align-items-center ms-3">
                         <a class="nav-link" href="#" role="button" id="notificationDropdown" data-bs-toggle="dropdown"
                             aria-expanded="false" style="display: flex; align-items: center;">
