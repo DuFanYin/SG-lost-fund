@@ -42,10 +42,15 @@ const app = Vue.createApp({
                     this.notifications = userData.notifications || [];
     
                     // Count the number of unread notifications
-                    this.unreadCount = this.notifications.filter(n => !n.read).length;
+                    // this.unreadCount = this.notifications.filter(n => !n.read).length;
+                    this.unreadCount = (this.notifications || []).filter(n => !n.read).length;
+                }
+                else {
+                    this.notifications = [];
                 }
             } catch (error) {
                 console.error("Error fetching notifications:", error);
+                this.notifications = []; // Ensure it's an empty array on error
             }
         },
     

@@ -56,7 +56,26 @@
 
 
                     <!-- Notification Bell Icon with Dropdown -->
+                    <!-- Notification Badge -->
                     <li v-if="isLoggedIn" class="nav-item dropdown d-flex align-items-center ms-3">
+                        <a class="nav-link" href="#" role="button" id="notificationDropdown" data-bs-toggle="dropdown"
+                            aria-expanded="false" style="display: flex; align-items: center;">
+                            <i class="fas fa-bell"></i>
+                            <span v-if="notifications && notifications.length > 0" class="badge bg-danger"
+                                v-text="unreadCount"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                            <li v-if="notifications && notifications.length === 0" class="dropdown-item">No new
+                                notifications</li>
+                            <li v-for="(notification, index) in notifications" :key="index" class="dropdown-item"
+                                @click="markNotificationAsRead(index)">
+                                <span v-if="!notification.read" class="fw-bold" v-text="notification.message"></span>
+                                <span v-else v-text="notification.message"></span>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- <li v-if="isLoggedIn" class="nav-item dropdown d-flex align-items-center ms-3">
                         <a class="nav-link" href="#" role="button" id="notificationDropdown" data-bs-toggle="dropdown"
                             aria-expanded="false" style="display: flex; align-items: center;">
                             <i class="fas fa-bell"></i>
@@ -70,7 +89,7 @@
                                 <span v-else v-text="notification.message"></span>
                             </li>
                         </ul>
-                    </li>
+                    </li> -->
 
 
                     <!-- Points tracking -->
