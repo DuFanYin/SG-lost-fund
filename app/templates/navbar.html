@@ -58,7 +58,7 @@
                     <!-- Notification Bell Icon with Dropdown -->
                     <!-- Notification Badge -->
                     <li v-if="isLoggedIn" class="nav-item dropdown d-flex align-items-center ms-3">
-                        <a class="nav-link" href="#" role="button" id="notificationDropdown" data-bs-toggle="dropdown"
+                        <a class="nav-link" href="#" role="button" id="notificationDropdown"  @click="showNotifications"
                             aria-expanded="false" style="display: flex; align-items: center;">
                             <i class="fas fa-bell"></i>
                             <span v-if="notifications && notifications.length > 0" class="badge bg-danger"
