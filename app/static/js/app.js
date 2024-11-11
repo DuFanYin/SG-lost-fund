@@ -611,7 +611,23 @@ function showItemsList(data, items, categoryArray, statusArray, datesArray) {
     document.getElementById('arrow').src = "../static/img/arrow_left.png"
 }
 
-function displayComment(commentData) {
+async function getUserAvatar(commentuid) {
+    try {
+        const userDoc = await db.collection('users').doc(commentuid).get();
+        if (userDoc.exists) {
+            const userData = userDoc.data();
+            return userData.profileImageURL || "https://firebasestorage.googleapis.com/v0/b/wad2project-db69b.firebasestorage.app/o/profile_images%2Fprofile-icon.jpg?alt=media&token=54252fe9-e3f0-4cd3-b97c-dc8bc19dd85b"; // Return profile image URL or fallback to placeholder
+        } else {
+            console.log("No such user document!");
+            return userAvatar; // Fallback to placeholder if user document doesn't exist
+        }
+    } catch (error) {
+        console.error("Error fetching user avatar:", error);
+        return userAvatar; // Fallback to placeholder in case of error
+    }
+}
+
+async function displayComment(commentData) {
     let commentSection = document.getElementById('comment-section');
 
     // Remove "No comments found" message if it exists
@@ -624,9 +640,12 @@ function displayComment(commentData) {
     // commentElement.classList.add('comment');
     commentElement.classList.add('comment', 'mb-3', 'p-2', 'border', 'rounded', 'd-flex', 'align-items-start');
 
-
+    const commentuid = commentData.userId;
     const userProfileLink = `./other_profile?uid=${commentData.userId}`;
-    const userAvatar = commentData.avatarURL || 'https://via.placeholder.com/40'; // Placeholder image if no avatar is available
+   
+    const userAvatar = await getUserAvatar(commentuid);
+
+    console.log(userAvatar)
 
     commentElement.innerHTML = `
         <div class="d-flex align-items-start">
