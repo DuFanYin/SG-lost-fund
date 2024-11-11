@@ -67,7 +67,7 @@ async function saveCommentToFirebase(description) {
         if (uid !== ownerId) {
             const itemName = listingDoc.data().item_name;
             const notificationData = {
-                message: `${username} commented on your listing "${itemName}"`,
+                message: `${username} commented "${description}"on your listing "${itemName}"`,
                 timestamp: new Date().toISOString(),
                 itemName: itemName,
                 read: false
