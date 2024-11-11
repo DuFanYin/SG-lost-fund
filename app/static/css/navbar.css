@@ -115,29 +115,74 @@
     font-size: 0.75rem;
 }
 
-.dropdown-menu {
-    max-height: 300px;
-    overflow-y: auto;
-}
-.dropdown-menu {
-    max-width: 90vw; /* Dropdown width scales with viewport, up to 90% */
-    min-width: 50vw; /* Ensure dropdown is at least 50% of the viewport */
-    width: auto; /* Adjust width based on content */
-    word-wrap: break-word; /* Break long words */
-    overflow-wrap: anywhere; /* Allow text wrapping */
-    white-space: normal; /* Allow text to wrap into multiple lines */
-}
 
-/* Extra-large screens (xl and above) */
+/* For extra-large screens and above */
 @media (min-width: 1200px) {
-    .dropdown-menu {
-        max-width: 600px; /* Limit max width for extra-large screens */
+    .notification-dropdown {
+        width: 400px; /* Fixed width for extra-large screens */
+    }
+    .notification-message {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
-/* Large screens (lg and smaller) */
-@media (max-width: 1199px) {
-    .dropdown-menu {
-        max-width: 70vw; /* Scale dropdown width to 70% of the viewport */
+/* For large screens and below */
+@media (max-width: 1199.98px) {
+    .notification-dropdown {
+        width: 90vw; /* Adjust to fit within the viewport */
+    }
+    .notification-message {
+        white-space: normal;
+        word-wrap: break-word;
+        word-break: break-word;
+    }
+    /* Adjust the delete button spacing */
+    .dropdown-item .btn {
+        margin-top: 5px;
     }
 }
+
+/* Ensure the dropdown menu doesn't overflow horizontally */
+.dropdown-menu {
+    overflow-x: hidden;
+}
+
+
+.notification-dropdown {
+    width: 90vw; /* Responsive width */
+    max-width: 400px; /* Limit the maximum width */
+    max-height: 300px; /* Fixed height to allow scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+}
+
+/* Extra-large screens (xl) and above */
+@media (min-width: 1200px) {
+    .notification-dropdown {
+        width: 400px; /* Fixed width for extra-large screens */
+    }
+}
+
+/* For smaller screens */
+@media (max-width: 1199.98px) {
+    .notification-dropdown {
+        width: 90vw; /* Dynamic width for smaller screens */
+        max-height: 300px; /* Ensure the height remains consistent */
+    }
+}
+
+.notification-dropdown .notification-message {
+    white-space: normal; /* Allow text to wrap */
+    word-wrap: break-word; /* Break long words onto the next line */
+    word-break: break-word; /* Break long words to fit within the container */
+}
+
+/* Ensure dropdown items wrap correctly */
+.notification-dropdown .dropdown-item {
+    white-space: normal; /* Allow text to wrap */
+    word-wrap: break-word; /* Enable breaking long words */
+    padding: 10px; /* Add spacing for better readability */
+}
+

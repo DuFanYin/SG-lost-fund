@@ -231,7 +231,15 @@ const app = Vue.createApp({
                 console.error("Error fetching user items:", error);
             }
         },
-
+        toggleElementVisibility() {
+            const elementToHide = document.getElementById("toggle-panel-button");
+            if (elementToHide) {
+                elementToHide.classList.toggle("hidden"); // Toggle the 'hidden' class
+                console.log("Toggle applied to element.");
+            } else {
+                console.error("Element to toggle not found.");
+            }
+        },
         async purchaseItem(item) {
             const userId = sessionStorage.getItem('uid');
 

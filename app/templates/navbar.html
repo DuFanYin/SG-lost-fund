@@ -9,7 +9,7 @@
 
             <!-- Navbar Toggler for Mobile View -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nvbr"
-                aria-controls="nvbr" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="nvbr" aria-expanded="false" aria-label="Toggle navigation" @click="toggleElementVisibility">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -64,28 +64,27 @@
 
                     <!-- Notification Bell Icon with Dropdown -->
                     <!-- Notification Badge -->
-                    <li v-if="isLoggedIn" class="nav-item dropdown d-flex flex-column align-items-center ms-3">
+                    <li v-if="isLoggedIn" class="nav-item dropdown ms-3">
                         <!-- Notification bell and badge -->
                         <a class="nav-link dropdown-toggle" href="#" role="button" id="notificationDropdown"
                             data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center;">
                             <i class="fas fa-bell"></i>
-                            <span v-if="notifications && notifications.length > 0" class="badge bg-danger ms-2"
+                            <span v-if="notifications && notifications.length > 0" class="badge bg-danger ms-1"
                                 v-text="unreadCount"></span>
                         </a>
                     
                         <!-- Notification dropdown -->
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                        <ul class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationDropdown">
                             <li v-if="notifications && notifications.length === 0" class="dropdown-item">No new notifications</li>
                             <li v-for="(notification, index) in notifications" :key="index" class="dropdown-item">
-                                <div class="d-flex flex-wrap justify-content-between align-items-start">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center">
                                     <!-- Notification message -->
                                     <span @click="markNotificationAsRead(index)"
-                                        :class="{ 'fw-bold': !notification.read }" 
-                                        class="w-100 text-break mb-2" 
+                                        :class="{ 'fw-bold': !notification.read }" class="notification-message"
                                         v-text="notification.message">
                                     </span>
                                     <!-- Delete button -->
-                                    <button class="btn btn-danger btn-sm" @click.stop="deleteNotification(index)">
+                                    <button class="btn btn-danger btn-sm ms-2 mt-2 mt-md-0" @click.stop="deleteNotification(index)">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </div>
