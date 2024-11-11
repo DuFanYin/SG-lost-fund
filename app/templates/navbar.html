@@ -56,6 +56,11 @@
                         </a>
                     </li>
 
+                    <!-- Points tracking -->
+                    <div class="points-display" v-if="isLoggedIn" @click="showPointShop" style="cursor: pointer;">
+                        <img src="../static/img/points-icon.png" alt="Points Icon" class="points-icon">
+                        <span class="points" v-text="points + ' Points'"></span>
+                    </div>
 
                     <!-- Notification Bell Icon with Dropdown -->
                     <!-- Notification Badge -->
@@ -84,29 +89,6 @@
                         </ul>
                     </li>
                     
-                    <!-- <li v-if="isLoggedIn" class="nav-item dropdown d-flex align-items-center ms-3">
-                        <a class="nav-link" href="#" role="button" id="notificationDropdown" data-bs-toggle="dropdown"
-                            aria-expanded="false" style="display: flex; align-items: center;">
-                            <i class="fas fa-bell"></i>
-                            <span v-if="unreadCount > 0" class="badge bg-danger" v-text="unreadCount"></span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
-                            <li v-if="notifications.length === 0" class="dropdown-item">No new notifications</li>
-                            <li v-for="(notification, index) in notifications" :key="index" class="dropdown-item"
-                                @click="markNotificationAsRead(index)">
-                                <span v-if="!notification.read" class="fw-bold" v-text="notification.message"></span>
-                                <span v-else v-text="notification.message"></span>
-                            </li>
-                        </ul>
-                    </li> -->
-
-
-                    <!-- Points tracking -->
-                    <div class="points-display" v-if="isLoggedIn" @click="showPointShop" style="cursor: pointer;">
-                        <img src="../static/img/points-icon.png" alt="Points Icon" class="points-icon">
-                        <span class="points" v-text="points + ' Points'"></span>
-                    </div>
-
                     &nbsp; &nbsp; &nbsp; &nbsp;
 
                     <!-- Show Username dropdown if logged in -->
