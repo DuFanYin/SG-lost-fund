@@ -106,6 +106,7 @@ p {
     display: none; /* Hidden by default until it needs to be shown */
     transition: left 0.3s ease; /* Smooth transition for panel appearance */
 }
+
 #panel.open {
     display: block; /* Shows the panel when it's open */
 }
@@ -285,6 +286,7 @@ p {
     max-width: 100%;
     background-color: #fff;
     border-top: 1px solid #ddd;
+    display: block;
 }
 .comment {
     background-color: #f8f9fa;
