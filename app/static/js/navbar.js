@@ -44,6 +44,7 @@ const app = Vue.createApp({
                     // Count the number of unread notifications
                     // this.unreadCount = this.notifications.filter(n => !n.read).length;
                     this.unreadCount = (this.notifications || []).filter(n => !n.read).length;
+                    console.log("Notifications loaded:", this.notifications);
                 }
                 else {
                     this.notifications = [];
@@ -104,7 +105,8 @@ const app = Vue.createApp({
             const dropdownElement = document.getElementById('notificationDropdown');
             if (dropdownElement) {
                 const dropdown = bootstrap.Dropdown.getOrCreateInstance(dropdownElement);
-                dropdown.toggle();
+                // dropdown.toggle();
+                dropdownElement.addEventListener('click', () => dropdown.toggle());
             } else {
                 console.error("Notification dropdown element not found.");
             }
