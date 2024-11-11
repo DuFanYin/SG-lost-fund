@@ -57,15 +57,15 @@
                         <!-- Username -->
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bx bxs-user"></i></span>
-                            <input v-model="username" type="text" class="form-control" placeholder="Username"
-                                required />
+                            <input v-model="username" type="text" class="form-control" placeholder="Username" required
+                                @input="checkUsernameUnique" />
                         </div>
 
                         <!-- Email -->
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bx bxs-envelope"></i></span>
                             <input v-model="email" type="email" class="form-control" placeholder="Email" required
-                                @input="checkEmail" />
+                                @blur="validateEmail" />
                         </div>
 
                         <!-- Password -->
@@ -100,21 +100,22 @@
 
                         <br>
 
-                        <!-- Password validation -->
-                        <div v-if="isPasswordInvalid" class="text-danger mb-3 d-flex justify-content-center">
-                            <ul>
-                                <li v-for="problem in passwordvalidation" :key="problem" v-text="problem"></li>
-                            </ul>
+                        <div class="validation-messages">
+                            <div v-if="passwordvalidation.length > 0"
+                                class="text-danger mb-3 d-flex justify-content-center">
+                                <ul>
+                                    <li v-for="message in passwordvalidation" :key="message" v-text="message"></li>
+                                </ul>
+                            </div>
                         </div>
 
-                        <!-- Confirm Password validation -->
-                        <div v-if="isConfirmPasswordInvalid" class="text-danger mb-3 d-flex justify-content-center">
-                            Confirm password must match the password.</div>
+
 
 
                         <!-- Email validation -->
-                        <div v-if="isEmailInvalid" class="text-danger mb-3 d-flex justify-content-center">Please enter a
-                            valid email address.</div>
+
+
+
 
 
                         <!-- Divider -->
@@ -148,6 +149,29 @@
                 <div class="modal-body text-center">
                     <p class="mb-0" style="font-size: 1.1rem;">
                         You have signed up successfully! Redirecting you to the login page...
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign-Up Failure Modal -->
+    <div class="modal fade" id="failureModal" tabindex="-1" aria-labelledby="failureModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-white" style="background-color: red;">
+                    <h5 class="modal-title" id="failureModalLabel">
+                        <i class="fas fa-exclamation-circle me-2"></i> Sign-Up Failed!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-0" style="font-size: 1.1rem;">
+                        There were issues with your sign-up. Please check the errors and try again.
                     </p>
                 </div>
                 <div class="modal-footer">

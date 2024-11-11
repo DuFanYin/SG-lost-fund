@@ -20,6 +20,13 @@ body {
     }
 }
 
+.validation-messages div {
+    margin-bottom: 0;
+    display: block;
+    line-height: 1.2; /* Adjust as needed for spacing between lines */
+}
+
+
 .background {
     position: fixed;
     top: 0;

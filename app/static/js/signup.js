@@ -14,7 +14,9 @@ Vue.createApp({
             isEmailInvalid: false,
             emailErrorMessage: '',
             showPassword: false,
-            showConfirmPassword: false
+            showConfirmPassword: false,
+            isEmailDuplicate: false,
+            isUsernameInvalid: false
         };
     },
     methods: {
@@ -25,9 +27,25 @@ Vue.createApp({
             this.showConfirmPassword = !this.showConfirmPassword;
         },
 
-        checkPasswordCriteria() {
+        async validateAllFields() {
+            // Clear existing messages
             this.passwordvalidation = [];
-            this.isPasswordInvalid = false;
+
+            // Run all validation checks and push error messages if found
+            await this.checkUsernameUnique();
+            this.checkEmail();
+            await this.checkEmailUnique();
+            this.checkPasswordCriteria();
+            this.checkConfirmPassword();
+
+  
+
+        },
+
+        checkPasswordCriteria() {
+            this.passwordvalidation = this.passwordvalidation.filter(
+                message => !message.includes('Password')
+            );
 
             if (this.password === "") {
                 return;
@@ -53,20 +71,23 @@ Vue.createApp({
         },
 
         checkConfirmPassword() {
-            this.isConfirmPasswordInvalid = false;
+            this.passwordvalidation = this.passwordvalidation.filter(
+                message => !message.includes('Confirm password')
+            );
 
             if (this.confirmPassword === "") {
                 return;
             }
 
             if (this.confirmPassword !== this.password) {
-                this.isConfirmPasswordInvalid = true;
+                this.passwordvalidation.push('Confirm password must match the password.');
             }
         },
 
         checkEmail() {
-            this.isEmailInvalid = false;
-            this.emailErrorMessage = '';
+            this.passwordvalidation = this.passwordvalidation.filter(
+                message => !message.includes('Please enter a valid email address')
+            );
 
             if (this.email === "") {
                 return;
@@ -74,28 +95,77 @@ Vue.createApp({
 
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailPattern.test(this.email)) {
-                this.isEmailInvalid = true;
+                this.passwordvalidation.push('Please enter a valid email address.');
             }
         },
 
+        validateEmail() {
+            this.checkEmail();       // Check email format
+            this.checkEmailUnique();  // Check if email is unique
+        },
+
+        async checkUsernameUnique() {
+            this.passwordvalidation = this.passwordvalidation.filter(
+                message => !message.includes('Username already exists')
+            );
+            if (this.username === '') return;
+
+            try {
+                // Check Firestore for existing username
+                const querySnapshot = await db.collection('users')
+                    .where('username', '==', this.username)
+                    .get();
+
+                // Log the query result
+                if (!querySnapshot.empty) {
+                    this.passwordvalidation.push('Username already exists.');
+                }
+            } catch (error) {
+                console.error('Error checking username uniqueness:', error);
+            }
+        },
+
+        async checkEmailUnique() {
+            this.passwordvalidation = this.passwordvalidation.filter(
+                message => !message.includes('Email already exists')
+            );
+            if (this.email === '') return;
+            
+            try {
+                // Check Firestore for existing email
+                const querySnapshot = await db.collection('users')
+                    .where('email', '==', this.email)
+                    .get();
+                
+                // Log the query result
+                console.log('Email Query Snapshot:', querySnapshot);
+        
+                // Check if the email already exists
+                this.isEmailDuplicate = !querySnapshot.empty;
+                if (!querySnapshot.empty) {
+                    this.passwordvalidation.push('Email already exists.');
+                }
+            } catch (error) {
+                console.error('Error checking email uniqueness:', error);
+            }
+        },
+        
 
         async signUp() {
-            this.errorMessage = '';
+            this.passwordvalidation = [];  // Reset validation messages
 
             // Check password criteria
-            this.checkPasswordCriteria();
+        
 
-            // Validate confirm password
-            this.checkConfirmPassword();
-            if (this.isConfirmPasswordInvalid) {
-                return;
-            }
+           // Run all field validations
+           await this.validateAllFields();
 
-            // Validate email
-            this.checkEmail();
-            if (this.isEmailInvalid) {
-                return;
-            }
+           // If there are any validation errors, do not proceed
+           if (this.passwordvalidation.length > 0) {
+            const failureModal = new bootstrap.Modal(document.getElementById('failureModal'));
+            failureModal.show();
+            return;
+        }
 
             try {
                 // Create user with email and password
@@ -117,7 +187,7 @@ Vue.createApp({
                     background2: false,
                     selectedbackground: '',
                     profileImageURL: 'https://firebasestorage.googleapis.com/v0/b/wad2project-db69b.firebasestorage.app/o/profile_images%2Fprofile-icon.jpg?alt=media&token=54252fe9-e3f0-4cd3-b97c-dc8bc19dd85b',
-                    
+
                 });
 
 
