@@ -199,7 +199,7 @@ Vue.createApp({
                 const geocoder = new google.maps.Geocoder();
 
                 // Geocode the entered location
-                geocoder.geocode({ address: newLocation }, (results, status) => {
+                geocoder.geocode({ address: newLocation, componentRestrictions: { country: "SG" } }, (results, status) => {
                     if (status === "OK" && Array.isArray(results) && results.length > 0) {
                         const foundLocation = results[0].geometry?.location;
 
