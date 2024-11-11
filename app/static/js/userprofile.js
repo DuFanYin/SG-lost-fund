@@ -51,17 +51,17 @@ const profile = Vue.createApp({
             return (item) => {
                 switch (item.item_type) {
                     case 'Electronics':
-                        return { backgroundColor: '#ffcccc' }; // Light red for Electronics
+                        return { backgroundColor: '#ca0d33' }; // Light red for Electronics
                     case 'Clothing':
-                        return { backgroundColor: '#cce6ff' }; // Light blue for Clothing
+                        return { backgroundColor: '#0033cc' }; // Light blue for Clothing
                     case 'Furniture':
-                        return { backgroundColor: '#fff2cc' }; // Light yellow for Furniture
+                        return { backgroundColor: '#e6b800' }; // Light yellow for Furniture
                     case 'Books':
-                        return { backgroundColor: '#e6ffe6' }; // Light green for Books
+                        return { backgroundColor: '#33cc33' }; // Light green for Books
                     case 'Jewelry':
-                        return { backgroundColor: '#f5e6ff' }; // Light purple for Jewelry
-                    default:
-                        return { backgroundColor: '#f2f2f2' }; // Light grey for Others
+                        return { backgroundColor: '#9900cc' }; // Light purple for Jewelry
+                    case 'Others':
+                        return { backgroundColor: '#808080' }; // Light grey for Others
                 }
             };
         },
@@ -78,7 +78,7 @@ const profile = Vue.createApp({
                         return { backgroundImage: 'linear-gradient(0deg, #6fcf97, #33cc33)' }; // Green gradient
                     case 'Jewelry':
                         return { backgroundImage: 'linear-gradient(0deg, #bb6bd9, #9900cc)' }; // Purple gradient
-                    default:
+                    case 'Others':
                         return { backgroundImage: 'linear-gradient(0deg, #b3b3b3, #808080)' }; // Grey gradient for others
                 }
             };
@@ -256,12 +256,12 @@ const profile = Vue.createApp({
             userRef.update({
                 points: firebase.firestore.FieldValue.increment(points) // Increment by 100 points
             })
-            .then(() => {
-                console.log(`User points increased by ${points}`);
-            })
-            .catch((error) => {
-                console.error("Error updating points:", error);
-            });
+                .then(() => {
+                    console.log(`User points increased by ${points}`);
+                })
+                .catch((error) => {
+                    console.error("Error updating points:", error);
+                });
         },
         closeConfirmation() {
             this.showConfirmation = false;  // Hide the confirmation dialog

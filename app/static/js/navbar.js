@@ -12,14 +12,14 @@ const app = Vue.createApp({
             unreadCount: 0,
             notifications: [], // Store the list of notifications
             borderItems: [
-                { name: 'Border 1', points: 100, image: '../static/img/border1.png', field: 'border1', selected: false },
-                { name: 'Border 2', points: 100, image: '../static/img/border2.png', field: 'border2', selected: false },
-                { name: 'Border 3', points: 100, image: '../static/img/border3.png', field: 'border3', selected: false },
-                { name: 'Border 4', points: 100, image: '../static/img/border4.png', field: 'border4', selected: false },
+                { name: 'Flower SG border', points: 100, image: '../static/img/border1.png', field: 'border1', selected: false },
+                { name: 'Rainbow SG border', points: 100, image: '../static/img/border2.png', field: 'border2', selected: false },
+                { name: 'Cat border', points: 100, image: '../static/img/border3.png', field: 'border3', selected: false },
+                { name: 'Dog border', points: 100, image: '../static/img/border4.png', field: 'border4', selected: false },
             ],
             backgroundItems: [
-                { name: 'Background 1', points: 200, image: '../static/img/background1.webp', field: 'background1', selected: false },
-                { name: 'Background 2', points: 200, image: '../static/img/background2.webp', field: 'background2', selected: false }
+                { name: 'SG background 1', points: 200, image: '../static/img/background1.webp', field: 'background1', selected: false },
+                { name: 'SG background 2', points: 200, image: '../static/img/background2.webp', field: 'background2', selected: false }
             ],
             confirmationMessage: '', // Message to show in the confirmation modal
         };
