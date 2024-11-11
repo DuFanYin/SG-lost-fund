@@ -1,3 +1,17 @@
+
+var animData = {
+    wrapper: document.querySelector('#loading'),
+    animType: 'svg',
+    loop: true,
+    prerender: true,
+    autoplay: true,
+    path: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/35984/LEGO_loader_chrisgannon.json'
+};
+var anim = bodymovin.loadAnimation(animData);
+anim.setSpeed(3.24);
+
+
+
 import { db } from './firebaseConfig.js';
 
 let currentDocumentId = null;
@@ -212,33 +226,66 @@ window.userLocation = userLocation;
 
 function showLoadingScreen() {
     const loading = document.getElementById('loading');
+    const mapDiv = document.getElementById('map');
+
     if (loading) {
-        loading.style.display = 'flex';
+        loading.style.display = 'flex'; // Show loading screen
         console.log('Loading screen displayed.');
     } else {
         console.error('Loading screen element not found.');
     }
-}
 
-
-function hideLoadingScreen() {
-    const loading = document.getElementById('loading');
-    if (loading) {
-        loading.style.display = 'none';
-        console.log('Loading screen hidden.');
-    } else {
-        console.error('Loading screen element not found.');
-    }
-
-    const mapDiv = document.getElementById('map');
     if (mapDiv) {
-        mapDiv.style.display = 'block';
-        mapDiv.classList.add('show');
-        console.log('Map displayed.');
+        mapDiv.style.display = 'none'; // Hide the map initially
     } else {
         console.error('Map container element not found.');
     }
+
+    // After 2 seconds, hide the loading screen and show the map
+    setTimeout(() => {
+        hideLoadingScreen();
+    }, 2000);
 }
+
+function hideLoadingScreen() {
+    const loading = document.getElementById('loading');
+    const mapDiv = document.getElementById('map');
+
+    if (loading) {
+        loading.style.display = 'none'; // Hide loading screen
+        console.log('Loading screen hidden.');
+    }
+
+    if (mapDiv) {
+        mapDiv.style.display = 'block'; // Show the map
+        mapDiv.classList.add('show');
+        console.log('Map displayed.');
+    }
+}
+
+// Call `showLoadingScreen` to start the process
+showLoadingScreen();
+
+
+
+// function hideLoadingScreen() {
+//     const loading = document.getElementById('loading');
+//     if (loading) {
+//         loading.style.display = 'none';
+//         console.log('Loading screen hidden.');
+//     } else {
+//         console.error('Loading screen element not found.');
+//     }
+
+//     const mapDiv = document.getElementById('map');
+//     if (mapDiv) {
+//         mapDiv.style.display = 'block';
+//         mapDiv.classList.add('show');
+//         console.log('Map displayed.');
+//     } else {
+//         console.error('Map container element not found.');
+//     }
+// }
 
 
 async function renderMapWithFeatures(centerPosition) {
@@ -380,7 +427,6 @@ async function renderMapWithFeatures(centerPosition) {
     });
 
     const rankedItems = await calculateDistances(map.data, centerPosition);
-    hideLoadingScreen();
     showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses), uniqueDates);
 
     // Autocomplete location search bar
