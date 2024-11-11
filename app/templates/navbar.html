@@ -1,6 +1,6 @@
 <!-- CSS Link -->
 <link rel="stylesheet" href="../static/css/navbar.css">
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <div id="navbar-placeholder">
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container-fluid">
@@ -74,7 +74,9 @@
                                           v-text="notification.message">
                                     </span>
                                     <!-- Delete button -->
-                                    <button class="btn btn-danger btn-sm ms-2" @click.stop="deleteNotification(index)">Delete</button>
+                                    <button class="btn btn-danger btn-sm ms-2" @click.stop="deleteNotification(index)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </div>
                             </li>
                         </ul>
