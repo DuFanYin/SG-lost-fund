@@ -70,6 +70,7 @@ async function saveCommentToFirebase(description) {
                 message: `${username} commented on your listing "${itemName}"`,
                 timestamp: new Date().toISOString(),
                 itemName: itemName,
+                read: false
             };
 
             const ownerRef = db.collection('users').doc(uid);
