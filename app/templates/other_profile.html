@@ -158,9 +158,9 @@
 
                             <!-- Pagination Controls -->
                             <div class="d-flex justify-content-center mt-3">
-                                <button class="btn btn-primary me-2" @click="previousPage"
+                                <button class="btn buttoncolor me-2" @click="previousPage"
                                     :disabled="currentPage == 1">Previous</button>
-                                <button class="btn btn-primary" @click="nextPage"
+                                <button class="btn buttoncolor" @click="nextPage"
                                     :disabled="currentPage * itemsPerPage >= foundItems.length">Next</button>
                             </div>
                         </div>
@@ -222,9 +222,9 @@
 
                             <!-- Pagination Controls -->
                             <div class="d-flex justify-content-center mt-3">
-                                <button class="btn btn-primary me-2" @click="previousPageLost"
+                                <button class="btn buttoncolor me-2" @click="previousPageLost"
                                     :disabled="currentPageLost == 1">Previous</button>
-                                <button class="btn btn-primary" @click="nextPageLost"
+                                <button class="btn buttoncolor" @click="nextPageLost"
                                     :disabled="currentPageLost * itemsPerPage >= lostItems.length">Next</button>
                             </div>
                         </div>
