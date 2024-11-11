@@ -34,13 +34,13 @@ const app = Vue.createApp({
         async fetchNotifications() {
             const userId = sessionStorage.getItem('uid');
             if (!userId) return;
-    
+
             try {
                 const userDoc = await db.collection('users').doc(userId).get();
                 if (userDoc.exists) {
                     const userData = userDoc.data();
                     this.notifications = userData.notifications || [];
-    
+
                     // Count the number of unread notifications
                     // this.unreadCount = this.notifications.filter(n => !n.read).length;
                     this.unreadCount = (this.notifications || []).filter(n => !n.read).length;
@@ -53,15 +53,15 @@ const app = Vue.createApp({
                 this.notifications = []; // Ensure it's an empty array on error
             }
         },
-    
+
         async markNotificationAsRead(index) {
             const userId = sessionStorage.getItem('uid');
             if (!userId) return;
-    
+
             // Update the notification read status
             this.notifications[index].read = true;
             this.unreadCount = this.notifications.filter(n => !n.read).length;
-    
+
             try {
                 // Update Firestore with the updated notifications list
                 await db.collection('users').doc(userId).update({
@@ -71,11 +71,18 @@ const app = Vue.createApp({
                 console.error("Error updating notifications:", error);
             }
         },
-    
+
         showNotifications() {
+            // const dropdownElement = document.getElementById('notificationDropdown');
+            // const dropdown = new bootstrap.Dropdown(dropdownElement);
+            // dropdown.toggle();
             const dropdownElement = document.getElementById('notificationDropdown');
-            const dropdown = new bootstrap.Dropdown(dropdownElement);
-            dropdown.toggle();
+            if (dropdownElement) {
+                const dropdown = bootstrap.Dropdown.getOrCreateInstance(dropdownElement);
+                dropdown.toggle();
+            } else {
+                console.error("Notification dropdown element not found.");
+            }
         },
 
         logout() {
