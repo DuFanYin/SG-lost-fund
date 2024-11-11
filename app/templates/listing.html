@@ -47,13 +47,13 @@
 
     <!-- Load the JavaScript to include the Navbar -->
     <script type="module" src="../static/js/navbar.js"></script>
-   <!-- <br>
+    <!-- <br>
     <br>
     <h1 id="page-title" class="title-animation">Post A Listing</h1>-->
 
     <!-- Form Structure -->
     <div class="form-background">
-       
+
         <div id="temp" class="container content">
             <div v-if="!formSubmitted" class="row justify-content-center">
                 <div class="col-md-8">
@@ -83,34 +83,35 @@
                                 <form @submit.prevent="submitForm">
 
 
-                                <div class="mb-3 p-3 rounded">
-                                    <label class="form-label" style="font-weight: bold; font-size: 20px;">Select Form Type:</label>
-                                    <div class="row">
-                                        <!-- Found button in the first row, filling the width -->
-                                        <div class="col-12">
-                                            <button type="button" class="btn d-block w-100 mb-1"
-                                                :class="formData.type === 'found' ? 'btn-success' : 'btn-outline-success'"
-                                                @click="setType('found')">
-                                                <i class="bi bi-check-circle me-2"></i>Have you found an item?
-                                            </button>
+                                    <div class="mb-3 p-3 rounded">
+                                        <label class="form-label" style="font-weight: bold; font-size: 20px;">Select
+                                            Form Type:</label>
+                                        <div class="row">
+                                            <!-- Found button in the first row, filling the width -->
+                                            <div class="col-12">
+                                                <button type="button" class="btn d-block w-100 mb-1"
+                                                    :class="formData.type === 'found' ? 'btn-success' : 'btn-outline-success'"
+                                                    @click="setType('found')">
+                                                    <i class="bi bi-check-circle me-2"></i>Have you found an item?
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <!-- Lost button in the second row, filling the width -->
+                                            <div class="col-12">
+                                                <button type="button" class="btn d-block w-100"
+                                                    :class="formData.type === 'lost' ? 'btn-danger' : 'btn-outline-danger'"
+                                                    @click="setType('lost')">
+                                                    <i class="bi bi-x-circle me-2"></i>Have you lost an item?
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row mt-3">
-                                        <!-- Lost button in the second row, filling the width -->
-                                        <div class="col-12">
-                                            <button type="button" class="btn d-block w-100"
-                                                :class="formData.type === 'lost' ? 'btn-danger' : 'btn-outline-danger'"
-                                                @click="setType('lost')">
-                                                <i class="bi bi-x-circle me-2"></i>Have you lost an item?
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                    
-                                    
-                                    
-                                    
+
+
+
+
 
                                     <!-- <h3 class="text-start text-md-left" style="font-weight: bold;">Item Information
                                     </h3> -->
@@ -127,18 +128,21 @@
                                             Item Name: <span style="color: red;">*</span>
                                         </label>
                                         <div class="input-group" style="border: 1px solid #ccc; border-radius: 5px;">
-                                            <span class="input-group-text" style="border: none; background-color: #f8f9fa;"><i class="bi bi-box"></i></span>
+                                            <span class="input-group-text"
+                                                style="border: none; background-color: #f8f9fa;"><i
+                                                    class="bi bi-box"></i></span>
                                             <!-- Bootstrap icon for box -->
                                             <input type="text" v-model="formData.item_name" class="form-control"
                                                 id="item_name" placeholder="Enter Item Name" required
                                                 style="border: none;">
                                         </div>
                                     </div>
-                                    
+
 
                                     <!-- Item Type -->
                                     <div class="mb-3">
-                                        <label for="item_type" class="form-label">Item Type: <span style="color: red;">*</span></label>
+                                        <label for="item_type" class="form-label">Item Type: <span
+                                                style="color: red;">*</span></label>
                                         <select v-model="formData.item_type" class="form-select" id="item_type"
                                             required>
                                             <option value="" disabled>Select Item Type</option>
@@ -196,7 +200,8 @@
                                             Location of the Item Found at: <span style="color: red;">*</span>
                                         </label>
                                         <div class="input-group" style="border: 1px solid #ccc; border-radius: 5px;">
-                                            <span class="input-group-text" style="border: none; background-color: #f8f9fa;">
+                                            <span class="input-group-text"
+                                                style="border: none; background-color: #f8f9fa;">
                                                 <i class="bi bi-geo-alt"></i>
                                             </span>
                                             <input type="text" v-model="formData.location" class="form-control"
@@ -204,19 +209,22 @@
                                                 style="border: none;">
                                         </div>
                                     </div>
-                                    
+
                                 </div>
 
                                 <div v-if="formData.type === 'lost'">
                                     <div class="mb-3">
-                                        <label for="location" class="form-label">Location of the Item Lost at: <span style="color: red;">*</span></label>
+                                        <label for="location" class="form-label">Location of the Item Lost at: <span
+                                                style="color: red;">*</span></label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                                            <input type="text" v-model="formData.location" class="form-control custom-input" id="location" placeholder="Enter Location Lost" required>
+                                            <input type="text" v-model="formData.location"
+                                                class="form-control custom-input" id="location"
+                                                placeholder="Enter Location Lost" required>
                                         </div>
                                     </div>
                                 </div>
-                                
+
 
                                 <!-- Google Map container -->
                                 <div id="map" style="height: 400px; width: 100%;"></div>
@@ -229,25 +237,27 @@
                                     <div class="mb-3">
                                         <label for="lat" class="form-label">Latitude</label>
                                         <div class="input-group" style="border: 1px solid #ccc; border-radius: 5px;">
-                                            <span class="input-group-text" style="border: none; background-color: #f8f9fa;">
+                                            <span class="input-group-text"
+                                                style="border: none; background-color: #f8f9fa;">
                                                 <i class="fas fa-map-marker-alt" style="background: none;"></i>
                                             </span>
                                             <input type="text" id="lat" v-model="formData.coordinates.lat" readonly
                                                 placeholder="Latitude" class="form-control" style="border: none;">
                                         </div>
                                     </div>
-                                    
+
                                     <div class="mb-3">
                                         <label for="lng" class="form-label">Longitude</label>
                                         <div class="input-group" style="border: 1px solid #ccc; border-radius: 5px;">
-                                            <span class="input-group-text" style="border: none; background-color: #f8f9fa;">
+                                            <span class="input-group-text"
+                                                style="border: none; background-color: #f8f9fa;">
                                                 <i class="fas fa-map-marker-alt" style="background: none;"></i>
                                             </span>
                                             <input type="text" id="lng" v-model="formData.coordinates.lng" readonly
                                                 placeholder="Longitude" class="form-control" style="border: none;">
                                         </div>
                                     </div>
-                                    
+
                                 </div>
 
                                 <br>
@@ -281,16 +291,18 @@
 
                                 <!-- Handoff Location -->
                                 <div class="mb-3">
-                                    <label for="handoff_location" class="form-label">Handoff Location: <span style="color: red;">*</span></label>
+                                    <label for="handoff_location" class="form-label">Handoff Location: <span
+                                            style="color: red;">*</span></label>
                                     <div class="input-group" style="border: 1px solid #ccc; border-radius: 5px;">
                                         <span class="input-group-text" style="border: none; background-color: #f8f9fa;">
                                             <i class="bi bi-geo-alt" style="background: none;"></i>
                                         </span>
-                                        <input type="text" v-model="formData.handoff_location" id="handoff_location" 
-                                            placeholder="Enter Handoff Location" class="form-control" style="border: none;" required>
+                                        <input type="text" v-model="formData.handoff_location" id="handoff_location"
+                                            placeholder="Enter Handoff Location" class="form-control"
+                                            style="border: none;" required>
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <!-- Navigation Buttons -->
                             <div class="d-flex justify-content-center mt-4">
@@ -301,6 +313,22 @@
                                 <button v-if="currentStep === 3" @click="submitForm"
                                     class="btn btn-success">Submit</button>
                             </div>
+
+                            <!-- Error Messages Block Below Buttons -->
+                            <!-- Centralized Error Messages Block Below Buttons -->
+                            <div v-if="errorMessages.length" class="error-messages">
+                                <ul>
+                                    <li v-for="(message, index) in errorMessages" :key="index">
+                                        <span v-text="message"></span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- <div v-if="errorMessages.length" class="mb-3" class="mb-3 text-center">
+                                <ul class="text-danger">
+                                    <li v-for="(message, index) in errorMessages" :key="index" v-text="message"></li>
+                                </ul>
+                            </div> -->
 
                             <!-- Submit Button
                                 <div class="d-grid">

@@ -28,10 +28,18 @@ Vue.createApp({
             formSubmitted: false,
             map: null, // Store map instance
             marker: null, // Store marker instance
+            errorMessages: [] // Array to hold validation messages
         };
     },
     methods: {
         nextStep() {
+            // Call the validation method before proceeding
+            if (!this.validateStep()) {
+                // If validation fails, do not proceed to the next step
+                return;
+            }
+
+            // proceed to the next step
             if (this.currentStep < 3) {
                 this.currentStep++;
                 if (this.currentStep === 2) {
@@ -51,9 +59,57 @@ Vue.createApp({
                 }
             }
         },
+        validateStep() {
+            this.errorMessages = []; // Reset error messages
+
+            // Step 1 Validation: Item Details
+            if (this.currentStep === 1) {
+                if (!this.formData.type) {
+                    this.errorMessages.push("Please select whether the item is 'Found' or 'Lost'.");
+                }
+                if (!this.formData.item_name.trim()) {
+                    this.errorMessages.push("Item name is required.");
+                }
+                if (!this.formData.item_type) {
+                    this.errorMessages.push("Please select an item type.");
+                }
+                if (!this.formData.item_description.trim()) {
+                    this.errorMessages.push("Item description is required.");
+                }
+                if (!this.formData.file) {
+                    this.errorMessages.push("Please upload an image of the item.");
+                }
+            }
+
+            // Step 2 Validation: Time & Location Details
+            if (this.currentStep === 2) {
+                if (!this.formData.datetime) {
+                    this.errorMessages.push("Date and time are required.");
+                }
+                if (!this.formData.location.trim()) {
+                    this.errorMessages.push("Location is required.");
+                }
+                if (!this.formData.coordinates.lat || !this.formData.coordinates.lng) {
+                    this.errorMessages.push("Please select a valid location on the map.");
+                }
+            }
+
+            // Step 3 Validation: Hand-Off Details
+            if (this.currentStep === 3) {
+                if (!this.formData.handoff_method) {
+                    this.errorMessages.push("Please select a handoff method.");
+                }
+                if (!this.formData.handoff_location.trim()) {
+                    this.errorMessages.push("Handoff location is required.");
+                }
+            }
+
+            // Return false if there are any error messages
+            return this.errorMessages.length === 0;
+        },
         validateDateTime() {
             const date = new Date(this.formData.datetime);
-            
+
             if (isNaN(date.getTime())) {
                 this.dateError = "Please select a valid date and time.";
             } else {
@@ -114,6 +170,12 @@ Vue.createApp({
             google.maps.event.trigger(this.map, 'resize');
         },
         async submitForm() {
+            // Trigger validation for step 3
+            if (!this.validateStep()) {
+                // If validation fails, do not proceed with form submission
+                return;
+            }
+
             const uid = sessionStorage.getItem('uid');
             if (this.formData.item_name && this.formData.file && this.formData.location) {
                 try {

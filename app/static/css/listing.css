@@ -284,34 +284,51 @@ input[type="text"]::placeholder {
 
 /* Apply border on page load */
 .custom-input {
-    border: 2px solid #66b272; /* Green border color */
-    border-radius: 8px; /* Rounded corners */
-    padding-left: 10px; /* Padding for text inside the input */
+    border: 2px solid #66b272; 
+    border-radius: 8px;
+    padding-left: 10px; 
 }
 
 /* Change border color on focus */
 .custom-input:focus {
-    border-color: #4e9a3f; /* Darker green when focused */
-    box-shadow: 0 0 5px rgba(102, 178, 114, 0.6); /* Light green glow */
+    border-color: #4e9a3f; 
+    box-shadow: 0 0 5px rgba(102, 178, 114, 0.6); 
 }
 
 /* Style the input group */
 .input-group-text {
-    background-color: #f4f4f4; /* Light grey background for the icon */
-    border-right: 2px solid #66b272; /* Matching border to the input box */
-    border-top-left-radius: 8px; /* Rounded corners on the left */
-    border-bottom-left-radius: 8px; /* Rounded corners on the left */
+    background-color: #f4f4f4; 
+    border-right: 2px solid #66b272; 
+    border-top-left-radius: 8px; 
+    border-bottom-left-radius: 8px; 
 }
 
-/* Optional: Style the label with some margin */
 .form-label {
-    font-weight: 600; /* Bold label */
-    font-size: 14px; /* Slightly larger font size */
-    margin-bottom: 8px; /* Space between label and input */
+    font-weight: 600; 
+    font-size: 14px; 
+    margin-bottom: 8px; 
 }
 
 .prev-btn{
     background-color: #808080 !important;
     color: white !important;
     padding: 12px 35px;
+}
+
+.error-messages {
+    margin-top: 10px;
+    color: #D30000;
+    text-align: center;
+}
+
+.error-messages ul {
+    list-style-type: disc;
+    padding-left: 0; 
+    display: inline-block; 
+}
+
+.error-messages li {
+    font-size: 14px;
+    margin-bottom: 5px;
+    text-align: left;
 }
