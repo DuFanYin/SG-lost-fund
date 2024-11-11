@@ -35,24 +35,46 @@ const app = Vue.createApp({
             const userId = sessionStorage.getItem('uid');
             if (!userId) return;
     
-            try {
-                const userDoc = await db.collection('users').doc(userId).get();
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    this.notifications = userData.notifications || [];
+            db.collection('users').doc(userId).onSnapshot(
+                (snapshot) => {
+                    const userDoc = snapshot;
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        this.notifications = userData.notifications || [];
+            
+                        // Count the number of unread notifications
+                        this.unreadCount = (this.notifications || []).filter(n => !n.read).length;
+                        console.log("Notifications loaded:", this.notifications);
+                    } else {
+                        console.error("User document does not exist.");
+                        this.notifications = [];
+                    }
+                },
+                (error) => {
+                    // Error handling callback for onSnapshot
+                    console.error("Error listening to notifications:", error);
+                    this.notifications = []; // Ensure it's an empty array on error
+                }
+            );
+            
+            // try {
+            //     const userDoc = await db.collection('users').doc(userId).get();
+            //     if (userDoc.exists) {
+            //         const userData = userDoc.data();
+            //         this.notifications = userData.notifications || [];
     
-                    // Count the number of unread notifications
-                    // this.unreadCount = this.notifications.filter(n => !n.read).length;
-                    this.unreadCount = (this.notifications || []).filter(n => !n.read).length;
-                    console.log("Notifications loaded:", this.notifications);
-                }
-                else {
-                    this.notifications = [];
-                }
-            } catch (error) {
-                console.error("Error fetching notifications:", error);
-                this.notifications = []; // Ensure it's an empty array on error
-            }
+            //         // Count the number of unread notifications
+            //         // this.unreadCount = this.notifications.filter(n => !n.read).length;
+            //         this.unreadCount = (this.notifications || []).filter(n => !n.read).length;
+            //         console.log("Notifications loaded:", this.notifications);
+            //     }
+            //     else {
+            //         this.notifications = [];
+            //     }
+            // } catch (error) {
+            //     console.error("Error fetching notifications:", error);
+            //     this.notifications = []; // Ensure it's an empty array on error
+            // }
         },
     
         async markNotificationAsRead(index) {
