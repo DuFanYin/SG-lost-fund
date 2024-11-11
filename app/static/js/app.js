@@ -53,7 +53,7 @@ async function saveCommentToFirebase(description) {
     }
 
     const listingRef = db.collection('listings').doc(currentDocumentId);
-
+    
     try {
         console.log('Saving comment...');
         await listingRef.update({
@@ -62,7 +62,7 @@ async function saveCommentToFirebase(description) {
         console.log('Comment saved successfully!');
 
         const listingDoc = await listingRef.get();
-        const ownerId = listingDoc.data().ownerId;
+        const ownerId = listingDoc.data().uid;
 
         if (uid !== ownerId) {
             const itemName = listingDoc.data().item_name;
@@ -518,14 +518,7 @@ async function calculateDistances(data, origin) {
                         } else {
                             console.warn(`Distance data is unavailable for item ID ${items[j]} (status: ${element.status})`);
                         }
-                        // const distanceText = element.distance.text;
-                        // const distanceVal = element.distance.value;
-                        // const distanceObject = {
-                        //     itemid: items[j],
-                        //     distanceText: distanceText,
-                        //     distanceVal: distanceVal,
-                        // };
-                        // distances.push(distanceObject);
+
                     }
                     resolve(distances);
                 }
@@ -854,11 +847,6 @@ function addItemInfo(data, item) {
         map.setCenter(position);
         adjustPanelsForScreenSize();
 
-        // const submitReviewButton = document.getElementById('submitReview');
-        // if (submitReviewButton) {
-        //     submitReviewButton.removeEventListener('click', handleSubmitReview); // Remove any existing event listeners
-        //     submitReviewButton.addEventListener('click', () => handleSubmitReview()); // Add the event listener to handle submit
-        // }
         const submitReviewButton = document.getElementById('submitReview');
         if (submitReviewButton) {
             submitReviewButton.removeEventListener('click', saveCommentToFirebase);

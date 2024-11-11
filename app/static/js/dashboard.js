@@ -64,56 +64,69 @@ const dashboardApp = Vue.createApp({
             try {
                 const listingsRef = db.collection("listings");
                 const snapshot = await listingsRef.where("report_type", "==", "Lost").get();
-
-                const itemCounts = {};
+        
+                // Predefined categories (ensure these match exactly with the Firestore data)
+                const categories = ["Electronics", "Clothing", "Furniture", "Books", "Jewelry", "Other"];
+                const categoryCounts = categories.reduce((acc, category) => {
+                    acc[category] = 0; // Start each category with a count of 0
+                    return acc;
+                }, {});
+        
+                console.log("Initialized categoryCounts:", categoryCounts);
+        
+                // Count the items for each category
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    const itemName = data.item_name.toLowerCase(); // Convert to lowercase
-                    itemCounts[itemName] = (itemCounts[itemName] || 0) + 1;
+                    const itemType = data.item_type;  // No need to convert to lowercase
+        
+                    console.log("Document data:", data);
+                    console.log("Item Type:", itemType);
+        
+                    // Check if the item type matches one of the predefined categories
+                    if (categoryCounts.hasOwnProperty(itemType)) {
+                        categoryCounts[itemType] += 1;
+                    } else {
+                        console.log(`Item type "${itemType}" does not match any predefined categories.`);
+                    }
                 });
-
-                console.log("Item Counts Object:", itemCounts);
-
-                const topItems = Object.entries(itemCounts)
-                    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-                    .slice(0, 5);
-
-                console.log("Top Items Array:", topItems);
-
-                const itemNames = topItems.map(item => item[0]);
-                const itemCountsData = topItems.map(item => item[1]);
-
-                console.log("Item Names:", itemNames);
-                console.log("Item Counts Data:", itemCountsData);
-
+        
+                // Ensure all categories are included, even those with a count of 0
+                const itemTypes = Object.keys(categoryCounts);  // ["Electronics", "Clothing", "Furniture", "Books", "Jewelry", "Other"]
+                const typeCountsData = itemTypes.map(type => categoryCounts[type]);
+        
+                console.log("Category Counts after processing:", categoryCounts);
+                console.log("Item Types:", itemTypes);
+                console.log("Item Type Counts Data:", typeCountsData);
+        
                 const barChartCanvas = document.getElementById("barChart");
                 if (!barChartCanvas) {
                     throw new Error("barChart element not found.");
                 }
-
+        
                 const ctx = barChartCanvas.getContext("2d");
                 if (!ctx) {
                     throw new Error("getContext failed on barChart canvas.");
                 }
-
+        
                 if (this.barChartInstance) {
-                    this.barChartInstance.data.labels = itemNames;
-                    this.barChartInstance.data.datasets[0].data = itemCountsData;
+                    console.log("Updating existing bar chart...");
+                    this.barChartInstance.data.labels = itemTypes;
+                    this.barChartInstance.data.datasets[0].data = typeCountsData;
                     this.barChartInstance.update();
                 } else {
+                    console.log("Creating new bar chart...");
                     const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
                     gradient.addColorStop(0, '#a3423c'); // Darkest red at the top
                     gradient.addColorStop(1, '#f07c6c'); // Lightest red at the bottom
-
-
+        
                     this.barChartInstance = new Chart(ctx, {
                         type: "bar",
                         data: {
-                            labels: itemNames,
+                            labels: itemTypes,
                             datasets: [
                                 {
-                                    label: "Top 5 Most Lost Items",
-                                    data: itemCountsData,
+                                    label: "Lost Items by Category",
+                                    data: typeCountsData,
                                     backgroundColor: gradient,
                                 },
                             ],
@@ -124,7 +137,7 @@ const dashboardApp = Vue.createApp({
                             plugins: {
                                 title: {
                                     display: true,
-                                    text: "Top 5 Most Lost Items",
+                                    text: "Lost Items by Category",
                                     font: {
                                         size: 20,
                                         weight: 'bold',
@@ -140,14 +153,10 @@ const dashboardApp = Vue.createApp({
                                     enabled: true,
                                     callbacks: {
                                         label: function (context) {
-                                            const rank = context.dataIndex + 1;
-                                            const labelPrefix = rank === 1 ? "Top most lost item" :
-                                                rank === 2 ? "Top 2nd most lost item" :
-                                                    rank === 3 ? "Top 3rd most lost item" :
-                                                        `Top ${rank}th most lost item`;
+                                            const label = context.label;
                                             const value = context.raw;
-                                            const reportLabel = value === 1 ? "report" : "reports";
-                                            return `${labelPrefix}: ${value} ${reportLabel}`;
+                                            const reportLabel = value === 1 ? "item" : "items";
+                                            return `${label}: ${value} ${reportLabel}`;
                                         }
                                     }
                                 }
@@ -175,12 +184,13 @@ const dashboardApp = Vue.createApp({
                         },
                     });
                 }
-
+        
             } catch (error) {
                 console.error("Error loading top lost items:", error);
             }
         }
-
+         
+        
 
         ,
 
