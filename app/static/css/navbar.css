@@ -60,17 +60,7 @@
     background-color: #f1f1f1 !important;
     color: #D30000 !important;
 }
-.dropdown-item span {
-    white-space: normal; /* Allow line wrapping */
-    word-wrap: break-word; /* Break long words */
-    word-break: break-word; /* Break words at arbitrary points */
-    margin-bottom: 0.5rem; /* Add spacing below the message */
-}
 
-/* Adjust button alignment for wrapped content */
-.dropdown-item button {
-    align-self: flex-start; /* Align delete button with the top of the message */
-}
 .navbar-nav .nav-item .nav-link i {
     font-size: 1rem;
     vertical-align: middle;
@@ -128,4 +118,26 @@
 .dropdown-menu {
     max-height: 300px;
     overflow-y: auto;
+}
+.dropdown-menu {
+    max-width: 90vw; /* Dropdown width scales with viewport, up to 90% */
+    min-width: 50vw; /* Ensure dropdown is at least 50% of the viewport */
+    width: auto; /* Adjust width based on content */
+    word-wrap: break-word; /* Break long words */
+    overflow-wrap: anywhere; /* Allow text wrapping */
+    white-space: normal; /* Allow text to wrap into multiple lines */
+}
+
+/* Extra-large screens (xl and above) */
+@media (min-width: 1200px) {
+    .dropdown-menu {
+        max-width: 600px; /* Limit max width for extra-large screens */
+    }
+}
+
+/* Large screens (lg and smaller) */
+@media (max-width: 1199px) {
+    .dropdown-menu {
+        max-width: 70vw; /* Scale dropdown width to 70% of the viewport */
+    }
 }
