@@ -4,10 +4,25 @@ body {
     min-height: 100vh;
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: #fef5f3 !important;
+    /* background-color: #fef5f3 !important; */
+    background: linear-gradient(45deg, #fef5f3, #fff0f0, #ffecec, #fce8e8, #fef5f3);
+    background-size: 300% 300%;
+    animation: gradientAnimation 10s ease infinite;
     padding: 0;
 }
    
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 #footer-placeholder {
     width: 100%;
 }
