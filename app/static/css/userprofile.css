@@ -61,7 +61,19 @@
         width: 100%;
     }
 
+    /* Add this CSS for hover effect */
+.hero {
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for transform and shadow */
+}
 
+.hero:hover {
+    transform: translateY(-5px); /* Move the element up slightly */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Larger shadow to create a pop-out effect */
+}
+
+.underline {
+    text-decoration: underline;
+}
 
     .badge-custom {
         background-color: #007bff;
@@ -347,6 +359,10 @@
         word-wrap: break-word; /* Break long words to prevent overflow */
         overflow: hidden;      /* Hide any content that might overflow */
     }
+
+    .list-item-name {
+        color: white !important;
+    }
     
     .list-text {
         white-space: nowrap;       /* Prevent text from wrapping to a new line */
@@ -354,6 +370,7 @@
         text-overflow: ellipsis;   /* Show ellipsis when text overflows */
         display: block;            /* Ensure it applies as a block element */
         width: 100%;               /* Make sure it takes the container's width */
+        color: #fff;
     }
     
 
