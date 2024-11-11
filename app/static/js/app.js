@@ -83,7 +83,6 @@ async function saveCommentToFirebase(description) {
 
         await fetchComments(currentDocumentId); // Fetch comments after saving and sending notification
 
-        displayComment(commentData);
         document.getElementById('reviewDescription').value = '';
 
     } catch (error) {
@@ -244,6 +243,7 @@ function hideLoadingScreen() {
 
 async function renderMapWithFeatures(centerPosition) {
     showLoadingScreen();
+
 
     const navElement = document.querySelector("nav");
     const navHeight = navElement ? navElement.offsetHeight : 0;
@@ -689,6 +689,8 @@ async function fetchComments(documentId) {
                 (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
             );
 
+            console.log(commentSection);
+            console.log(sortedComments);
             // Display each sorted comment
             sortedComments.forEach(displayComment);
 
@@ -699,7 +701,6 @@ async function fetchComments(documentId) {
         console.error('Error fetching comments:', error);
     }
 }
-
 
 function addItemInfo(data, item) {
 
@@ -891,8 +892,8 @@ function addItemInfo(data, item) {
                 await saveCommentToFirebase(description);
             });
         }
-        
-        
+
+
 
     });
 
