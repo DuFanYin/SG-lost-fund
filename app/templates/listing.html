@@ -82,37 +82,32 @@
                                         class="bi bi-info-circle me-2"></i>Item Details</h3>
                                 <form @submit.prevent="submitForm">
 
-                                    <div class="mb-3 border p-3 rounded">
-                                        <label class="form-label" style="font-weight: bold; font-size: 20px;">Select Form Type:</label>
-                                        <div class="row">
-                                            <!-- "Have you found an item?" and Found button in the same row -->
-                                            <div class="col-6 d-flex align-items-center">
-                                                <p class="mb-0">Have you found an item?</p>
-                                            </div>
-                                            <div class="col-6">
-                                                <button type="button" class="btn d-block w-100 mb-2"
-                                                    :class="formData.type === 'found' ? 'btn' : 'btn-outline-success'"
-                                                    :style="formData.type === 'found' ? 'background-color: #66b272; border-color: #66b272; box-shadow: 0 0 5px 2px #006400;' : 'border-color: #66b272; color: #66b272;'"
-                                                    @click="setType('found')">
-                                                    <i class="bi bi-check-circle me-2"></i>Found
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-3">
-                                            <!-- "Have you lost an item?" and Lost button in the same row -->
-                                            <div class="col-6 d-flex align-items-center">
-                                                <p class="mb-0">Have you lost an item?</p>
-                                            </div>
-                                            <div class="col-6">
-                                                <button type="button" class="btn d-block w-100"
-                                                    :class="formData.type === 'lost' ? '' : 'btn-outline-danger'"
-                                                    :style="formData.type === 'lost' ? 'background-color: #f07c6c; color: white; box-shadow: 0 0 5px 2px #d96a5d; border-color: #c02f20;' : 'border-color: #f07c6c;'"
-                                                    @click="setType('lost')">
-                                                    <i class="bi bi-x-circle me-2"></i>Lost
-                                                </button>
-                                            </div>
+
+                                <div class="mb-3 p-3 rounded">
+                                    <label class="form-label" style="font-weight: bold; font-size: 20px;">Select Form Type:</label>
+                                    <div class="row">
+                                        <!-- Found button in the first row, filling the width -->
+                                        <div class="col-12">
+                                            <button type="button" class="btn d-block w-100 mb-1"
+                                                :class="formData.type === 'found' ? 'btn-success' : 'btn-outline-success'"
+                                                @click="setType('found')">
+                                                <i class="bi bi-check-circle me-2"></i>Have you found an item?
+                                            </button>
                                         </div>
                                     </div>
+                                    <div class="row mt-3">
+                                        <!-- Lost button in the second row, filling the width -->
+                                        <div class="col-12">
+                                            <button type="button" class="btn d-block w-100"
+                                                :class="formData.type === 'lost' ? 'btn-danger' : 'btn-outline-danger'"
+                                                @click="setType('lost')">
+                                                <i class="bi bi-x-circle me-2"></i>Have you lost an item?
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                    
                                     
                                     
                                     
