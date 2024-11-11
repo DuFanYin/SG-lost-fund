@@ -627,8 +627,11 @@ async function getUserAvatar(commentuid) {
     }
 }
 
+
+
+// Function to display each comment
 async function displayComment(commentData) {
-    let commentSection = document.getElementById('comment-section');
+    const commentSection = document.getElementById('comment-section');
 
     // Remove "No comments found" message if it exists
     const noCommentsMessage = document.getElementById('no-comments-message');
@@ -638,11 +641,10 @@ async function displayComment(commentData) {
 
     const commentElement = document.createElement('div');
     commentElement.classList.add('comment', 'mb-3', 'p-2', 'border', 'rounded', 'd-flex', 'align-items-start');
+    commentElement.setAttribute('data-id', commentData.timestamp);  // Use the timestamp as the data-id for identification
 
-    const commentuid = commentData.userId;
     const userProfileLink = `./other_profile?uid=${commentData.userId}`;
-
-    const userAvatar = await getUserAvatar(commentuid);
+    const userAvatar = await getUserAvatar(commentData.userId);
 
     commentElement.innerHTML = `
         <div class="d-flex align-items-start">
@@ -651,27 +653,46 @@ async function displayComment(commentData) {
                 <a href="${userProfileLink}" class="fw-bold text-primary">${sanitizeHTML`${commentData.username}`}</a>
                 <span class="text-muted">(${new Date(commentData.timestamp).toLocaleString()})</span>
                 <p class="mb-1 comment-message">${sanitizeHTML`${commentData.message}`}</p>
-                <button class="btn btn-sm btn-link edit-comment" data-id="${commentData.id}">Edit</button>
-                <button class="btn btn-sm btn-link text-danger delete-comment" data-id="${commentData.id}">Delete</button>
             </div>
         </div>
     `;
 
+    // Only display edit/delete buttons if the comment belongs to the current user
+    const currentUserId = sessionStorage.getItem('uid');
+    if (commentData.userId === currentUserId) {
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.innerHTML = `
+            <button class="btn btn-sm btn-link edit-comment" data-id="${commentData.timestamp}">Edit</button>
+            <button class="btn btn-sm btn-link text-danger delete-comment" data-id="${commentData.timestamp}">Delete</button>
+        `;
+        commentElement.querySelector('div > div').appendChild(buttonsContainer);
+
+        // Event listener for edit
+        buttonsContainer.querySelector('.edit-comment').addEventListener('click', () => {
+            editComment(commentData);
+        });
+
+        // Event listener for delete
+        buttonsContainer.querySelector('.delete-comment').addEventListener('click', async () => {
+            const commentId = commentData.timestamp; // Use the timestamp as the commentId for deletion
+            console.log(`Deleting comment with ID: ${commentId}`); // Log the commentId being passed
+            await deleteComment(commentId); // Pass the commentId for deletion
+            commentElement.remove(); // Remove comment from the UI
+        });
+    }
+
     commentSection.appendChild(commentElement);
-
-    // Event listener for edit
-    commentElement.querySelector('.edit-comment').addEventListener('click', () => {
-        editComment(commentData);
-    });
-
-    // Event listener for delete
-    commentElement.querySelector('.delete-comment').addEventListener('click', async () => {
-        await deleteComment(commentData.id);
-        commentElement.remove(); // Remove comment from the UI
-    });
 }
 
+// Function to fetch and display comments
 async function fetchComments(documentId) {
+    // Retrieve the current user's ID from session storage
+    const currentUserId = sessionStorage.getItem('uid');
+    if (!currentUserId) {
+        console.error('User is not authenticated.');
+        return;
+    }
+
     try {
         const listingRef = db.collection('listings').doc(documentId);
         const doc = await listingRef.get();
@@ -682,7 +703,6 @@ async function fetchComments(documentId) {
 
             let commentSection = document.getElementById('comment-section');
             if (!commentSection) {
-                console.log('loading comment section');
                 commentSection = document.createElement('div');
                 commentSection.id = 'comment-section';
                 document.getElementById('info-panel').appendChild(commentSection);
@@ -690,13 +710,10 @@ async function fetchComments(documentId) {
 
             commentSection.innerHTML = ''; // Clear previous comments
 
-            // Check if there are no comments
             if (Object.keys(comments).length === 0) {
                 const noCommentsMessage = document.createElement('p');
                 noCommentsMessage.id = 'no-comments-message';
                 noCommentsMessage.textContent = 'No comments found';
-                noCommentsMessage.style.color = '#666'; // Optional styling
-                noCommentsMessage.style.fontStyle = 'italic'; // Optional styling
                 commentSection.appendChild(noCommentsMessage);
                 return;
             }
@@ -705,11 +722,7 @@ async function fetchComments(documentId) {
                 (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
             );
 
-            console.log(commentSection);
-            console.log(sortedComments);
-            // Display each sorted comment
-            sortedComments.forEach(displayComment);
-
+            sortedComments.forEach(commentData => displayComment(commentData));
         } else {
             console.error('Listing not found.');
         }
@@ -718,29 +731,48 @@ async function fetchComments(documentId) {
     }
 }
 
+// Edit Comment Function
 async function editComment(commentData) {
     const newMessage = prompt('Edit your comment:', commentData.message);
     if (newMessage && newMessage !== commentData.message) {
-        // Update Firestore with the new message
-        const listingRef = db.collection('listings').doc(documentId);
+        const listingRef = db.collection('listings').doc(currentDocumentId);
         await listingRef.update({
             [`comments.${commentData.id}.message`]: newMessage
         });
 
-        // Update the comment's display on the page
         const commentElement = document.querySelector(`[data-id="${commentData.id}"]`).closest('.comment');
         commentElement.querySelector('.comment-message').textContent = sanitizeHTML`${newMessage}`;
     }
 }
 
-// Delete Comment Function
+// Function to delete a comment
 async function deleteComment(commentId) {
+    const currentUserId = sessionStorage.getItem('uid');
+    if (!currentUserId) {
+        console.error('User is not authenticated.');
+        return;
+    }
+
     try {
-        const listingRef = db.collection('listings').doc(documentId);
+        // Reference to the listings collection and the specific document using currentDocumentId
+        const listingRef = db.collection('listings').doc(currentDocumentId);
+
+        // Log the commentId being passed and the reference
+        console.log(`Attempting to delete comment with ID: ${commentId}`);
+        console.log(`Reference path: comments.${commentId}`);
+
+        // Use the commentId to delete the specific comment from the comments map
         await listingRef.update({
             [`comments.${commentId}`]: firebase.firestore.FieldValue.delete()
         });
+
         console.log('Comment deleted successfully');
+
+        // Remove the comment element from the UI after successful deletion
+        const commentElement = document.querySelector(`[data-id="${commentId}"]`);
+        if (commentElement) {
+            commentElement.remove(); // Remove from the UI
+        }
     } catch (error) {
         console.error('Error deleting comment:', error);
     }
