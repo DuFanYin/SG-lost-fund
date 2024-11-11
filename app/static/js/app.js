@@ -53,7 +53,7 @@ async function saveCommentToFirebase(description) {
     }
 
     const listingRef = db.collection('listings').doc(currentDocumentId);
-
+    
     try {
         console.log('Saving comment...');
         await listingRef.update({
@@ -62,7 +62,7 @@ async function saveCommentToFirebase(description) {
         console.log('Comment saved successfully!');
 
         const listingDoc = await listingRef.get();
-        const ownerId = listingDoc.data().ownerId;
+        const ownerId = listingDoc.data().uid;
 
         if (uid !== ownerId) {
             const itemName = listingDoc.data().item_name;
@@ -70,9 +70,10 @@ async function saveCommentToFirebase(description) {
                 message: `${username} commented on your listing "${itemName}"`,
                 timestamp: new Date().toISOString(),
                 itemName: itemName,
+                read: false
             };
 
-            const ownerRef = db.collection('users').doc(uid);
+            const ownerRef = db.collection('users').doc(ownerId);
             await ownerRef.update({
                 notifications: firebase.firestore.FieldValue.arrayUnion(notificationData)
             });
@@ -82,7 +83,6 @@ async function saveCommentToFirebase(description) {
 
         await fetchComments(currentDocumentId); // Fetch comments after saving and sending notification
 
-        displayComment(commentData);
         document.getElementById('reviewDescription').value = '';
 
     } catch (error) {
@@ -243,6 +243,7 @@ function hideLoadingScreen() {
 
 async function renderMapWithFeatures(centerPosition) {
     showLoadingScreen();
+
 
     const navElement = document.querySelector("nav");
     const navHeight = navElement ? navElement.offsetHeight : 0;
@@ -517,14 +518,7 @@ async function calculateDistances(data, origin) {
                         } else {
                             console.warn(`Distance data is unavailable for item ID ${items[j]} (status: ${element.status})`);
                         }
-                        // const distanceText = element.distance.text;
-                        // const distanceVal = element.distance.value;
-                        // const distanceObject = {
-                        //     itemid: items[j],
-                        //     distanceText: distanceText,
-                        //     distanceVal: distanceVal,
-                        // };
-                        // distances.push(distanceObject);
+
                     }
                     resolve(distances);
                 }
@@ -617,8 +611,6 @@ function showItemsList(data, items, categoryArray, statusArray, datesArray) {
     document.getElementById('arrow').src = "../static/img/arrow_left.png"
 }
 
-
-
 function displayComment(commentData) {
     let commentSection = document.getElementById('comment-section');
 
@@ -654,53 +646,54 @@ function displayComment(commentData) {
     commentSection.appendChild(commentElement);
 }
 
-function addItemInfo(data, item) {
+async function fetchComments(documentId) {
+    try {
+        const listingRef = db.collection('listings').doc(documentId);
+        const doc = await listingRef.get();
 
-    async function fetchComments(documentId) {
-        try {
-            const listingRef = db.collection('listings').doc(documentId);
-            const doc = await listingRef.get();
+        if (doc.exists) {
+            const data = doc.data();
+            const comments = data.comments || {};
 
-            if (doc.exists) {
-                const data = doc.data();
-                const comments = data.comments || {};
-
-                let commentSection = document.getElementById('comment-section');
-                if (!commentSection) {
-                    console.log('loading comment section');
-                    commentSection = document.createElement('div');
-                    commentSection.id = 'comment-section';
-                    document.getElementById('info-panel').appendChild(commentSection);
-                }
-
-                commentSection.innerHTML = ''; // Clear previous comments
-
-                // Check if there are no comments
-                if (Object.keys(comments).length === 0) {
-                    const noCommentsMessage = document.createElement('p');
-                    noCommentsMessage.id = 'no-comments-message';
-                    noCommentsMessage.textContent = 'No comments found';
-                    noCommentsMessage.style.color = '#666'; // Optional styling
-                    noCommentsMessage.style.fontStyle = 'italic'; // Optional styling
-                    commentSection.appendChild(noCommentsMessage);
-                    return;
-                }
-
-                const sortedComments = Object.values(comments).sort(
-                    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-                );
-
-                // Display each sorted comment
-                sortedComments.forEach(displayComment);
-
-            } else {
-                console.error('Listing not found.');
+            let commentSection = document.getElementById('comment-section');
+            if (!commentSection) {
+                console.log('loading comment section');
+                commentSection = document.createElement('div');
+                commentSection.id = 'comment-section';
+                document.getElementById('info-panel').appendChild(commentSection);
             }
-        } catch (error) {
-            console.error('Error fetching comments:', error);
-        }
-    }
 
+            commentSection.innerHTML = ''; // Clear previous comments
+
+            // Check if there are no comments
+            if (Object.keys(comments).length === 0) {
+                const noCommentsMessage = document.createElement('p');
+                noCommentsMessage.id = 'no-comments-message';
+                noCommentsMessage.textContent = 'No comments found';
+                noCommentsMessage.style.color = '#666'; // Optional styling
+                noCommentsMessage.style.fontStyle = 'italic'; // Optional styling
+                commentSection.appendChild(noCommentsMessage);
+                return;
+            }
+
+            const sortedComments = Object.values(comments).sort(
+                (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+            );
+
+            console.log(commentSection);
+            console.log(sortedComments);
+            // Display each sorted comment
+            sortedComments.forEach(displayComment);
+
+        } else {
+            console.error('Listing not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching comments:', error);
+    }
+}
+
+function addItemInfo(data, item) {
 
     const temp = document.createElement('div');
     const tempBody = document.createElement('div');
@@ -741,7 +734,7 @@ function addItemInfo(data, item) {
     tempBody.appendChild(distanceElement);
 
     tempBody.innerHTML += `
-         <img src="${imageURL}" alt="Item Image" style="width: 100%; height: auto;">
+        <img src="${imageURL}" alt="Item Image" style="width: 100%; height: auto;">
         <p>${item_description}</br>
         Location: ${handoff_location}</br>
         ${report_type} on: ${found_timestamp}</br>
@@ -854,11 +847,6 @@ function addItemInfo(data, item) {
         map.setCenter(position);
         adjustPanelsForScreenSize();
 
-        // const submitReviewButton = document.getElementById('submitReview');
-        // if (submitReviewButton) {
-        //     submitReviewButton.removeEventListener('click', handleSubmitReview); // Remove any existing event listeners
-        //     submitReviewButton.addEventListener('click', () => handleSubmitReview()); // Add the event listener to handle submit
-        // }
         const submitReviewButton = document.getElementById('submitReview');
         if (submitReviewButton) {
             submitReviewButton.removeEventListener('click', saveCommentToFirebase);
@@ -890,8 +878,8 @@ function addItemInfo(data, item) {
                 await saveCommentToFirebase(description);
             });
         }
-        
-        
+
+
 
     });
 

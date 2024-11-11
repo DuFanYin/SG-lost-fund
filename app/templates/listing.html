@@ -44,6 +44,7 @@
     <!-- Navbar placeholder -->
     <div id="navbar-placeholder"></div>
 
+
     <!-- Load the JavaScript to include the Navbar -->
     <script type="module" src="../static/js/navbar.js"></script>
    <!-- <br>
@@ -81,28 +82,35 @@
                                         class="bi bi-info-circle me-2"></i>Item Details</h3>
                                 <form @submit.prevent="submitForm">
 
-                                    <div class="mb-3">
-                                        <label class="form-label" style="font-weight: bold;">Select Form Type:</label>
-                                        <br>
-                                        <div class="btn-group" role="group" aria-label="Form Type Toggle">
-                                            <button type="button" class="btn"
-                                            :class="formData.type === 'found' ? 'btn' : 'btn-outline-success'"
-                                            :style="formData.type === 'found' ? 'background-color: #66b272; border-color: #66b272; box-shadow: 0 0 5px 2px #006400;' : 'border-color: #66b272; color: #66b272;'"
-                                            @click="setType('found')">
-                                            <i class="bi bi-check-circle me-2"></i>Found
-                                        </button>
-                                        <button
-                                        type="button"
-                                        class="btn"
-                                        :class="formData.type === 'lost' ? '' : 'btn-outline-danger'"
-                                        :style="formData.type === 'lost' ? 'background-color: #f07c6c; color: white; box-shadow: 0 0 5px 2px #d96a5d; border-color: #c02f20;' : 'border-color: #f07c6c;'"
-                                        @click="setType('lost')"
-                                    >
-                                        <i class="bi bi-x-circle me-2"></i>Lost
-                                    </button>
-                                    
+
+                                <div class="mb-3 p-3 rounded">
+                                    <label class="form-label" style="font-weight: bold; font-size: 20px;">Select Form Type:</label>
+                                    <div class="row">
+                                        <!-- Found button in the first row, filling the width -->
+                                        <div class="col-12">
+                                            <button type="button" class="btn d-block w-100 mb-1"
+                                                :class="formData.type === 'found' ? 'btn-success' : 'btn-outline-success'"
+                                                @click="setType('found')">
+                                                <i class="bi bi-check-circle me-2"></i>Have you found an item?
+                                            </button>
                                         </div>
                                     </div>
+                                    <div class="row mt-3">
+                                        <!-- Lost button in the second row, filling the width -->
+                                        <div class="col-12">
+                                            <button type="button" class="btn d-block w-100"
+                                                :class="formData.type === 'lost' ? 'btn-danger' : 'btn-outline-danger'"
+                                                @click="setType('lost')">
+                                                <i class="bi bi-x-circle me-2"></i>Have you lost an item?
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                    
+                                    
+                                    
+                                    
 
                                     <!-- <h3 class="text-start text-md-left" style="font-weight: bold;">Item Information
                                     </h3> -->
@@ -172,15 +180,6 @@
                                         class="bi bi-geo-alt me-2"></i>Time and Location Details</h3>
                                 <br>
 
-                                <!-- Date and Time Field -->
-                                <!-- Date and Time Picker -->
-                                <!--  <div class="mb-3">
-                                        <label for="datetime" class="form-label">Date and Time: <span
-                                                style="color: red;">*</span></label>
-                                        <input type="datetime-local" v-model="formData.datetime" class="form-control"
-                                            id="datetime" required>
-                                    </div>-->
-
                                 <!-- Date and Time Picker -->
                                 <div class="mb-3">
                                     <label for="datetime" class="form-label">Date and Time: <span
@@ -218,25 +217,6 @@
                                     </div>
                                 </div>
                                 
-
-                                <!-- <div v-if="formData.type === 'found' ">
-                                    <div class="mb-3">
-                                        <label for="location" class="form-label">Location of the Item Found at: <span
-                                                style="color: red;">*</span></label>
-                                        <input type="text" v-model="formData.location" class="form-control"
-                                            id="location" placeholder="Enter Location Found" required>
-                                    </div>
-                                </div>
-
-                                <div v-if="formData.type === 'lost' ">
-                                    <div class="mb-3">
-                                        <label for="location" class="form-label">Location of the Item Lost at: <span
-                                                style="color: red;">*</span></label>
-                                        <input type="text" v-model="formData.location" class="form-control"
-                                            id="location" placeholder="Enter Location Found" required>
-                                    </div>
-                                </div> -->
-
 
                                 <!-- Google Map container -->
                                 <div id="map" style="height: 400px; width: 100%;"></div>
@@ -315,7 +295,7 @@
                             <!-- Navigation Buttons -->
                             <div class="d-flex justify-content-center mt-4">
                                 <button v-if="currentStep > 1" @click="previousStep"
-                                    class="btn btn-outline-secondary">Previous</button>
+                                    class="btn prev-btn">Previous</button>
                                 <button v-if="currentStep < 3" @click="nextStep"
                                     class="btn btn-custom-next">Next</button>
                                 <button v-if="currentStep === 3" @click="submitForm"

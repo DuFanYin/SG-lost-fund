@@ -135,7 +135,7 @@ hr {
 
 /* Button Design */
 .btn-custom-next {
-    background-color: #f2a594 !important;
+    background-color: #f07c6c !important;
     color: white !important;
     padding: 12px 35px;
 }
@@ -153,7 +153,6 @@ hr {
 
 .btn {
     width: 100%;
-    max-width: 200px;
     margin-right: 10px;
 }
 
@@ -162,7 +161,7 @@ hr {
 }
 
 .btn-group {
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     gap: 10px;
     width: 100%;
@@ -296,4 +295,8 @@ input[type="text"]::placeholder {
     margin-bottom: 8px; /* Space between label and input */
 }
 
-
+.prev-btn{
+    background-color: #808080 !important;
+    color: white !important;
+    padding: 12px 35px;
+}

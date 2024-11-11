@@ -125,12 +125,17 @@ const profile = Vue.createApp({
                 .then(() => {
                     console.log("Listing updated successfully");
                     // Update the local array with the modified item
-                    const index = this.foundItems.findIndex(item => item.id === this.tempItem.id);
+                    let index = this.foundItems.findIndex(item => item.id === this.tempItem.id);
                     if (index !== -1) {
                         this.foundItems[index] = { ...this.tempItem };
+                    } else {
+                        index = this.lostItems.findIndex(item => item.id === this.tempItem.id);
+                        if (index !== -1) {
+                            this.lostItems[index] = { ...this.tempItem };
+                        }
                     }
                     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-        successModal.show();
+                    successModal.show();
                 })
                 .catch(error => {
                     console.error("Error updating listing:", error);
@@ -450,7 +455,7 @@ const profile = Vue.createApp({
                 sessionStorage.setItem('username', this.username);
                 sessionStorage.setItem('profiledesc', this.profiledesc);
                 const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-        successModal.show();
+                successModal.show();
             }).catch((error) => {
                 console.error("Error updating profile: ", error);
             });

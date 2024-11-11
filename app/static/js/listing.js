@@ -77,7 +77,7 @@ Vue.createApp({
         initMap() {
             const mapDiv = document.getElementById('map');
             if (!mapDiv) {
-                console.error('Map container element not found.');
+                console.log('Map container element not found.');
                 return;
             }
 
