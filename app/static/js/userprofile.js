@@ -118,7 +118,7 @@ const profile = Vue.createApp({
                 // Check if the username is taken and it's not the current user's username
                 this.usernameExists = !querySnapshot.empty && this.tempUsername !== this.username;
             } catch (error) {
-                console.error("Error checking username availability:", error);
+                console.log("Error checking username availability:", error);
             }
         },
         async archiveConfirmedItem() {
@@ -157,7 +157,7 @@ const profile = Vue.createApp({
                     this.closeConfirmation();
                 }
             } catch (error) {
-                console.error("Error in archiving or updating points:", error);
+                console.log("Error in archiving or updating points:", error);
             }
         },
 
@@ -193,7 +193,7 @@ const profile = Vue.createApp({
                     successModal.show();
                 })
                 .catch(error => {
-                    console.error("Error updating listing:", error);
+                    console.log("Error updating listing:", error);
                 });
         },
 
@@ -214,7 +214,7 @@ const profile = Vue.createApp({
                     console.log("User data updated.");
                 }
             }).catch((error) => {
-                console.error("Error fetching user data:", error);
+                console.log("Error fetching user data:", error);
             });
         },
 
@@ -273,7 +273,7 @@ const profile = Vue.createApp({
                     // Optional: Handle upload progress
                 },
                 (error) => {
-                    console.error("Error uploading image:", error);
+                    console.log("Error uploading image:", error);
                 },
                 async () => {
                     // Get the download URL after upload completes
@@ -293,7 +293,7 @@ const profile = Vue.createApp({
                     sessionStorage.setItem('profileImageURL', downloadURL); // Store in sessionStorage
                 })
                 .catch((error) => {
-                    console.error("Error updating profile image URL:", error);
+                    console.log("Error updating profile image URL:", error);
                 });
         },
         confirmArchive(item) {
@@ -314,7 +314,7 @@ const profile = Vue.createApp({
                     console.log(`User points increased by ${points}`);
                 })
                 .catch((error) => {
-                    console.error("Error updating points:", error);
+                    console.log("Error updating points:", error);
                 });
         },
         closeConfirmation() {
@@ -339,7 +339,7 @@ const profile = Vue.createApp({
                     }
                 })
                 .catch((error) => {
-                    console.error("Error archiving item:", error);
+                    console.log("Error archiving item:", error);
                 });
         },
         updateBodyBackground() {
@@ -486,7 +486,7 @@ const profile = Vue.createApp({
                     this.loading = false; // Set loading to false once items are loaded
                 })
                 .catch((error) => {
-                    console.error("Error fetching items:", error);
+                    console.log("Error fetching items:", error);
                     this.loading = false; // Ensure loading is set to false even if there's an error
                 });
         },
@@ -539,20 +539,8 @@ const profile = Vue.createApp({
                 const successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
             } catch (error) {
-                console.error("Error updating profile: ", error);
+                console.log("Error updating profile: ", error);
             }
-            // userRef.update({
-            //     username: this.username,
-            //     profiledesc: this.profiledesc,
-            // }).then(() => {
-            //     console.log("Profile successfully updated!");
-            //     sessionStorage.setItem('username', this.username);
-            //     sessionStorage.setItem('profiledesc', this.profiledesc);
-            //     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-            //     successModal.show();
-            // }).catch((error) => {
-            //     console.error("Error updating profile: ", error);
-            // });
         },
     },
 });

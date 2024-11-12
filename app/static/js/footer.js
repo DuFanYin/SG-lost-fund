@@ -5,7 +5,7 @@ function loadFooter() {
         .then(data => {
             document.getElementById('footer-placeholder').innerHTML = data;
         })
-        .catch(error => console.error('Error loading footer:', error));
+        .catch(error => console.log('Error loading footer:', error));
 }
 
 document.addEventListener("DOMContentLoaded", function() {
