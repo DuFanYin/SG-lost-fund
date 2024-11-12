@@ -84,6 +84,8 @@ def signup():
 
     return render_template('signup.html', message=message)
 
+
+
 @main.route('/pointshop')
 def pointshop():
     return render_template('pointshop.html')
