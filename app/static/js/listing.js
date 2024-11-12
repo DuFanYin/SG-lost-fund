@@ -17,13 +17,10 @@ Vue.createApp({
                 coordinates: { // Initialize coordinates
                     lat: null,
                     lng: null
-                },
-                formData: {
-                    datetime: '',  // Initialize datetime
-                    type: null,
-                },
-                dateError: '',
+                }
             },
+            dateError: '',
+            currentDateTime: this.getCurrentDateTime(), // Initialize the current date and time
             characterCount: 0,
             formSubmitted: false,
             map: null, // Store map instance
@@ -108,13 +105,28 @@ Vue.createApp({
             return this.errorMessages.length === 0;
         },
         validateDateTime() {
-            const date = new Date(this.formData.datetime);
-
-            if (isNaN(date.getTime())) {
-                this.dateError = "Please select a valid date and time.";
+            const selectedDateTime = new Date(this.formData.datetime);
+            const currentDateTime = new Date(this.currentDateTime);
+    
+            // Check if the selected date and time is in the future
+            if (selectedDateTime > currentDateTime) {
+                this.dateError = "Please select a date and time that is not in the future.";
             } else {
                 this.dateError = "";
             }
+        },
+        
+        getCurrentDateTime() {
+            const now = new Date();
+    
+            // Format as 'YYYY-MM-DDTHH:MM' to set both date and time
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
         },
         setType(type) {
             this.formData.type = type;
