@@ -233,7 +233,8 @@ const app = Vue.createApp({
         },
         toggleElementVisibility() {
             const elementToHide = document.getElementById("toggle-panel-button");
-            if (elementToHide) {
+            const infoPanel = document.getElementById('info-panel');
+            if (elementToHide && (infoPanel == null || infoPanel.style.display == 'none' )) {
                 elementToHide.classList.toggle("hidden"); // Toggle the 'hidden' class
                 console.log("Toggle applied to element.");
             } else {

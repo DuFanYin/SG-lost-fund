@@ -3,60 +3,73 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255); /* Semi-transparent background */
+    background-color: rgba(255, 255, 255);
+    /* Semi-transparent background */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 2; /* Ensure it stays on top */
-    bottom:0;
+    z-index: 2;
+    /* Ensure it stays on top */
+    bottom: 0;
 }
 
 body {
     background-color: #fef5f3;
     overflow: hidden;
     text-align: center;
-  }
-  
-  body, html {
+}
+
+body,
+html {
     height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
-  }
-  
-  #loading {
+}
+
+#loading {
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
+    flex-direction: column;
+    /* Stack elements vertically */
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100vh;
     background-color: #fef5f3;
-    z-index: 9999; /* Ensure it appears above other elements */
-    display: none; /* Initially hidden */
-    }
+    z-index: 9999;
+    /* Ensure it appears above other elements */
+    display: none;
+    /* Initially hidden */
+}
 
-  .animation {
+.animation {
     width: 100px;
     height: 100px;
     background-size: cover;
-    margin-bottom: 20px; /* Adds space between animation and text */
-  }
-  
-  .loading-text {
+    margin-bottom: 20px;
+    /* Adds space between animation and text */
+}
+
+.loading-text {
     color: #333;
     font-size: 40px;
     font-weight: bold;
     margin: 0;
     text-align: center;
-  }
-  
+}
+
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
+
 #map {
     width: 100%;
     position: absolute;
@@ -66,13 +79,16 @@ body {
     transition: opacity 0.5s ease;
     opacity: 0;
 }
+
 #map.show {
     opacity: 1;
     transition: opacity 0.5s ease;
 }
-nav{
+
+nav {
     z-index: 1;
 }
+
 html,
 body {
     height: 100%;
@@ -80,20 +96,24 @@ body {
     padding: 0;
     overflow: hidden;
 }
+
 #autocomplete-container {
     display: block;
     align-items: center;
     background-color: white;
-    border-radius: 25px; /* Rounded corners */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+    border-radius: 25px;
+    /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    /* Subtle shadow */
     padding: 5px 5px;
     position: absolute;
     z-index: 3;
     width: max(210px, calc(20% - 20px));
     margin-left: 20px;
     margin-top: 10px;
-    border:5px solid #fff;
+    border: 5px solid #fff;
 }
+
 #autocomplete-input {
     border: none;
     outline: none;
@@ -105,23 +125,31 @@ body {
 }
 
 #autocomplete-container:hover {
-        border-color: #f07c6c;
-        border-width: 2px; /* Adjust the width as needed */
-        border-style: solid; /* Ensure the border is visible */
+    border-color: #f07c6c;
+    border-width: 2px;
+    /* Adjust the width as needed */
+    border-style: solid;
+    /* Ensure the border is visible */
 }
 
-.hidden{
+.hidden {
     display: none;
 }
-h3{
+
+h3 {
     padding-left: 15px;
 }
+
 p {
     max-width: 100%;
-    white-space: normal; /* Avoid overflowing text */
-    text-overflow: ellipsis; /* Adds "..." for overflowed text */
-    overflow: hidden; /* Prevent content overflow */
-    word-wrap: break-word; /* Break long words */
+    white-space: normal;
+    /* Avoid overflowing text */
+    text-overflow: ellipsis;
+    /* Adds "..." for overflowed text */
+    overflow: hidden;
+    /* Prevent content overflow */
+    word-wrap: break-word;
+    /* Break long words */
 }
 
 #panel {
@@ -131,18 +159,23 @@ p {
     left: 0;
     height: 100%;
     width: calc(20% + 20px);
-    background-color: rgba(255, 255, 255, 1); 
-    box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3); /* Adds shadow for better visibility */
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3);
+    /* Adds shadow for better visibility */
     margin: 70px 0px;
     padding-bottom: 100px;
     overflow: scroll;
-    display: none; /* Hidden by default until it needs to be shown */
-    transition: left 0.3s ease; /* Smooth transition for panel appearance */
+    display: none;
+    /* Hidden by default until it needs to be shown */
+    transition: left 0.3s ease;
+    /* Smooth transition for panel appearance */
 }
 
 #panel.open {
-    display: block; /* Shows the panel when it's open */
+    display: block;
+    /* Shows the panel when it's open */
 }
+
 .toggle-panel-button {
     position: fixed;
     left: 0;
@@ -154,31 +187,35 @@ p {
     padding: 0px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     z-index: 2;
-    transition: left 0.3s ease; /* Smooth transition for button movement */
+    transition: left 0.3s ease;
+    /* Smooth transition for button movement */
     width: 20px;
-    height:48px;
-}
-#panel.open ~ .toggle-panel-button {
-    left: max(250px, calc(20% + 20px)); /* Button position when panel is open */
+    height: 48px;
 }
 
-#arrow{
+#panel.open~.toggle-panel-button {
+    left: max(250px, calc(20% + 20px));
+    /* Button position when panel is open */
+}
+
+#arrow {
     width: 100%;
 }
 
 /* CARD */
-#card, #card-body{
+#card,
+#card-body {
     position: absolute;
     z-index: 0;
     display: block;
     height: 70px;
     width: calc(20% + 20px);
-    background-color: white; 
+    background-color: white;
     min-width: 250px;
 }
 
 /* Styling for individual result cards */
-#panel > div:not(#filter-container):not(#filter-status-container):not(#filter-date-container) {
+#panel>div:not(#filter-container):not(#filter-status-container):not(#filter-date-container) {
     padding: 15px;
     margin: 10px 15px;
     border-radius: 5px;
@@ -191,14 +228,14 @@ p {
 }
 
 /* Hover effect for cards */
-#panel > div:not(#filter-container):not(#filter-status-container):not(#filter-date-container):hover {
+#panel>div:not(#filter-container):not(#filter-status-container):not(#filter-date-container):hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transform: translateY(-3px);
     background-color: #f9f9f9;
 }
 
 /* Title styling */
-#panel > div:not(#filter-container):not(#filter-status-container):not(#filter-date-container) .itemText {
+#panel>div:not(#filter-container):not(#filter-status-container):not(#filter-date-container) .itemText {
     font-size: 1.1em;
     font-weight: bold;
     color: #333;
@@ -206,14 +243,14 @@ p {
 }
 
 /* Styling for description and details */
-#panel > div:not(#filter-container):not(#filter-status-container):not(#filter-date-container) p {
+#panel>div:not(#filter-container):not(#filter-status-container):not(#filter-date-container) p {
     margin: 4px 0;
     font-size: 0.9em;
     color: #666;
 }
 
 /* Highlighting specific labels */
-#panel > div:not(#filter-container):not(#filter-status-container):not(#filter-date-container) p b {
+#panel>div:not(#filter-container):not(#filter-status-container):not(#filter-date-container) p b {
     color: #333;
     font-weight: bold;
 }
@@ -241,18 +278,23 @@ p {
 #panel::-webkit-scrollbar {
     width: 5px;
 }
+
 #panel::-webkit-scrollbar-track {
     background-color: #f1f1f1;
 }
+
 #panel::-webkit-scrollbar-thumb {
     background-color: lightgrey;
 }
+
 #panel::-webkit-scrollbar-thumb:hover {
     background-color: darkgrey;
 }
 
 
-#filter-container, #filter-status-container, #filter-date-container{
+#filter-container,
+#filter-status-container,
+#filter-date-container {
     display: inline-block;
     padding-left: 15px;
     width: calc(calc(100% - 18.2px) / 3);
@@ -272,8 +314,10 @@ p {
     position: fixed;
     left: 0;
     z-index: 1;
-    display: block; /* Ensure it is displayed */
-    opacity: 1; /* Ensure it is fully visible */
+    display: block;
+    /* Ensure it is displayed */
+    opacity: 1;
+    /* Ensure it is fully visible */
     transition: transform 0.3s ease;
 }
 
@@ -289,6 +333,7 @@ p {
     top: 10px;
     right: 10px;
 }
+
 .close-button:hover {
     background-color: #ff2a2a;
 }
@@ -296,8 +341,10 @@ p {
 .custom-marker {
     width: 28px;
     height: 28px;
-    border: 3px solid red; /* Red border */
-    border-radius: 50%; /* Make it circular */
+    border: 3px solid red;
+    /* Red border */
+    border-radius: 50%;
+    /* Make it circular */
     background-size: cover;
     background-position: center;
 }
@@ -305,10 +352,13 @@ p {
 /* Shift modal to the right */
 .custom-modal-right {
     position: absolute;
-    left: 10%; /* Adjust this percentage to position the modal as needed */
+    left: 10%;
+    /* Adjust this percentage to position the modal as needed */
     top: 10%;
-    transform: none !important; /* Ensure the modal doesn't center itself automatically */
-    width: 500px; /* Optional: Set width to control its size */
+    transform: none !important;
+    /* Ensure the modal doesn't center itself automatically */
+    width: 500px;
+    /* Optional: Set width to control its size */
 }
 
 /* Styles for individual comments */
@@ -320,6 +370,7 @@ p {
     background-color: #fff;
     display: block;
 }
+
 .comment {
     background-color: #f8f9fa;
     border-radius: 10px;
@@ -327,15 +378,19 @@ p {
     margin-bottom: 15px;
     display: flex;
     align-items: flex-start;
-    width: 105%; /* Ensure it takes full width of the comment section */
-    max-width: 110%; /* Prevent overflow */
+    width: 105%;
+    /* Ensure it takes full width of the comment section */
+    max-width: 110%;
+    /* Prevent overflow */
     text-overflow: ellipsis;
 }
+
 .comment img.rounded-circle {
     width: 40px;
     height: 40px;
     margin-right: 10px;
 }
+
 .comment p {
     word-wrap: break-word;
     word-break: break-all;
@@ -344,13 +399,14 @@ p {
 }
 
 #write-review-btn {
-    margin-left: 8px; 
+    margin-left: 8px;
 }
 
 .info-panel-content img {
     width: 100%;
     height: auto;
-    aspect-ratio: 16 / 9; /* Adjust the aspect ratio if needed */
+    aspect-ratio: 16 / 9;
+    /* Adjust the aspect ratio if needed */
     object-fit: contain;
     border-radius: 10px;
     border: 2px solid #ddd;
@@ -362,7 +418,8 @@ p {
     width: 100%;
     object-fit: cover;
     height: auto;
-    aspect-ratio: 16 / 9; /* Adjust the aspect ratio if needed */
+    aspect-ratio: 16 / 9;
+    /* Adjust the aspect ratio if needed */
     object-fit: contain;
     border-radius: 10px;
     border: 2px solid #ddd;
@@ -376,7 +433,8 @@ p {
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;
-    max-width: 100%; /* Ensure it does not exceed the container */
+    max-width: 100%;
+    /* Ensure it does not exceed the container */
 }
 
 
@@ -387,8 +445,10 @@ p {
 
 .close-btn {
     position: absolute;
-    top: 1rem; /* Adjust to fine-tune the position */
-    right: 1rem; /* Adjust to fine-tune the position */
+    top: 1rem;
+    /* Adjust to fine-tune the position */
+    right: 1rem;
+    /* Adjust to fine-tune the position */
     background: none;
     border: none;
     padding: 0;
@@ -396,7 +456,8 @@ p {
 }
 
 .close-btn i {
-    font-size: 1.5rem; /* Size of the icon */
+    font-size: 1.5rem;
+    /* Size of the icon */
 }
 
 /* Default layout - buttons next to the comment */
@@ -409,15 +470,11 @@ p {
 /* Stack buttons below the comment on smaller screens */
 @media (max-width: 600px) {
     .buttons-container {
-        flex-direction: column; /* Stack buttons vertically */
-        align-items: flex-start; /* Align to the left */
-        margin-top: 8px; /* Add some space above the buttons */
+        flex-direction: column;
+        /* Stack buttons vertically */
+        align-items: flex-start;
+        /* Align to the left */
+        margin-top: 8px;
+        /* Add some space above the buttons */
     }
 }
-
-
-
-
-
-
-
