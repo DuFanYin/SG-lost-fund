@@ -165,13 +165,18 @@ hr {
 
 /* Button Design */
 .btn-custom-next {
-    background-color: #f07c6c !important;
+    background-color: #c46e6c !important;
     color: white !important;
-    padding: 12px 35px;
+    padding: 12px 20px; /* Adjust padding to allow text to influence the button width */
+    white-space: nowrap; /* Prevents text wrapping */
+    text-align: center; /* Centers text */
+    display: inline-block; /* Button length adjusts based on the content */
+    border-radius: 5px; /* Optional rounded corners */
 }
 
+
 .btn-custom-next:hover {
-    background-color: #e77e6b !important;
+    background-color: #c46e6c !important;
     color: white !important;
 }
 
