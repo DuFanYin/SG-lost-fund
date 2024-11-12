@@ -388,18 +388,17 @@
         color: white;
     }
 
-
-
+    
     /* Media query for smaller screens */
-    @media (max-width: 576px) {
+    @media  (max-width: 767px) {
         .hero-logo {
-            height: 50px;
-            width: 50px;
+            height: 100px;
+            width: 100px;
         }
 
         .hero-description {
-            font-size: 14px;
-            left: 80px;
+            font-size: 24px;
+            left: 130px;
         }
 
         .hero-date,
