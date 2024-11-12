@@ -42,7 +42,7 @@ Vue.createApp({
 
                     sessionStorage.setItem('profileImageURL', userData.profileImageURL || "https://firebasestorage.googleapis.com/v0/b/wad2project-db69b.firebasestorage.app/o/profile_images%2Fprofile-icon.jpg?alt=media&token=54252fe9-e3f0-4cd3-b97c-dc8bc19dd85b"); // Set a default if it doesn't exist
 
-                       // Cache selectedBorder and selectedBackground in localStorage
+                    // Cache selectedBorder and selectedBackground in localStorage
                     localStorage.setItem('selectedBorder', userData.selectedborder || '');
                     localStorage.setItem('selectedBackground', userData.selectedbackground || '');
 
@@ -104,7 +104,15 @@ Vue.createApp({
                         points: 200, // Default points
                         profiledesc: "", // Empty profile description
                         uid: result.user.uid,
-                        username: result.user.displayName || result.user.email.split('@')[0] // Use display name or derive from email
+                        username: result.user.displayName || result.user.email.split('@')[0], // Use display name or derive from email
+                        border1: false,
+                        border2: false,
+                        border3: false,
+                        border4: false,
+                        background1: false,
+                        background2: false,
+                        selectedbackground: '',
+                        profileImageURL: 'https://firebasestorage.googleapis.com/v0/b/wad2project-db69b.firebasestorage.app/o/profile_images%2Fprofile-icon.jpg?alt=media&token=54252fe9-e3f0-4cd3-b97c-dc8bc19dd85b',
                     });
                 }
 
@@ -121,7 +129,7 @@ Vue.createApp({
 
                 // Display the username in the success modal
                 document.getElementById('username-display').textContent = userData.username;
-                
+
                 // Show success modal
                 new bootstrap.Modal(document.getElementById('successModal')).show();
 

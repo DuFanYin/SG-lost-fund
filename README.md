@@ -67,7 +67,7 @@ By leveraging user-generated content, the platform will act as a bridge between 
 
 
 ### Google Firebase Setup
-
+pip install firebase-admin
 
 
 
