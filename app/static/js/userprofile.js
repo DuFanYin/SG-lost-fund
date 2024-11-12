@@ -346,7 +346,12 @@ const profile = Vue.createApp({
                 document.body.style.backgroundSize = "cover";
                 document.body.style.backgroundPosition = "center";
             } else {
-                document.body.style.backgroundImage = '';
+                // document.body.style.backgroundImage = '';
+                // Revert to the animated gradient background
+                document.body.style.backgroundImage = "linear-gradient(45deg, #fff5f5, #ffebeb, #ffdada, #ffb3b3, #ff8080)";
+                document.body.style.backgroundSize = "300% 300%";
+                document.body.style.backgroundPosition = "0% 50%";
+                document.body.style.animation = "gradientAnimation 15s ease infinite";
             }
         },
         // Pagination Controls

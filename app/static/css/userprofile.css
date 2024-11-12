@@ -64,7 +64,7 @@
 
     .bg3 {
         background: linear-gradient(45deg, #fff5f5, #ffebeb, #ffdada, #ffb3b3, #ff8080);
-        animation: gradientAnimation 10s ease infinite;
+        animation: gradientAnimation 15s ease infinite;
         background-size: 300% 300%;
         /* Fallback color */
         /* background-size: cover; */
