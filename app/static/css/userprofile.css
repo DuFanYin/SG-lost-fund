@@ -2,19 +2,29 @@
         padding: 40px 20px;
         margin-top: 20px;
         min-height: 30vh;
+        border: #f3d9d9 3px solid;
+        border-bottom: 0px;
+        border-top: 0px
     }
 
     .listborder {
         border-top: 0;
         min-height: 80vh;
         margin-bottom: -60px;
+        border: #f3d9d9 3px solid;
+        border-bottom: 0px;
+        border-top: 0px
     }
 
     .profile-img {
-        width: 170px;         /* Ensure fixed width */
-        height: 170px;        /* Ensure fixed height */
-        object-fit: cover;    /* Crop image to fill square */
-        border-radius: 15px;  /* Optional: add rounded corners */
+        width: 170px;
+        /* Ensure fixed width */
+        height: 170px;
+        /* Ensure fixed height */
+        object-fit: cover;
+        /* Crop image to fill square */
+        border-radius: 15px;
+        /* Optional: add rounded corners */
         z-index: 1;
     }
 
@@ -44,7 +54,7 @@
     }
 
     .bg2 {
-        background-color: #EAE7E6;
+        background-color: #eae7e6;
     }
 
     .modal-backdrop {
@@ -52,28 +62,34 @@
     }
 
     .bg3 {
-        background-color: #000000; /* Fallback color */
+        background: linear-gradient(45deg, #fff5f5, #ffebeb, #ffdada, #ffb3b3, #ff8080);
+        animation: gradientAnimation 10s ease infinite;
+        /* Fallback color */
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
     }
 
     .main-wrapper {
-        min-height: 100vh; /* Ensure it covers full viewport height */
+        min-height: 100vh;
+        /* Ensure it covers full viewport height */
         width: 100%;
     }
 
     /* Add this CSS for hover effect */
-.hero {
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for transform and shadow */
-}
+    .hero {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        /* Smooth transition for transform and shadow */
+    }
 
-.hero:hover {
-    transform: translateY(-5px); /* Move the element up slightly */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Larger shadow to create a pop-out effect */
-}
+    .hero:hover {
+        transform: translateY(-5px);
+        /* Move the element up slightly */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        /* Larger shadow to create a pop-out effect */
+    }
 
-/* .underline {
+    /* .underline {
     text-decoration: underline;
 } */
 
@@ -117,10 +133,14 @@
 
     .border-overlay {
         position: absolute;
-        top: -15px; /* Adjust to increase space above the profile image */
-        left: -15px; /* Adjust to increase space to the left */
-        width: calc(100% + 30px); /* Increase width beyond the container */
-        height: calc(100% + 30px); /* Increase height beyond the container */
+        top: -15px;
+        /* Adjust to increase space above the profile image */
+        left: -15px;
+        /* Adjust to increase space to the left */
+        width: calc(100% + 30px);
+        /* Increase width beyond the container */
+        height: calc(100% + 30px);
+        /* Increase height beyond the container */
         z-index: 2;
         pointer-events: none;
     }
@@ -128,49 +148,65 @@
     .profile_description {
         white-space: normal;
         word-wrap: break-word;
-        max-width: 90%; /* Default width for larger screens */
+        max-width: 90%;
+        /* Default width for larger screens */
     }
 
 
-    .redtext{
+    .redtext {
         color: red;
     }
 
     @media (max-width: 1200px) {
         .profile_description {
-            max-width: 100%; /* Make the profile description full width on smaller screens */
+            max-width: 100%;
+            /* Make the profile description full width on smaller screens */
         }
     }
 
-    @media (max-width: 992px) { /* Large screens (Bootstrap lg) */
+    @media (max-width: 992px) {
+
+        /* Large screens (Bootstrap lg) */
         .profile_name {
             font-size: 22px;
         }
+
         .profile_description {
             font-size: 12px;
-            max-width: 100%; /* Make the profile description full width on smaller screens */
+            max-width: 100%;
+            /* Make the profile description full width on smaller screens */
         }
     }
 
 
 
-    @media (max-width: 768px) { /* Medium screens (Bootstrap md) */
+    @media (max-width: 768px) {
+
+        /* Medium screens (Bootstrap md) */
         .profile_name {
             font-size: 18px;
         }
+
         .profile_description {
-            max-width: 100%; /* Make it even narrower on very small screens */
+            max-width: 100%;
+            /* Make it even narrower on very small screens */
         }
     }
 
-    @media (max-width: 576px) { /* Small screens (Bootstrap sm) */
+    @media (max-width: 576px) {
+
+        /* Small screens (Bootstrap sm) */
         .profile_name {
             font-size: 16px;
         }
+
         .profile_description {
-            max-width: 80%;/* Make it even narrower on very small screens */
-            margin: 0 auto; /* Center the text within the container */
-            text-align: center; /* Center-align text */
+            max-width: 80%;
+            /* Make it even narrower on very small screens */
+            margin: 0 auto;
+            /* Center the text within the container */
+            text-align: center;
+            /* Center-align text */
         }
     }
 
@@ -182,9 +218,12 @@
     } */
 
     .archive-button {
-        float: right;             /* Moves the button to the right side */
-        border-radius: 30%;       /* Applies a 30% border radius */
-        margin-top: 10px;         /* Adds a little space above the button */
+        float: right;
+        /* Moves the button to the right side */
+        border-radius: 30%;
+        /* Applies a 30% border radius */
+        margin-top: 10px;
+        /* Adds a little space above the button */
     }
 
     .confirmation-overlay {
@@ -212,12 +251,13 @@
     .hero {
         display: block;
         position: relative;
-        width: 100%; /* Make it responsive to parent container */
+        width: 100%;
+        /* Make it responsive to parent container */
         border-radius: 30px;
         overflow: hidden;
         box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
-        min-height: 300px; 
-        aspect-ratio: 1; 
+        min-height: 300px;
+        aspect-ratio: 1;
     }
 
     .hero-profile-img {
@@ -256,16 +296,22 @@
         left: 90px;
         bottom: 26%;
         font-size: 16px;
-        width: calc(100% - 100px); /* Adjust width to fit the available space */
-        overflow: hidden;           /* Make sure overflow is hidden in the parent container */
+        width: calc(100% - 100px);
+        /* Adjust width to fit the available space */
+        overflow: hidden;
+        /* Make sure overflow is hidden in the parent container */
         font-family: 'Poppins', sans-serif;
     }
-    
+
     .text-overflow {
-        white-space: nowrap;       /* Prevents text from wrapping */
-        overflow: hidden;          /* Hides overflow content */
-        text-overflow: ellipsis;   /* Displays ellipsis when text overflows */
-        display: block;            /* Ensures it takes the full container width */
+        white-space: nowrap;
+        /* Prevents text from wrapping */
+        overflow: hidden;
+        /* Hides overflow content */
+        text-overflow: ellipsis;
+        /* Displays ellipsis when text overflows */
+        display: block;
+        /* Ensures it takes the full container width */
     }
 
     .hero-date {
@@ -286,13 +332,14 @@
         font-size: 14px;
         font-weight: bold;
         border: 2px solid #ffffff;
-        background-color:  #B22222; /* Light pink-beige background */
+        background-color: #B22222;
+        /* Light pink-beige background */
         color: white;
         border-radius: 15px;
         font-family: 'Poppins', sans-serif;
     }
 
-    .edit-listing{
+    .edit-listing {
         position: absolute;
         color: #000000;
         left: 15px;
@@ -302,7 +349,8 @@
         border: 2px solid #f9f9f9;
         font-weight: bold;
         color: white;
-        background-color: #B22222; /* Light pink-beige background */
+        background-color: #B22222;
+        /* Light pink-beige background */
         font-family: 'Poppins', sans-serif;
         border-radius: 15px;
     }
@@ -317,7 +365,7 @@
         font-size: 14px;
         font-weight: bold;
         border: 2px solid #ffffff;
-        background-color:  #28a745;
+        background-color: #28a745;
         border-radius: 15px;
         font-family: 'Poppins', sans-serif;
         color: white;
@@ -331,10 +379,12 @@
             height: 50px;
             width: 50px;
         }
+
         .hero-description {
             font-size: 14px;
             left: 80px;
         }
+
         .hero-date,
         .hero-btn {
             font-size: 12px;
@@ -345,8 +395,10 @@
     .hero-logo img {
         width: 100%;
         height: 100%;
-        object-fit: contain; /* or you can try scale-down */
-        object-position: center; /* Center the image within the square */
+        object-fit: contain;
+        /* or you can try scale-down */
+        object-position: center;
+        /* Center the image within the square */
     }
 
 
@@ -354,61 +406,81 @@
 
     .card-content-expanded {
         padding: 15px;
-        background-color: #f59090; /* Optional: Set background color */
+        background-color: #f59090;
+        /* Optional: Set background color */
         word-wrap: break-word;
         overflow: hidden;
-        border-radius: 10px; /* Optional: Rounded corners */
+        border-radius: 10px;
+        /* Optional: Rounded corners */
     }
 
     .return-button {
-        float: left;             /* Moves the button to the right side */
-        border-radius: 30%;       /* Applies a 30% border radius */
-        margin-top: 2%;         /* Adds a little space above the button */
+        float: left;
+        /* Moves the button to the right side */
+        border-radius: 30%;
+        /* Applies a 30% border radius */
+        margin-top: 2%;
+        /* Adds a little space above the button */
     }
 
     .return {
         position: absolute;
         color: #000000;
         left: 10px;
-        top: 2%;
+        top: 4%;
         padding: 5px 10px;
         font-size: 14px;
-        border: 2px solid #f9f9f9;
-        background-color:  #B22222;
+        border: 2px solid #f9f9f900;
+        background-color: #ffffff00;
         border-radius: 15px;
         font-family: 'Poppins', sans-serif;
     }
 
     .card-content-expanded {
         padding: 15px;
-        word-wrap: break-word; /* Break long words to prevent overflow */
-        overflow: hidden;      /* Hide any content that might overflow */
+        word-wrap: break-word;
+        /* Break long words to prevent overflow */
+        overflow: hidden;
+        /* Hide any content that might overflow */
     }
+
     .list-item-name {
         color: white !important;
-        white-space: nowrap;       /* Prevent text from wrapping */
-        overflow: hidden;          /* Hide the overflow */
-        text-overflow: ellipsis;   /* Display ellipsis (...) when text overflows */
-        display: block;            /* Make it a block element */
-        width: 100%;               /* Ensure it takes up the full width of its container */
-        padding-left: 15%;
+        white-space: nowrap;
+        /* Prevent text from wrapping */
+        overflow: hidden;
+        /* Hide the overflow */
+        text-overflow: ellipsis;
+        /* Display ellipsis (...) when text overflows */
+        display: block;
+        /* Make it a block element */
+        width: 100%;
+        /* Ensure it takes up the full width of its container */
+        padding-left: 0%;
     }
-    
+
     .list-text {
-        white-space: nowrap;       /* Prevent text from wrapping to a new line */
-        overflow: hidden;          /* Hide overflow */
-        text-overflow: ellipsis;   /* Show ellipsis when text overflows */
-        display: block;            /* Ensure it applies as a block element */
-        width: 100%;               /* Make sure it takes the container's width */
+        white-space: nowrap;
+        /* Prevent text from wrapping to a new line */
+        overflow: hidden;
+        /* Hide overflow */
+        text-overflow: ellipsis;
+        /* Show ellipsis when text overflows */
+        display: block;
+        /* Ensure it applies as a block element */
+        width: 100%;
+        /* Make sure it takes the container's width */
         color: #fff;
         margin-bottom: 2px;
     }
 
     .no-space {
-        margin: 0;           /* Remove any margin */
-        padding: 0;          /* Remove any padding */
+        margin: 0;
+        /* Remove any margin */
+        padding: 0;
+        /* Remove any padding */
     }
-    
+
 
     /* Center items only when col-8 is applied */
     @media (max-width: 768px) {
@@ -418,98 +490,99 @@
         }
     }
 
-    .buttoncolor{
+    .buttoncolor {
         background-color: #B22222 !important;
-        color: white !important ;
+        color: white !important;
     }
 
-    @media (max-width: 449px) { 
+    @media (max-width: 449px) {
+
         /* Styles for screens between 576px and 767px */
-        .list-text{
+        .list-text {
             font-size: 16px
         }
-        
-        .list-item-name{
+
+        .list-item-name {
             font-size: 24px
         }
-        .return{
-        top: 0.5%; /* Reduced padding */
-    }
+
     }
 
     /* Extra Small (XS): Phones in portrait */
-    @media (min-width: 425px) and (max-width: 479px) { 
+    @media (min-width: 425px) and (max-width: 479px) {
+
         /* Styles for screens between 576px and 767px */
-        .list-text{
+        .list-text {
             font-size: 18px
         }
-        
-        .list-item-name{
+
+        .list-item-name {
             font-size: 24px
         }
-        .return{
-            top: 0.5%; /* Reduced padding */
+
     }
 
-/* Small (SM): Phones in landscape */
-@media (min-width: 480px) and (max-width: 767.99px) {
-    .list-text {
-        font-size: 12px;
-    }
+        /* Small (SM): Phones in landscape */
+        @media (min-width: 480px) and (max-width: 767.99px) {
+            .list-text {
+                font-size: 18px;
+            }
 
-    .list-item-name {
-        font-size: 20px;
-    }
-}
-
-/* Medium (MD): Tablets */
-@media (min-width: 768px) and (max-width: 991px) {
-    .list-text {
-        font-size: 12px;
-    }
-
-    .list-item-name {
-        font-size: 18px;
-    }
-}
-
-    /* Large (LG): Desktops and larger tablets */
-    @media (min-width: 992px) and (max-width: 1199px) { 
-        /* Styles for screens between 992px and 1199px */
-        .list-text{
-            font-size: 10px
+            .list-item-name {
+                font-size: 28px;
+            }
         }
-        
-        .list-item-name{
-            font-size: 12px
-        }
-    }
 
-    /* Extra Large (XL): Larger desktops */
-    @media (min-width: 1200px) and (max-width: 1399px) { 
-        /* Styles for screens between 1200px and 1399px */
-        .list-text{
-            font-size: 13px
-        }
-        
-        .list-item-name{
-            font-size: 24px
-        }
-    }
+        /* Medium (MD): Tablets */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .list-text {
+                font-size: 14px;
+            }
 
-    /* Extra Extra Large (XXL): Very large screens */
-    @media (min-width: 1400px) { 
-        /* Styles for screens ≥1400px */
-        .list-text{
-            font-size: 15px
+            .list-item-name {
+                font-size: 24px;
+            }
         }
-        
-        .list-item-name{
-            font-size: 28px
-        }
-    }
 
-    .green-button{
-        background-color: #28a745 !important;
-        color:white !important;
-    }
+        /* Large (LG): Desktops and larger tablets */
+        @media (min-width: 992px) and (max-width: 1199px) {
+
+            /* Styles for screens between 992px and 1199px */
+            .list-text {
+                font-size: 16px
+            }
+
+            .list-item-name {
+                font-size: 28px
+        }
+
+        /* Extra Large (XL): Larger desktops */
+        @media (min-width: 1200px) and (max-width: 1399px) {
+
+            /* Styles for screens between 1200px and 1399px */
+            .list-text {
+                font-size: 18px
+            }
+
+            .list-item-name {
+                font-size: 28px
+            }
+        }
+
+        /* Extra Extra Large (XXL): Very large screens */
+        @media (min-width: 1400px) {
+
+            /* Styles for screens ≥1400px */
+            .list-text {
+                font-size: 24px
+            }
+
+            .list-item-name {
+                font-size: 28px
+            }
+        }
+
+        .green-button {
+            background-color: #28a745 !important;
+            color: white !important;
+        }

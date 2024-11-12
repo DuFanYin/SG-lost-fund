@@ -7,7 +7,7 @@
 
 @media (min-width: 992px) {
     #pointShopModal .modal-content {
-        min-height: 750px;
+        min-height: 1000px;
         /* Minimum height for even larger screens */
     }
 }
@@ -62,17 +62,20 @@
 .green-button{
     background-color: #28a745 !important;
     color: white !important;
-    font-weight: bold;
+    font-weight: bold !important;
+    border: 2px white solid ;
 }
 
 .red-button{
     background-color: #B22222 !important;
     color: white !important;
-    font-weight: bold;
+    font-weight: bold !important;
+    border: 2px white solid ;
 }
 
 .blue-button{
     background-color: #0013a4d5 !important;
     color: white !important;
-    font-weight: bold;
+    font-weight: bold !important;
+    border: 2px white solid ;
 }

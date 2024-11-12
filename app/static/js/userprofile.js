@@ -92,7 +92,8 @@ const profile = Vue.createApp({
             return {
                 backgroundImage: this.selectedBackground ? `url(${this.selectedBackground})` : '',
                 backgroundSize: 'cover',
-                backgroundPosition: 'center'
+                backgroundPosition: 'center',
+                backgroundColor: this.selectedBackground ? '' : '#f5f5f5' // Replace #f5f5f5 with your desired color
             };
         },
         paginatedItems() {

@@ -12,6 +12,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favicon-16x16.png">
     <link rel="manifest" href="../static/site.webmanifest">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -33,7 +34,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script> <!-- Add this line -->
 </head>
 
-<body>
+<body class="bg3">
     <!-- Navbar placeholder -->
     <div id="navbar-placeholder"></div>
     <!-- Load the JavaScript to include the Navbar -->
@@ -147,8 +148,7 @@
 
 
                                         <div class="button-container">
-                                            <button class="return return-button" @click="toggleExpand(item)">
-                                                <i class="bi bi-arrow-left"></i>
+                                            <button class="return return-button btn-close btn-close-white" @click="toggleExpand(item)">
                                             </button>
                                         </div>
                                     </div>
@@ -211,8 +211,7 @@
 
 
                                         <div class="button-container">
-                                            <button class="return return-button" @click="toggleExpand(item)">
-                                                <i class="bi bi-arrow-left"></i>
+                                            <button class="return return-button btn-close btn-close-white" @click="toggleExpand(item)">
                                             </button>
                                         </div>
                                     </div>
