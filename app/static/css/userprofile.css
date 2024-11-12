@@ -29,12 +29,14 @@
         font-weight: bold;
         line-height: 1;
         margin-bottom: -20px;
+        font-family: 'Poppins', sans-serif;
     }
 
     .profile_username {
         font-size: 16px;
         line-height: 1;
         margin-bottom: 10px;
+        font-family: 'Poppins', sans-serif;
     }
 
     .bg1 {
@@ -71,9 +73,9 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Larger shadow to create a pop-out effect */
 }
 
-.underline {
+/* .underline {
     text-decoration: underline;
-}
+} */
 
     .badge-custom {
         background-color: #007bff;
@@ -83,6 +85,7 @@
         border-radius: 0.5rem;
         font-weight: 500;
         text-transform: capitalize;
+        font-family: 'Poppins', sans-serif;
     }
 
     .animated-text {
@@ -90,6 +93,7 @@
         font-weight: bold;
         color: #333;
         animation: fadeIn 1.5s ease-in-out;
+        font-family: 'Poppins', sans-serif;
     }
 
     /* Animation */
@@ -252,6 +256,16 @@
         left: 90px;
         bottom: 26%;
         font-size: 16px;
+        width: calc(100% - 100px); /* Adjust width to fit the available space */
+        overflow: hidden;           /* Make sure overflow is hidden in the parent container */
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .text-overflow {
+        white-space: nowrap;       /* Prevents text from wrapping */
+        overflow: hidden;          /* Hides overflow content */
+        text-overflow: ellipsis;   /* Displays ellipsis when text overflows */
+        display: block;            /* Ensures it takes the full container width */
     }
 
     .hero-date {
@@ -260,6 +274,7 @@
         left: 15px;
         bottom: 10%;
         font-size: 14px;
+        font-family: 'Poppins', sans-serif;
     }
 
     .hero-btn {
@@ -269,9 +284,12 @@
         bottom: 10%;
         padding: 5px 10px;
         font-size: 14px;
-        border: 1px solid #f9f9f9;
-        background-color:  #fef5f3; /* Light pink-beige background */
+        font-weight: bold;
+        border: 2px solid #ffffff;
+        background-color:  #B22222; /* Light pink-beige background */
+        color: white;
         border-radius: 15px;
+        font-family: 'Poppins', sans-serif;
     }
 
     .edit-listing{
@@ -281,8 +299,11 @@
         bottom: 10%;
         padding: 5px 15px;
         font-size: 14px;
-        border: 1px solid #f9f9f9;
-        background-color: #fef5f3; /* Light pink-beige background */
+        border: 2px solid #f9f9f9;
+        font-weight: bold;
+        color: white;
+        background-color: #B22222; /* Light pink-beige background */
+        font-family: 'Poppins', sans-serif;
         border-radius: 15px;
     }
 
@@ -294,9 +315,12 @@
         bottom: 10%;
         padding: 5px 10px;
         font-size: 14px;
-        border: 1px solid #f9f9f9;
-        background-color:  #fef5f3;
+        font-weight: bold;
+        border: 2px solid #ffffff;
+        background-color:  #28a745;
         border-radius: 15px;
+        font-family: 'Poppins', sans-serif;
+        color: white;
     }
 
 
@@ -352,6 +376,7 @@
         border: 1px solid #f9f9f9;
         background-color:  #fef5f3;
         border-radius: 15px;
+        font-family: 'Poppins', sans-serif;
     }
 
     .card-content-expanded {
@@ -359,9 +384,14 @@
         word-wrap: break-word; /* Break long words to prevent overflow */
         overflow: hidden;      /* Hide any content that might overflow */
     }
-
     .list-item-name {
         color: white !important;
+        white-space: nowrap;       /* Prevent text from wrapping */
+        overflow: hidden;          /* Hide the overflow */
+        text-overflow: ellipsis;   /* Display ellipsis (...) when text overflows */
+        display: block;            /* Make it a block element */
+        width: 100%;               /* Ensure it takes up the full width of its container */
+        padding-left: 15%;
     }
     
     .list-text {
@@ -371,6 +401,12 @@
         display: block;            /* Ensure it applies as a block element */
         width: 100%;               /* Make sure it takes the container's width */
         color: #fff;
+        margin-bottom: 2px;
+    }
+
+    .no-space {
+        margin: 0;           /* Remove any margin */
+        padding: 0;          /* Remove any padding */
     }
     
 
@@ -447,4 +483,9 @@
         .list-item-name{
             font-size: 28px
         }
+    }
+
+    .green-button{
+        background-color: #28a745 !important;
+        color:white !important;
     }
