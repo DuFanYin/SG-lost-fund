@@ -92,8 +92,7 @@ const profile = Vue.createApp({
             return {
                 backgroundImage: this.selectedBackground ? `url(${this.selectedBackground})` : '',
                 backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundColor: this.selectedBackground ? '' : '#f5f5f5' // Replace #f5f5f5 with your desired color
+                backgroundPosition: 'center'
             };
         },
         paginatedItems() {
@@ -519,9 +518,17 @@ const profile = Vue.createApp({
                     username: this.username,
                     profiledesc: this.profiledesc,
                 });
+
+                const editProfileModal = document.getElementById('editProfileModal');
+                const modalInstance = bootstrap.Modal.getInstance(editProfileModal); 
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+
                 console.log("Profile successfully updated!");
                 sessionStorage.setItem('username', this.username);
                 sessionStorage.setItem('profiledesc', this.profiledesc);
+
                 const successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
             } catch (error) {
