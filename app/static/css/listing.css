@@ -10,7 +10,12 @@ body {
     animation: gradientAnimation 10s ease infinite;
     padding: 0;
 }
-   
+
+.buttoncolor{
+    background-color: #B22222 !important;
+    color: white !important ;
+}
+
 @keyframes gradientAnimation {
     0% {
         background-position: 0% 50%;
@@ -135,7 +140,9 @@ hr {
 #progressbar li.active:before {
     background: #f07c6c;
     color: white;
+    
 }
+
 
 #progressbar li:after {
     content: '';
@@ -149,8 +156,9 @@ hr {
 }
 
 #progressbar li.active:after {
-    background: #f07c6c;
+    background: #B22222 !important;
 }
+
 
 #progressbar li:first-child:after {
     content: none;
@@ -165,7 +173,7 @@ hr {
 
 /* Button Design */
 .btn-custom-next {
-    background-color: #c46e6c !important;
+    background-color: #B22222 !important;
     color: white !important;
     padding: 12px 20px; /* Adjust padding to allow text to influence the button width */
     white-space: nowrap; /* Prevents text wrapping */
@@ -176,7 +184,7 @@ hr {
 
 
 .btn-custom-next:hover {
-    background-color: #c46e6c !important;
+    background-color: #B22222 !important;
     color: white !important;
 }
 
