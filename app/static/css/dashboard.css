@@ -4,10 +4,25 @@ body {
     min-height: 100vh;
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: #fef5f3 !important;
+    /* background-color: #fef5f3 !important; */
+    background: linear-gradient(45deg, #fff5f5, #ffebeb, #ffdada, #ffb3b3, #ff8080);
+    background-size: 300% 300%;
+    animation: gradientAnimation 10s ease infinite;
     padding: 0;
 }
-   
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 #footer-placeholder {
     width: 100%;
 }
@@ -28,13 +43,16 @@ html {
 
 .dropdown-container {
     position: absolute;
-    top: 10px; /* Adjust to avoid overlapping with title */
+    top: 10px;
+    /* Adjust to avoid overlapping with title */
     right: 10px;
     z-index: 2;
-    background-color: rgba(255, 255, 255, 0.9); /* Optional: background for visibility */
+    background-color: rgba(255, 255, 255, 0.9);
+    /* Optional: background for visibility */
     border-radius: 20%;
     padding: 5px;
-    min-width: 100px; /* Ensures proper width */
+    min-width: 100px;
+    /* Ensures proper width */
 }
 
 
@@ -68,7 +86,8 @@ html {
 .table {
     width: 100%;
     max-width: 100%;
-    table-layout: auto; /* Allows the table to expand based on content */
+    table-layout: auto;
+    /* Allows the table to expand based on content */
 }
 
 
@@ -134,7 +153,8 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5em; /* Default font size */
+    font-size: 1.5em;
+    /* Default font size */
 }
 
 
@@ -207,9 +227,11 @@ html {
 } */
 
 .highlight-current-user td {
-    background-color: #fee2e2 !important; /* Bright yellow for highlighting */
+    background-color: #fee2e2 !important;
+    /* Bright yellow for highlighting */
     font-weight: bold;
-    color: #333; /* Dark text color for contrast */
+    color: #333;
+    /* Dark text color for contrast */
 }
 
 
@@ -223,7 +245,7 @@ html {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    color:white;
+    color: white;
 }
 
 .container-fluid {
@@ -317,29 +339,56 @@ html {
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
 }
 
 .line {
-    border-top: 6px solid #B30000; /* Change this to the desired thickness and color */
-    padding-top: 10px; /* Optional: Add padding to the top for spacing */
-    margin-top: 10px; /* Optional: Add margin if needed */
+    border-top: 6px solid #B30000;
+    /* Change this to the desired thickness and color */
+    padding-top: 10px;
+    /* Optional: Add padding to the top for spacing */
+    margin-top: 10px;
+    /* Optional: Add margin if needed */
 }
-.background-color{
-background-color: #fef5f3; /* Light pink-beige background */}
 
+/* .background-color { */
+    /* background-color: #fef5f3;  */
+    /* background: linear-gradient(45deg, #fff5f5, #ffebeb, #ffdada, #ffb3b3, #ff8080);
+    background-size: 300% 300%;
+    animation: gradientAnimation 10s ease infinite;
+} */
 
+/* @keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+} */
 
 
 .subscription-card {
-    background-color: #fff7f5; /* Light pink background */
+    background-color: #fff7f5;
+    /* Light pink background */
     border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    min-height: 200px;  /* Minimum height to maintain uniformity */
+    min-height: 200px;
+    /* Minimum height to maintain uniformity */
 
 }
 
@@ -348,23 +397,25 @@ background-color: #fef5f3; /* Light pink-beige background */}
 .icon-circle1 {
     width: 50px;
     height: 50px;
-    background-color: #f3e7ff; /* Light purple background */
+    background-color: #f3e7ff;
+    /* Light purple background */
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 15px;
-    padding: 30px;  /* Increase padding to make the circle bigger */
+    padding: 30px;
+    /* Increase padding to make the circle bigger */
 
 
- 
+
 }
 
 /* Icon circle styling */
 .icon-circle2 {
     width: 50px;
     height: 50px;
-    background-color: #dcf8fa; 
+    background-color: #dcf8fa;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -377,7 +428,7 @@ background-color: #fef5f3; /* Light pink-beige background */}
 .icon-circle3 {
     width: 50px;
     height: 50px;
-    background-color: #fbedf2; 
+    background-color: #fbedf2;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -390,47 +441,60 @@ background-color: #fef5f3; /* Light pink-beige background */}
 
 .icon-tag1 {
     font-size: 24px;
-    color: #6A0DAD; /* Purple icon color */
+    color: #6A0DAD;
+    /* Purple icon color */
 }
 
 
 .icon-tag2 {
     font-size: 24px;
-    color: #6daabf; /* Purple icon color */
+    color: #6daabf;
+    /* Purple icon color */
 }
 
 
 .icon-tag3 {
     font-size: 24px;
-    color: #e0a3b6; /* Purple icon color */
+    color: #e0a3b6;
+    /* Purple icon color */
 }
 
 /* Subscription info styling */
-.registered-users h2, .lost-item-reports h2, .recovered-items h2 {
+.registered-users h2,
+.lost-item-reports h2,
+.recovered-items h2 {
     margin: 0;
     font-size: 24px;
     font-weight: bold;
-    color: #333; /* Dark text color */
+    color: #333;
+    /* Dark text color */
 }
 
-.registered-users p, .lost-item-reports p, .recovered-items p {
+.registered-users p,
+.lost-item-reports p,
+.recovered-items p {
     margin: 0;
     font-size: 18px;
-    color: #666; /* Gray text color */
+    color: #666;
+    /* Gray text color */
 }
 
 
 
 .card-content {
-    padding: 30px; /* Adds padding around the content */
+    padding: 30px;
+    /* Adds padding around the content */
     display: flex;
     align-items: center;
-    justify-content: center;  /* Centers content vertically */
+    justify-content: center;
+    /* Centers content vertically */
 }
 
 .card-header {
-    background-color: #f8f9fa; /* Light background */
-    border-bottom: 1px solid #ddd; /* Subtle border for separation */
+    background-color: #f8f9fa;
+    /* Light background */
+    border-bottom: 1px solid #ddd;
+    /* Subtle border for separation */
 }
 
 .trophy-icon {
@@ -439,9 +503,11 @@ background-color: #fef5f3; /* Light pink-beige background */}
 }
 
 h1.text-dark {
-    font-size: 1.5rem; /* Adjust font size if needed */
+    font-size: 1.5rem;
+    /* Adjust font size if needed */
 }
-.leaderboard-bg{
+
+.leaderboard-bg {
     background-color: #f5e9e4;
     padding-top: 20px;
     border-radius: 5px;
@@ -466,11 +532,14 @@ h1.text-dark {
     color: black;
 }
 
-.dropdown-container{
-    margin-top: -10px; /* Adjust the value as needed */
-    width: 100%; /* Ensure the dropdown is responsive */
+.dropdown-container {
+    margin-top: -10px;
+    /* Adjust the value as needed */
+    width: 100%;
+    /* Ensure the dropdown is responsive */
 
 }
+
 .dropdown-container select {
     max-width: 120px;
 }
@@ -502,13 +571,15 @@ h1.text-dark {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    width: 100%;      
+    width: 100%;
 }
 
 @media (max-width: 576px) {
     .subscription-card2 {
-        height: auto; /* Ensure height is based on content */
-        min-height: auto; /* Ensure no minimum height is forcing the card to a fixed size */
+        height: auto;
+        /* Ensure height is based on content */
+        min-height: auto;
+        /* Ensure no minimum height is forcing the card to a fixed size */
     }
 }
 
@@ -522,7 +593,8 @@ h1.text-dark {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap; /* Allows wrapping of elements on smaller screens */
+    flex-wrap: wrap;
+    /* Allows wrapping of elements on smaller screens */
 }
 
 /* Adjust the title font size for smaller screens */
@@ -535,10 +607,14 @@ h1.text-dark {
 /* Responsive table */
 .table-responsive {
 
-    overflow-x: auto; /* Ensures the table is scrollable on small screens */
-    -webkit-overflow-scrolling: touch;  /* Enables smooth scrolling on mobile devices */
-    max-width: 100%;      /* Ensure it doesn't exceed the parent container's width */
+    overflow-x: auto;
+    /* Ensures the table is scrollable on small screens */
+    -webkit-overflow-scrolling: touch;
+    /* Enables smooth scrolling on mobile devices */
+    max-width: 100%;
+    /* Ensure it doesn't exceed the parent container's width */
 }
+
 @media (max-width: 768px) {
     .table-responsive {
         padding-left: 10px;
@@ -556,34 +632,46 @@ h1.text-dark {
         font-size: 16px;
     }
 }
+
 @media (max-width: 300px) {
     .table-responsive {
-        font-size: 12px; /* Adjust font size for very small screens */
+        font-size: 12px;
+        /* Adjust font size for very small screens */
     }
 
-    .table th, .table td {
-        padding: 4px; /* Reduce padding to fit content */
+    .table th,
+    .table td {
+        padding: 4px;
+        /* Reduce padding to fit content */
     }
 
     .table {
         width: 100%;
     }
 }
+
 .table {
-    table-layout: fixed; /* Ensures table columns don't overflow */
+    table-layout: fixed;
+    /* Ensures table columns don't overflow */
     word-wrap: break-word;
 }
 
 /* Adjust table styling for smaller widths */
 @media (max-width: 480px) {
-    .table th, .table td {
-        padding: 6px; /* Reduce padding slightly */
+
+    .table th,
+    .table td {
+        padding: 6px;
+        /* Reduce padding slightly */
     }
 }
 
 @media (max-width: 768px) {
-    .table th, .table td {
-        padding: 8px; /* Slightly larger padding for tablets */
+
+    .table th,
+    .table td {
+        padding: 8px;
+        /* Slightly larger padding for tablets */
     }
 }
 
