@@ -201,6 +201,7 @@ function sanitizeHTML(strings) {
 
 
 function userLocation() {
+    showLoadingScreen();
     const defaultPos = { lat: 1.3521, lng: 103.8198 }; // Singapore center
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
@@ -263,12 +264,8 @@ function hideLoadingScreen() {
     }
 }
 
-// Call `showLoadingScreen` to start the process
-showLoadingScreen();
 
 async function renderMapWithFeatures(centerPosition) {
-    showLoadingScreen();
-
 
     const navElement = document.querySelector("nav");
     const navHeight = navElement ? navElement.offsetHeight : 0;
@@ -732,7 +729,6 @@ async function displayComment(commentData, commentId) {
 
     const commentElement = document.createElement('div');
     commentElement.classList.add('comment', 'mb-3', 'p-2', 'border', 'rounded', 'd-flex', 'align-items-start');
-
     commentElement.setAttribute('data-id', commentId); // Set the commentId in the data-id attribute
 
     const userProfileLink = `./other_profile?uid=${commentData.userId}`;
@@ -742,7 +738,7 @@ async function displayComment(commentData, commentId) {
         <div class="d-flex align-items-start">
             <img src="${userAvatar}" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px;">
             <div>
-                <a href="${userProfileLink}" class="fw-bold text-primary">${sanitizeHTML`${commentData.username}`}</a>
+                <a id ="userLink" href="${userProfileLink}" class="fw-bold text-primary">${sanitizeHTML`${commentData.username}`}</a>
                 <span class="text-muted">(${new Date(commentData.timestamp).toLocaleString()})</span>
                 <p class="mb-1 comment-message">${sanitizeHTML`${commentData.message}`}</p>
             </div>
@@ -761,8 +757,8 @@ async function displayComment(commentData, commentId) {
         const buttonsContainer = document.createElement('div');
         buttonsContainer.classList.add('d-flex', 'justify-content-between', 'flex-wrap', 'mt-2', 'buttons-container');
         buttonsContainer.innerHTML = `
-            <button class="btn btn-sm btn-link edit-comment" data-id="${commentId}" title="Edit" style="padding: 15px;"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-sm btn-link text-danger delete-comment" data-id="${commentId}" title="Delete" style="padding: 8px;"><i class="fas fa-trash-alt"></i></button>
+            <button class="btn btn-sm btn-link edit-comment" data-id="${commentId}" title="Edit" style="padding: 15px;margin:auto"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-sm btn-link text-danger delete-comment" data-id="${commentId}" title="Delete" style="padding: 8px;margin:auto"><i class="fas fa-trash-alt"></i></button>
         `;
         commentElement.querySelector('div > div').appendChild(buttonsContainer);
 
@@ -963,7 +959,6 @@ function addItemInfo(data, item) {
 
         infoPanel.innerHTML = '';
         const content =
-
             `
             <div class="info-panel-content p-3 text-center">
             <img style="width: 100%; height: auto; border-radius: 10px; border: 2px solid #ddd;" src="${imageURL}">

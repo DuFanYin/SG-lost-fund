@@ -380,7 +380,7 @@ p {
     align-items: flex-start;
     width: 105%;
     /* Ensure it takes full width of the comment section */
-    max-width: 110%;
+    max-width: 100%;
     /* Prevent overflow */
     text-overflow: ellipsis;
 }
@@ -391,7 +391,7 @@ p {
     margin-right: 10px;
 }
 
-.comment p {
+.comment p, #userLink {
     word-wrap: break-word;
     word-break: break-all;
     white-space: normal;
