@@ -46,13 +46,13 @@ const app = Vue.createApp({
                         this.unreadCount = (this.notifications || []).filter(n => !n.read).length;
                         console.log("Notifications loaded:", this.notifications);
                     } else {
-                        console.error("User document does not exist.");
+                        console.log("User document does not exist.");
                         this.notifications = [];
                     }
                 },
                 (error) => {
                     // Error handling callback for onSnapshot
-                    console.error("Error listening to notifications:", error);
+                    console.log("Error listening to notifications:", error);
                     this.notifications = []; // Ensure it's an empty array on error
                 }
             );
@@ -91,13 +91,13 @@ const app = Vue.createApp({
                     notifications: this.notifications,
                 });
             } catch (error) {
-                console.error("Error updating notifications:", error);
+                console.log("Error updating notifications:", error);
             }
         },
         async deleteNotification(index) {
             const userId = sessionStorage.getItem('uid');
             if (!userId) {
-                console.error("User ID not found in session storage");
+                console.log("User ID not found in session storage");
                 return;
             }
 
@@ -116,7 +116,7 @@ const app = Vue.createApp({
 
                 console.log("Notification deleted successfully");
             } catch (error) {
-                console.error("Error deleting notification:", error);
+                console.log("Error deleting notification:", error);
             }
         },
 
@@ -130,7 +130,7 @@ const app = Vue.createApp({
                 // dropdown.toggle();
                 dropdownElement.addEventListener('click', () => dropdown.toggle());
             } else {
-                console.error("Notification dropdown element not found.");
+                console.log("Notification dropdown element not found.");
             }
         },
 
@@ -145,7 +145,7 @@ const app = Vue.createApp({
         setupRealTimeListener() {
             const userId = sessionStorage.getItem('uid'); // Assuming you store the user ID in session storage
             if (!userId) {
-                console.error("User ID not found in session storage");
+                console.log("User ID not found in session storage");
                 return;
             }
 
@@ -168,7 +168,7 @@ const app = Vue.createApp({
                             item.purchased = userData[item.field] || false;
                         });
                     } else {
-                        console.error("Document does not exist");
+                        console.log("Document does not exist");
                     }
                 }); // Close onSnapshot correctly here
         },
@@ -228,7 +228,7 @@ const app = Vue.createApp({
 
                 }
             } catch (error) {
-                console.error("Error fetching user items:", error);
+                console.log("Error fetching user items:", error);
             }
         },
         toggleElementVisibility() {
@@ -237,7 +237,7 @@ const app = Vue.createApp({
                 elementToHide.classList.toggle("hidden"); // Toggle the 'hidden' class
                 console.log("Toggle applied to element.");
             } else {
-                console.error("Element to toggle not found.");
+                console.log("Element to toggle not found.");
             }
         },
         async purchaseItem(item) {
@@ -265,7 +265,7 @@ const app = Vue.createApp({
 
                     console.log(`Purchased ${item.name} for ${item.points} points`);
                 } catch (error) {
-                    console.error("Error updating Firestore:", error);
+                    console.log("Error updating Firestore:", error);
                 }
             } else if (item.purchased) {
                 console.log(`Selected ${item.name}`);
@@ -278,7 +278,7 @@ const app = Vue.createApp({
         async selectItem(item) {
             const userId = sessionStorage.getItem('uid');
             if (!userId) {
-                console.error("User ID not found in session storage");
+                console.log("User ID not found in session storage");
                 return;
             }
 
@@ -330,7 +330,7 @@ const app = Vue.createApp({
                 }
 
             } catch (error) {
-                console.error("Error updating selected item in Firestore:", error);
+                console.log("Error updating selected item in Firestore:", error);
             }
         },
 
@@ -373,4 +373,4 @@ fetch('/navbar')
         document.getElementById('navbar-placeholder').innerHTML = data;
         app.mount('#navbar-placeholder');
     })
-    .catch(error => console.error('Error loading navbar:', error));
+    .catch(error => console.log('Error loading navbar:', error));

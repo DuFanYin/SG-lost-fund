@@ -66,7 +66,7 @@ Vue.createApp({
                 // Redirect to dashboard or other page
                 // window.location.href = '/dash_board';
             } catch (error) {
-                console.error('Error logging in:', error);
+                console.log('Error logging in:', error);
                 console.log('Firebase error code:', error.code); // Log error code for debugging
 
                 // this.errorMessage = 'Error logging in: ' + error.message;
@@ -139,7 +139,7 @@ Vue.createApp({
                 }, 2000);
 
             } catch (error) {
-                console.error('Error logging in with Google:', error);
+                console.log('Error logging in with Google:', error);
                 const errorMessages = {
                     "auth/popup-closed-by-user": "The popup was closed before completing the sign-in.",
                     "auth/cancelled-popup-request": "The popup was cancelled. Please try again.",
