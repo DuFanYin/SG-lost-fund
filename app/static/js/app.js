@@ -926,7 +926,7 @@ function addItemInfo(data, item) {
             </div>
             <!-- Modal Structure -->
             <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg custom-modal-right">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="reviewModalLabel">Write a Comment</h5>
