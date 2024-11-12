@@ -243,9 +243,9 @@ function showLoadingScreen() {
     }
 
     // After 2 seconds, hide the loading screen and show the map
-    setTimeout(() => {
-        hideLoadingScreen();
-    }, 2000);
+    // setTimeout(() => {
+    //     hideLoadingScreen();
+    // }, 2000);
 }
 
 function hideLoadingScreen() {
@@ -266,7 +266,6 @@ function hideLoadingScreen() {
 
 
 async function renderMapWithFeatures(centerPosition) {
-
     const navElement = document.querySelector("nav");
     const navHeight = navElement ? navElement.offsetHeight : 0;
     document.getElementById("map").style.height = `calc(100vh - ${navHeight}px)`;
@@ -313,9 +312,9 @@ async function renderMapWithFeatures(centerPosition) {
     addCustomMarker();
     uniqueDates = Array.from(temp)
         .sort((a, b) => a - b)
-        .map(date => date.toDateString())
+        .map(date => formatSingaporeTime(date))
         .filter((date, index, self) => self.indexOf(date) === index);
-
+    hideLoadingScreen();
     const togglePanelButton = document.getElementById('toggle-panel-button');
     togglePanelButton.addEventListener('click', () => {
         if (panel.classList.contains('open')) {
@@ -364,7 +363,7 @@ async function renderMapWithFeatures(centerPosition) {
                         <h2>${item_name}</h2>
                         <div class="d-flex flex-column align-items-start">
                             <p><i class="fas fa-info-circle text-danger"></i> <b>Description:</b> ${item_description}</p>
-                            <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${found_timestamp}</p>
+                            <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${formatSingaporeTime(found_timestamp, true)}</p>
                             <p><i class="fas fa-user text-danger"></i> <b>Username:</b> <a href="${userProfileLink}">${user.username}</a></p>
                             <p><i class="fas fa-envelope text-danger"></i> <b>Email:</b> <a href="mailto:${user.username}">${user.email}</a></p>
                             <p><i class="fas fa-handshake text-danger"></i> <b>Handoff Method:</b> ${handoff_method}</p>
@@ -454,11 +453,16 @@ async function renderMapWithFeatures(centerPosition) {
         }
 
         const closeButton = document.createElement('button');
-        closeButton.textContent = 'X';
-        closeButton.classList.add('close-button');
+        closeButton.innerHTML = '<i class="fas fa-times"></i>'; // Using Font Awesome's "times" icon
+        closeButton.classList.add('icon-close-button');
         closeButton.style.position = 'absolute';
         closeButton.style.top = '10px';
         closeButton.style.right = '10px';
+        closeButton.style.background = 'none';
+        closeButton.style.border = 'none';
+        closeButton.style.fontSize = '20px';
+        closeButton.style.color = '#666';
+        closeButton.style.cursor = 'pointer';
         closeButton.addEventListener('click', () => {
             infoPanel.style.display = 'none';
             document.getElementById('toggle-panel-button').classList.remove('hidden');
@@ -523,6 +527,26 @@ async function renderMapWithFeatures(centerPosition) {
             showItemsList(map.data, rankedItems, Array.from(uniqueCategories), Array.from(uniqueStatuses), uniqueDates);
         }
     });
+
+}
+
+function formatSingaporeTime(timestamp, isFull) {
+    // Create a Date object
+    const date = new Date(timestamp);
+
+    // Extract the day, month, year, hours, minutes, and seconds
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    // Format as ddmmyyyy 00:00:00
+    if(isFull){
+        return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    }
+    return `${day}/${month}/${year}`;
 
 }
 
@@ -937,7 +961,7 @@ function addItemInfo(data, item) {
         <img src="${imageURL}" alt="Item Image" style="width: 100%; height: auto;">
         <p>${item_description}</br>
         Location: ${handoff_location}</br>
-        ${report_type} on: ${found_timestamp}</br>
+        ${report_type} on: ${formatSingaporeTime(found_timestamp, true)}</br>
     `;
     temp.appendChild(tempBody);
     temp.style.paddingLeft = "10px";
@@ -966,7 +990,7 @@ function addItemInfo(data, item) {
                 <h2>${item_name}</h2>
                 <div class="d-flex flex-column align-items-start">
                     <p><i class="fas fa-info-circle text-danger"></i> <b>Description:</b> ${item_description}</p>  
-                    <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${found_timestamp}</p>
+                    <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${formatSingaporeTime(found_timestamp, true)}</p>
                     <p><i class="fas fa-user text-danger"></i> <b>Username:</b> <a href="${userProfileLink}">${user.username}</a></p>
                     <p><i class="fas fa-envelope text-danger"></i> <b>Email:</b> <a href="mailto:${user.username}">${user.email}</a></p>
                     <p><i class="fas fa-handshake text-danger"></i> <b>Handoff Method:</b> ${handoff_method}</p>
@@ -1067,11 +1091,16 @@ function addItemInfo(data, item) {
         //     });
         // }
         const closeButton = document.createElement('button');
-        closeButton.textContent = 'X';
-        closeButton.classList.add('close-button');
+        closeButton.innerHTML = '<i class="fas fa-times"></i>'; // Using Font Awesome's "times" icon
+        closeButton.classList.add('icon-close-button');
         closeButton.style.position = 'absolute';
         closeButton.style.top = '10px';
         closeButton.style.right = '10px';
+        closeButton.style.background = 'none';
+        closeButton.style.border = 'none';
+        closeButton.style.fontSize = '20px';
+        closeButton.style.color = '#666';
+        closeButton.style.cursor = 'pointer';
         closeButton.addEventListener('click', () => {
             infoPanel.style.display = 'none';
             document.getElementById('toggle-panel-button').classList.remove('hidden');
@@ -1175,7 +1204,7 @@ function applyFilters(panel, data) {
     if (selectedDate !== 'all') {
         filteredItems = filteredItems.filter((item) => {
             const feature = data.getFeatureById(item.itemid);
-            return feature.getProperty('found_timestamp').toDateString() === selectedDate;
+            return formatSingaporeTime(feature.getProperty('found_timestamp'), false) === selectedDate;
         });
     }
 
@@ -1194,7 +1223,7 @@ function applyFilters(panel, data) {
 function applyFiltersToMap(data) {
     const selectedCategory = document.getElementById('category-filter').value;
     const selectedStatus = document.getElementById('status-filter').value;
-    const selectedDates = document.getElementById('date-filter').value;
+    const selectedDate = document.getElementById('date-filter').value;
 
     data.forEach((feature) => {
         const item_type = feature.getProperty('item_type');
@@ -1208,7 +1237,7 @@ function applyFiltersToMap(data) {
         if (selectedStatus !== 'all' && report_type !== selectedStatus) {
             visible = false;
         }
-        if (selectedDates !== 'all' && found_timestamp.toDateString() !== selectedDates) {
+        if (selectedDate !== 'all' && formatSingaporeTime(found_timestamp, false) !== selectedDate) {
             visible = false;
         }
 
