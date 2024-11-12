@@ -28,20 +28,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function saveCommentToFirebase(description) {
     if (!description) {
-        console.error('Review message is required.');
+        console.log('Review message is required.');
         alert('Please enter a review message before submitting.');
         return;
     }
 
     const uid = sessionStorage.getItem('uid');
     if (!uid) {
-        console.error('User is not authenticated.');
+        console.log('User is not authenticated.');
         return;
     }
 
     const username = await getUsername(uid);
     if (!username) {
-        console.error('Username not found.');
+        console.log('Username not found.');
         return;
     }
 
@@ -62,7 +62,7 @@ async function saveCommentToFirebase(description) {
     };
 
     if (!currentDocumentId) {
-        console.error('Document ID is not set.');
+        console.log('Document ID is not set.');
         return;
     }
 
@@ -100,7 +100,7 @@ async function saveCommentToFirebase(description) {
         document.getElementById('reviewDescription').value = '';
 
     } catch (error) {
-        console.error('Error saving comment:', error);
+        console.log('Error saving comment:', error);
     }
 }
 
@@ -112,11 +112,11 @@ async function getUsername(uid) {
         if (userDoc.exists) {
             return userDoc.data().username;
         } else {
-            console.error('User not found in Firestore.');
+            console.log('User not found in Firestore.');
             return null;
         }
     } catch (error) {
-        console.error('Error fetching username:', error);
+        console.log('Error fetching username:', error);
         return null;
     }
 }
@@ -232,13 +232,13 @@ function showLoadingScreen() {
         loading.style.display = 'flex'; // Show loading screen
         console.log('Loading screen displayed.');
     } else {
-        console.error('Loading screen element not found.');
+        console.log('Loading screen element not found.');
     }
 
     if (mapDiv) {
         mapDiv.style.display = 'none'; // Hide the map initially
     } else {
-        console.error('Map container element not found.');
+        console.log('Map container element not found.');
     }
 
     // After 2 seconds, hide the loading screen and show the map
@@ -265,28 +265,6 @@ function hideLoadingScreen() {
 
 // Call `showLoadingScreen` to start the process
 showLoadingScreen();
-
-
-
-// function hideLoadingScreen() {
-//     const loading = document.getElementById('loading');
-//     if (loading) {
-//         loading.style.display = 'none';
-//         console.log('Loading screen hidden.');
-//     } else {
-//         console.error('Loading screen element not found.');
-//     }
-
-//     const mapDiv = document.getElementById('map');
-//     if (mapDiv) {
-//         mapDiv.style.display = 'block';
-//         mapDiv.classList.add('show');
-//         console.log('Map displayed.');
-//     } else {
-//         console.error('Map container element not found.');
-//     }
-// }
-
 
 async function renderMapWithFeatures(centerPosition) {
     showLoadingScreen();
@@ -332,7 +310,7 @@ async function renderMapWithFeatures(centerPosition) {
         map.data.addGeoJson(geoJsonData, { idPropertyName: 'itemid' });
 
     } catch (error) {
-        console.error("Error loading GeoJSON data into the map:", error);
+        console.log("Error loading GeoJSON data into the map:", error);
     }
 
     addCustomMarker();
@@ -589,7 +567,7 @@ function showItemsList(data, items, categoryArray, statusArray, datesArray) {
     const panel = document.getElementById('panel');
 
     if (!panel) {
-        console.error('Sidebar element (#panel) not found in the document.');
+        console.log('Sidebar element (#panel) not found in the document.');
         return;
     }
 
@@ -668,7 +646,7 @@ async function getUserAvatar(commentuid) {
             return userAvatar; // Fallback to placeholder if user document doesn't exist
         }
     } catch (error) {
-        console.error("Error fetching user avatar:", error);
+        console.log("Error fetching user avatar:", error);
         return userAvatar; // Fallback to placeholder in case of error
     }
 }
@@ -732,7 +710,7 @@ async function displayComment(commentData, commentId) {
 async function fetchComments(documentId) {
     const currentUserId = sessionStorage.getItem('uid');
     if (!currentUserId) {
-        console.error('User is not authenticated.');
+        console.log('User is not authenticated.');
         return;
     }
 
@@ -771,10 +749,10 @@ async function fetchComments(documentId) {
                 displayComment(commentData, commentId); // Pass the commentId (key) and commentData
             });
         } else {
-            console.error('Listing not found.');
+            console.log('Listing not found.');
         }
     } catch (error) {
-        console.error('Error fetching comments:', error);
+        console.log('Error fetching comments:', error);
     }
 }
 
@@ -798,7 +776,7 @@ async function editComment(commentData, commentId) {
 async function deleteComment(commentId) {
     const currentUserId = sessionStorage.getItem('uid');
     if (!currentUserId) {
-        console.error('User is not authenticated.');
+        console.log('User is not authenticated.');
         return;
     }
 
@@ -813,7 +791,7 @@ async function deleteComment(commentId) {
 
         console.log('Comment deleted successfully');
     } catch (error) {
-        console.error('Error deleting comment:', error);
+        console.log('Error deleting comment:', error);
     }
 }
 
@@ -826,7 +804,7 @@ function addItemInfo(data, item) {
     const currentItem = data.getFeatureById(item.itemid);
     // Check if currentItem is valid
     if (!currentItem) {
-        console.error(`Feature with ID ${item.itemid} not found.`);
+        console.log(`Feature with ID ${item.itemid} not found.`);
         return; // Exit the function if the feature is not found
     }
 
