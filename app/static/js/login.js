@@ -22,6 +22,28 @@ Vue.createApp({
         async logIn() {
             this.errorMessage = ''; // Reset error message
 
+
+
+            // Check if the email is empty
+            if (!this.email) {
+                this.errorMessage = 'Please enter your email.';
+                return;
+            }
+
+            // Check if the email format is valid using a regular expression
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(this.email)) {
+                this.errorMessage = 'Please enter a valid email address.';
+                return;
+            }
+
+            if (!this.password) {
+                this.errorMessage = 'Please enter your password.';
+                return;
+            }
+
+
+
             try {
 
                 // Sign in the user with Firebase Authentication
@@ -48,12 +70,8 @@ Vue.createApp({
 
                     // Display the username in the success modal
                     document.getElementById('username-display').textContent = userData.username;
-                }
-                else {
-                    this.errorMessage = 'User data not found in Firestore.';
-                    return;
-                }
 
+                    
                 // Show success modal
                 new bootstrap.Modal(document.getElementById('successModal')).show();
 
@@ -61,23 +79,27 @@ Vue.createApp({
                 setTimeout(() => {
                     window.location.href = '/';
                 }, 2000); // 2 seconds delay
+                }
+                else {
+                    this.errorMessage = 'User data not found in Firestore.';
+                }
+
 
 
                 // Redirect to dashboard or other page
                 // window.location.href = '/dash_board';
             } catch (error) {
-                console.log('Error logging in:', error);
-                console.log('Firebase error code:', error.code); // Log error code for debugging
+                if (error.code) {
+                    console.info('Firebase authentication error:', error.code, error.message);
+                }
 
-                // this.errorMessage = 'Error logging in: ' + error.message;
                 const errorMessages = {
                     "auth/user-not-found": "No account found with this email.",
-                    "auth/missing-password": "Please fill in your password.",
+                    "auth/missing-password": "Please enter your password.",
                     "auth/wrong-password": "Incorrect password.",
                     "auth/invalid-email": "The email address is not valid.",
                     "auth/invalid-login-credentials": "Invalid credentials. Please check your email and password."
                 };
-
                 this.errorMessage = errorMessages[error.code] || "An error occurred. Please try again.";
             }
         },
