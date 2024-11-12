@@ -691,13 +691,10 @@ async function displayComment(commentData, commentId) {
         const buttonsContainer = document.createElement('div');
         buttonsContainer.classList.add('d-flex', 'justify-content-between', 'flex-wrap', 'mt-2', 'buttons-container');
         buttonsContainer.innerHTML = `
-            <button class="btn btn-sm btn-link edit-comment" data-id="${commentId}">Edit</button>
-            <button class="btn btn-sm btn-link text-danger delete-comment" data-id="${commentId}">Delete</button>
+            <button class="btn btn-sm btn-link edit-comment" data-id="${commentId}" title="Edit" style="padding: 15px;"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-sm btn-link text-danger delete-comment" data-id="${commentId}" title="Delete" style="padding: 8px;"><i class="fas fa-trash-alt"></i></button>
         `;
         commentElement.querySelector('div > div').appendChild(buttonsContainer);
-        
-        
-
 
         // Event listener for delete
         buttonsContainer.querySelector('.delete-comment').addEventListener('click', async () => {
@@ -745,6 +742,10 @@ async function fetchComments(documentId) {
                 const noCommentsMessage = document.createElement('p');
                 noCommentsMessage.id = 'no-comments-message';
                 noCommentsMessage.textContent = 'No comments found';
+                noCommentsMessage.style.marginLeft = '10px'; // Adjust for alignment
+                noCommentsMessage.style.textAlign = 'center'; // Aligns text to the left
+                noCommentsMessage.style.paddingLeft = '5px'; // Additional spacing, if needed
+                noCommentsMessage.style.color = '#666'; // Optional: Change the text color for better visibility
                 commentSection.appendChild(noCommentsMessage);
                 return;
             }
@@ -813,7 +814,7 @@ async function deleteComment(commentId) {
     try {
         const listingRef = db.collection('listings').doc(currentDocumentId); // Ensure this is the correct document ID
         console.log(`Attempting to delete comment with ID: ${commentId}`);
-        
+
         // Delete the comment using the correct path: comments.{commentId}
         await listingRef.update({
             [`comments.${commentId}`]: firebase.firestore.FieldValue.delete()
@@ -908,7 +909,7 @@ function addItemInfo(data, item) {
                 <hr>
         
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <h2 class="mb-0">Comments</h2>
+                    <h4 class="mb-0">Comments</h4>
         
                     <!-- Write a Comment Button -->
                     <button id="write-review-btn" class="btn btn-danger ms-3">
@@ -935,7 +936,7 @@ function addItemInfo(data, item) {
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" id="submitReview">Submit Review</button>
+                            <button type="button" class="btn btn-primary" id="submitReview" style="background-color: #28a745; border-color: #28a745;">Submit Comment</button>
                         </div>
                     </div>
                 </div>
@@ -965,7 +966,7 @@ function addItemInfo(data, item) {
 
         // Add event listener for the review button
         const reviewButton = document.getElementById('write-review-btn');
-        
+
         // added this to check if the user is login before being able to comment
         if (reviewButton) {
             reviewButton.addEventListener('click', () => {

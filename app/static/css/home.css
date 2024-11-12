@@ -262,8 +262,8 @@ p {
 
 /* INFO PANEL */
 #info-panel {
-    width: calc(20% + 20px);
-    min-width: 250px;
+    width: calc(70% + 70px);
+    min-width: 650px;
     height: 100%;
     background-color: rgba(255, 255, 255, 0.95);
     box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3);
@@ -328,6 +328,9 @@ p {
     margin-bottom: 15px;
     display: flex;
     align-items: flex-start;
+    width: 105%; /* Ensure it takes full width of the comment section */
+    max-width: 110%; /* Prevent overflow */
+    text-overflow: ellipsis;
 }
 .comment img.rounded-circle {
     width: 40px;
@@ -358,12 +361,25 @@ p {
 .info-panel-content img,
 #panel img {
     width: 100%;
+    object-fit: cover;
     height: auto;
     aspect-ratio: 16 / 9; /* Adjust the aspect ratio if needed */
     object-fit: contain;
     border-radius: 10px;
     border: 2px solid #ddd;
 }
+
+/* Prevent text overflow and ensure wrapping */
+.info-panel-content h2 {
+    font-size: 40px;
+    font-weight: bold;
+    color: #333;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%; /* Ensure it does not exceed the container */
+}
+
 
 .d-flex.flex-column.align-items-start p {
     margin: 5px 0;
