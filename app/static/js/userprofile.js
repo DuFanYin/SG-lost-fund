@@ -25,6 +25,7 @@ const profile = Vue.createApp({
             itemToConfirm: null, // Store the item that needs confirmation
             tempItem: {}, // Temporary object to hold item data for editing
             loading: true, // new loading state property
+            requesterUsername: '', // Store the username entered for "Lost" 
         };
     },
     created() {
@@ -105,7 +106,44 @@ const profile = Vue.createApp({
         },
     },
     methods: {
-
+        async archiveConfirmedItem() {
+            try {
+                console.log("Report type of itemToConfirm:", this.itemToConfirm.report_type);
+                console.log("Attempting to archive item. Report type:", this.itemToConfirm.report_type);
+                if (this.itemToConfirm.report_type === 'Lost' && !this.requesterUsername) {
+                    alert("Please enter a username to confirm the request for Lost items.");
+                    return;
+                }
+                
+                if (this.itemToConfirm.report_type === 'Lost') {
+                    const usersRef = db.collection('users');
+                    const querySnapshot = await usersRef.where('username', '==', this.requesterUsername).get();
+                    
+                    if (querySnapshot.empty) {
+                        alert("The entered username does not exist. Please enter a valid username.");
+                        return;
+                    }
+                    
+                    const userDoc = querySnapshot.docs[0];
+                    const userId = userDoc.id;
+                    
+                    await usersRef.doc(userId).update({
+                        points: firebase.firestore.FieldValue.increment(100)
+                    });
+                    
+                    console.log(`100 points added to user ${this.requesterUsername}`);
+                    this.archiveItem(this.itemToConfirm);
+                    this.incrementUserPoints(50); // For current user, if needed
+                    this.closeConfirmation();
+                } else {
+                    this.archiveItem(this.itemToConfirm);
+                    this.closeConfirmation();
+                }
+            } catch (error) {
+                console.error("Error in archiving or updating points:", error);
+            }
+        },
+        
 
         openEditListingModal(item) {
             this.tempItem = { ...item }; // Create a shallow copy of the item for temporary edits
@@ -156,7 +194,6 @@ const profile = Vue.createApp({
                     this.username = data.username || 'username';
                     this.profiledesc = data.profiledesc || 'No Description';
                     this.profileImageURL = data.profileImageURL || this.profileImageURL; // Update profile image URL if it exists
-                    console.log(profileImageURL);
                     console.log("User data updated.");
                 }
             }).catch((error) => {
@@ -246,7 +283,7 @@ const profile = Vue.createApp({
             this.itemToConfirm = item;  // Set the item to be confirmed
             this.showConfirmation = true; // Show the confirmation dialog
         },
-        archiveConfirmedItem() {
+        archiveFoundItem() {
             this.archiveItem(this.itemToConfirm);  // Archive the confirmed item
             this.incrementUserPoints(100); // Call the increment function
             this.closeConfirmation(); // Close the confirmation dialog

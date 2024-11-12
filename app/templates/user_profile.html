@@ -166,8 +166,8 @@
 
                                         <div v-if="showConfirmation && itemToConfirm === item"
                                             class="confirmation-overlay">
-                                            <p>Are you sure you want to complete this item?</p>
-                                            <button @click="archiveConfirmedItem" class="btn btn-success">Yes</button>
+                                            <p>Complete item?</p>
+                                            <button @click="archiveFoundItem" class="btn btn-success">Yes</button>
                                             <button @click="closeConfirmation" class="btn btn-secondary">No</button>
                                         </div>
                                     </div>
@@ -239,12 +239,24 @@
                                             </button>
                                         </div>
 
-                                        <div v-if="showConfirmation && itemToConfirm === item"
-                                            class="confirmation-overlay">
-                                            <p>Are you sure you want to complete this item?</p>
-                                            <button @click="archiveConfirmedItem" class="btn btn-success">Yes</button>
+                                        <div v-if="showConfirmation && itemToConfirm === item" class="confirmation-overlay">
+                                            <p v-if="itemToConfirm.report_type === 'Lost'">Enter finder's username</p>
+                                            
+                                            <!-- Username input only for Lost items -->
+                                            <input 
+                                                v-if="itemToConfirm.report_type === 'Lost'" 
+                                                type="text" 
+                                                v-model="requesterUsername" 
+                                                placeholder="Found username" 
+                                                class="form-control mb-2" 
+                                            />
+                                        
+                                            <p>Complete item?</p>
+                                            <button @click="archiveConfirmedItem" class="btn btn-success" :disabled="itemToConfirm.report_type === 'Lost' && !requesterUsername">
+                                                Yes
+                                            </button>
                                             <button @click="closeConfirmation" class="btn btn-secondary">No</button>
-                                        </div>
+                                        </div>                                        
                                     </div>
 
                                 </div>
