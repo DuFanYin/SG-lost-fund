@@ -26,6 +26,7 @@
         border-radius: 15px;
         /* Optional: add rounded corners */
         z-index: 1;
+        border: 2px solid black;
     }
 
 
@@ -50,11 +51,11 @@
     }
 
     .bg1 {
-        background-color: #f5eeee;
+        background-color: white;
     }
 
     .bg2 {
-        background-color: #eae7e6;
+        background-color: white;
     }
 
     .modal-backdrop {
@@ -64,11 +65,27 @@
     .bg3 {
         background: linear-gradient(45deg, #fff5f5, #ffebeb, #ffdada, #ffb3b3, #ff8080);
         animation: gradientAnimation 10s ease infinite;
+        background-size: 300% 300%;
         /* Fallback color */
-        background-size: cover;
+        /* background-size: cover; */
         background-repeat: no-repeat;
         background-position: center;
     }
+
+    @keyframes gradientAnimation {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
 
     .main-wrapper {
         min-height: 100vh;
@@ -522,38 +539,38 @@
 
     }
 
-        /* Small (SM): Phones in landscape */
-        @media (min-width: 480px) and (max-width: 767.99px) {
-            .list-text {
-                font-size: 18px;
-            }
-
-            .list-item-name {
-                font-size: 28px;
-            }
+    /* Small (SM): Phones in landscape */
+    @media (min-width: 480px) and (max-width: 767.99px) {
+        .list-text {
+            font-size: 18px;
         }
 
-        /* Medium (MD): Tablets */
-        @media (min-width: 768px) and (max-width: 991px) {
-            .list-text {
-                font-size: 14px;
-            }
+        .list-item-name {
+            font-size: 28px;
+        }
+    }
 
-            .list-item-name {
-                font-size: 24px;
-            }
+    /* Medium (MD): Tablets */
+    @media (min-width: 768px) and (max-width: 991px) {
+        .list-text {
+            font-size: 14px;
         }
 
-        /* Large (LG): Desktops and larger tablets */
-        @media (min-width: 992px) and (max-width: 1199px) {
+        .list-item-name {
+            font-size: 24px;
+        }
+    }
 
-            /* Styles for screens between 992px and 1199px */
-            .list-text {
-                font-size: 16px
-            }
+    /* Large (LG): Desktops and larger tablets */
+    @media (min-width: 992px) and (max-width: 1199px) {
 
-            .list-item-name {
-                font-size: 28px
+        /* Styles for screens between 992px and 1199px */
+        .list-text {
+            font-size: 16px
+        }
+
+        .list-item-name {
+            font-size: 28px
         }
 
         /* Extra Large (XL): Larger desktops */
@@ -586,3 +603,4 @@
             background-color: #28a745 !important;
             color: white !important;
         }
+    }
