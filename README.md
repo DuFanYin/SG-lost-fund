@@ -7,7 +7,7 @@
 
 
 * Access our website thorugh this link (https://wad-2-ap5y.vercel.app/)
-* Youtube Demo Link: 
+* Presentation Demo Link: 
 
 
 ## Table of Contents
@@ -67,8 +67,9 @@ By leveraging user-generated content, the platform will act as a bridge between 
 
 
 ### Google Firebase Setup
+```
 pip install firebase-admin
-
+```
 
 
 ### Dependencies & Firebase Installation
@@ -112,9 +113,14 @@ python app.py
 #### Backend
 - [![Firebase](https://img.shields.io/badge/Firebase-FFCA28.svg?style=for-the-badge&logo=Firebase&logoColor=black)](https://firebase.google.com/)
 - [![Python](https://img.shields.io/badge/Python-3776AB.svg?style=for-the-badge&logo=Python&logoColor=white)](https://www.python.org/)
+- [![Flask](https://img.shields.io/badge/Flask-000000.svg?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+
 
 #### API
 - [![Google Maps API](https://img.shields.io/badge/Google%20Maps%20API-4285F4.svg?style=for-the-badge&logo=google-maps&logoColor=white)](https://developers.google.com/maps)
+- [![Google Distance Matrix API](https://img.shields.io/badge/Google%20Maps%20Distance%20Matrix%20API-4285F4.svg?style=for-the-badge&logo=google-maps&logoColor=white)](https://developers.google.com/maps/documentation/distance-matrix)
+
+
 
 #### Beyond the Lab
 - [![Chart.js](https://img.shields.io/badge/Chart.js-F5788D.svg?style=for-the-badge&logo=Chart.js&logoColor=white)](https://www.chartjs.org/)
