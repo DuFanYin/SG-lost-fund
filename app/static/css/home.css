@@ -106,7 +106,9 @@ body {
 }
 
 #autocomplete-container:hover {
-    border-color: red;
+        border-color: #f07c6c;
+        border-width: 2px; /* Adjust the width as needed */
+        border-style: solid; /* Ensure the border is visible */
 }
 
 .hidden{
@@ -281,7 +283,7 @@ p {
     background-color: #ff5c5c;
     border: none;
     color: white;
-    padding: 10px;
+    /* padding: 10px; */
     cursor: pointer;
     border-radius: 3px;
     position: absolute;
@@ -293,8 +295,8 @@ p {
 }
 
 .custom-marker {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border: 3px solid red; /* Red border */
     border-radius: 50%; /* Make it circular */
     background-size: cover;
@@ -317,7 +319,6 @@ p {
     margin-bottom: 20px;
     max-width: 100%;
     background-color: #fff;
-    border-top: 1px solid #ddd;
     display: block;
 }
 .comment {
@@ -368,3 +369,36 @@ p {
     margin: 5px 0;
     text-align: left;
 }
+
+.close-btn {
+    position: absolute;
+    top: 1rem; /* Adjust to fine-tune the position */
+    right: 1rem; /* Adjust to fine-tune the position */
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.close-btn i {
+    font-size: 1.5rem; /* Size of the icon */
+}
+
+/* Default layout - buttons next to the comment */
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+}
+
+/* Stack buttons below the comment on smaller screens */
+@media (max-width: 600px) {
+    .buttons-container {
+        flex-direction: column; /* Stack buttons vertically */
+        align-items: flex-start; /* Align to the left */
+        margin-top: 8px; /* Add some space above the buttons */
+    }
+}
+
+
+

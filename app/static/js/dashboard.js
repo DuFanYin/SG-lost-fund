@@ -66,7 +66,7 @@ const dashboardApp = Vue.createApp({
                 const snapshot = await listingsRef.where("report_type", "==", "Lost").get();
         
                 // Predefined categories (ensure these match exactly with the Firestore data)
-                const categories = ["Electronics", "Clothing", "Furniture", "Books", "Jewelry", "Other"];
+                const categories = ["Electronics", "Clothing", "Furniture", "Books", "Jewelry", "Others"];
                 const categoryCounts = categories.reduce((acc, category) => {
                     acc[category] = 0; // Start each category with a count of 0
                     return acc;
@@ -91,7 +91,7 @@ const dashboardApp = Vue.createApp({
                 });
         
                 // Ensure all categories are included, even those with a count of 0
-                const itemTypes = Object.keys(categoryCounts);  // ["Electronics", "Clothing", "Furniture", "Books", "Jewelry", "Other"]
+                const itemTypes = Object.keys(categoryCounts);  // ["Electronics", "Clothing", "Furniture", "Books", "Jewelry", "Others"]
                 const typeCountsData = itemTypes.map(type => categoryCounts[type]);
         
                 console.log("Category Counts after processing:", categoryCounts);

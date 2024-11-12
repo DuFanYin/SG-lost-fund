@@ -409,7 +409,7 @@ async function renderMapWithFeatures(centerPosition) {
         infoPanel.style.left = '0px'; // Ensure it's positioned correctly
 
         const closeButton = document.createElement('button');
-        closeButton.textContent = 'Close';
+        closeButton.textContent = 'X';
         closeButton.classList.add('close-button');
         closeButton.style.position = 'absolute';
         closeButton.style.top = '10px';
@@ -704,12 +704,22 @@ async function displayComment(commentData, commentId) {
     // Only show edit/delete buttons if the comment belongs to the current user
     const currentUserId = sessionStorage.getItem('uid');
     if (commentData.userId === currentUserId) {
+        // const buttonsContainer = document.createElement('div');
+        // buttonsContainer.innerHTML = `
+        //     <button class="btn btn-sm btn-link edit-comment" data-id="${commentId}">Edit</button>
+        //     <button class="btn btn-sm btn-link text-danger delete-comment" data-id="${commentId}">Delete</button>
+        // `;
+        // commentElement.querySelector('div > div').appendChild(buttonsContainer);
         const buttonsContainer = document.createElement('div');
+        buttonsContainer.classList.add('d-flex', 'justify-content-between', 'flex-wrap', 'mt-2', 'buttons-container');
         buttonsContainer.innerHTML = `
             <button class="btn btn-sm btn-link edit-comment" data-id="${commentId}">Edit</button>
             <button class="btn btn-sm btn-link text-danger delete-comment" data-id="${commentId}">Delete</button>
         `;
         commentElement.querySelector('div > div').appendChild(buttonsContainer);
+        
+        
+
 
         // Event listener for delete
         buttonsContainer.querySelector('.delete-comment').addEventListener('click', async () => {
@@ -884,55 +894,57 @@ function addItemInfo(data, item) {
         infoPanel.innerHTML = '';
         const content =
 
-            `<div class="info-panel-content p-3 text-center">
-                <img style="width: 100%; height: auto; border-radius: 10px; border: 2px solid #ddd;" src="${imageURL}">
-                    <div style="padding: 20px;">
-                        <h2>${item_name}</h2>
-                        <div class="d-flex flex-column align-items-start">
-                            <p><i class="fas fa-info-circle text-danger"></i> <b>Description:</b> ${item_description}</p>  
-                            <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${found_timestamp}</p>
-                            <p><i class="fas fa-envelope text-danger"></i> <b>Email:</b> <a href="mailto:${user.email}">${user.email}</a></p>
-                            <p><i class="fas fa-handshake text-danger"></i> <b>Handoff Method:</b> ${handoff_method}</p>
-                            <p><i class="fas fa-map-marker-alt text-danger"></i> <b>Handoff Location:</b> ${handoff_location}</p>
-                        </div>
-
-                        <hr>
-                        
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                             <h2 class="mb-0">Comments</h2>
-
-                            <!-- Write a Comment Button -->
-                            <button id="write-review-btn" class="btn btn-danger ms-3">
-                                <i class="fas fa-pencil-alt"></i>
+            `
+            <div class="info-panel-content p-3 text-center">
+            <img style="width: 100%; height: auto; border-radius: 10px; border: 2px solid #ddd;" src="${imageURL}">
+            <div style="padding: 20px;">
+                <h2>${item_name}</h2>
+                <div class="d-flex flex-column align-items-start">
+                    <p><i class="fas fa-info-circle text-danger"></i> <b>Description:</b> ${item_description}</p>  
+                    <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${found_timestamp}</p>
+                    <p><i class="fas fa-envelope text-danger"></i> <b>Email:</b> <a href="mailto:${user.email}">${user.email}</a></p>
+                    <p><i class="fas fa-handshake text-danger"></i> <b>Handoff Method:</b> ${handoff_method}</p>
+                    <p><i class="fas fa-map-marker-alt text-danger"></i> <b>Handoff Location:</b> ${handoff_location}</p>
+                </div>
+        
+                <hr>
+        
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h2 class="mb-0">Comments</h2>
+        
+                    <!-- Write a Comment Button -->
+                    <button id="write-review-btn" class="btn btn-danger ms-3">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                </div>    
+            </div>
+            <!-- Modal Structure -->
+            <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg custom-modal-right">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="reviewModalLabel">Write a Comment</h5>
+                            <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="fas fa-times-circle text-danger"></i>
                             </button>
-                        </div>    
-                    </div>
-                    <!-- Modal Structure -->
-                    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg custom-modal-right">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="reviewModalLabel">Write a Comment</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                        <i class="fas fa-times-circle text-danger"></i>
-                                    </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="reviewForm">
+                                <div class="mb-3">
+                                    <label for="reviewDescription" class="form-label" style="text-align: left;">Description</label>
+                                    <textarea class="form-control" id="reviewDescription" rows="5" placeholder="Enter comments"></textarea>
                                 </div>
-                                <div class="modal-body">
-                                    <form id="reviewForm">
-                                        <div class="mb-3">
-                                            <label for="reviewDescription" class="form-label">Description</label>
-                                            <textarea class="form-control" id="reviewDescription" rows="5" placeholder="Enter comments"></textarea>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" id="submitReview">Submit Review</button>
-                                </div>
-                            </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="submitReview">Submit Review</button>
                         </div>
                     </div>
-                </div>`;
+                </div>
+            </div>
+        </div>
+        `;
+
 
         infoPanel.innerHTML = content;
         infoPanel.style.display = 'block';
@@ -989,7 +1001,7 @@ function addItemInfo(data, item) {
         //     });
         // }
         const closeButton = document.createElement('button');
-        closeButton.textContent = 'Close';
+        closeButton.textContent = 'X';
         closeButton.classList.add('close-button');
         closeButton.style.position = 'absolute';
         closeButton.style.top = '10px';
