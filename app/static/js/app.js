@@ -360,28 +360,61 @@ async function renderMapWithFeatures(centerPosition) {
         const userProfileLink = `./other_profile?uid=${user.uid}`;
 
         infoPanel.innerHTML = '';
-        const content = `
-            <div class="info-panel-content p-3 text-center">
+        const content =
+            `<div class="info-panel-content p-3 text-center">
                 <img style="width: 100%; height: auto; border-radius: 10px; border: 2px solid #ddd;" src="${imageURL}">
-                <div style="padding: 20px;">
-                    <h2>${item_name}</h2>
-                    <p>${item_description}</p>
-                    <div class="d-flex flex-column align-items-start">
-                        <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${found_timestamp}</p>
-                        <p><i class="fas fa-user text-danger"></i> <b>Username:</b> <a href="${userProfileLink}">${user.username}</a></p>
-                        <p><i class="fas fa-envelope text-danger"></i> <b>Username:</b> <a href="mailto:${user.email}">${user.email}</a></p>
-                        <p><i class="fas fa-handshake text-danger"></i> <b>Handoff Method:</b> ${handoff_method}</p>
-                        <p><i class="fas fa-map-marker-alt text-danger"></i> <b>Handoff Location:</b> ${handoff_location}</p>
+                    <div style="padding: 20px;">
+                        <h2>${item_name}</h2>
+                        <div class="d-flex flex-column align-items-start">
+                            <p><i class="fas fa-info-circle text-danger"></i> <b>Description:</b> ${item_description}</p>
+                            <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${found_timestamp}</p>
+                            <p><i class="fas fa-user text-danger"></i> <b>Username:</b> <a href="${userProfileLink}">${user.username}</a></p>
+                            <p><i class="fas fa-envelope text-danger"></i> <b>Email:</b> <a href="mailto:${user.username}">${user.email}</a></p>
+                            <p><i class="fas fa-handshake text-danger"></i> <b>Handoff Method:</b> ${handoff_method}</p>
+                            <p><i class="fas fa-map-marker-alt text-danger"></i> <b>Handoff Location:</b> ${handoff_location}</p>
+                        </div>
+
+                        <hr>
+
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h4 class="mb-0">Comments</h4>
+
+                                <!-- Write a Comment Button -->
+                                <button id="write-review-btn" class="btn btn-danger ms-3">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                            </div>
                     </div>
-                </div>
-            </div>`
-            
-            ;
+                    <!-- Modal Structure -->
+                    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="reviewModalLabel">Write a Comment</h5>
+                                    <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+                                        <i class="fas fa-times-circle text-danger"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="reviewForm">
+                                        <div class="mb-3">
+                                            <label for="reviewDescription" class="form-label" style="text-align: left;">Description</label>
+                                            <textarea class="form-control" id="reviewDescription" rows="5" placeholder="Enter comments"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="submitReview" style="background-color: #28a745; border-color: #28a745;">Submit Comment</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>`;
 
         infoPanel.innerHTML = content;
         infoPanel.style.display = 'block';
         infoPanel.style.position = 'absolute';
-        infoPanel.style.left = '0px';
+        infoPanel.style.left = '0';
         infoPanel.style.height = '100%';
         infoPanel.style.width = 'calc(20% + 20px)';
         infoPanel.style.minWidth = '250px';
@@ -389,7 +422,39 @@ async function renderMapWithFeatures(centerPosition) {
         infoPanel.style.boxShadow = '-2px 0px 5px rgba(0, 0, 0, 0.3)';
         infoPanel.style.overflowY = 'auto';
         infoPanel.style.zIndex = '3';
-        infoPanel.style.left = '0px'; // Ensure it's positioned correctly
+
+        const documentId = event.feature.getProperty('itemid'); // Retrieve the documentId dynamically
+        currentDocumentId = documentId; // Store it globally
+        console.log('Current Document ID:', currentDocumentId);
+
+        // Fetch and display existing comments for the listing
+        await fetchComments(documentId);
+
+        // Add event listener for the review button
+        const reviewButton = document.getElementById('write-review-btn');
+
+        // added this to check if the user is login before being able to comment
+        if (reviewButton) {
+            reviewButton.addEventListener('click', () => {
+                const uid = sessionStorage.getItem('uid');
+
+                // Check if the user is logged in
+                if (!uid) {
+                    // Show the login modal if the user is not logged in
+                    const loginModal = new bootstrap.Modal(document.getElementById('commentsModal'), {
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    loginModal.show();
+                } else {
+                    const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'), {
+                        backdrop: false,
+                        keyboard: true
+                    });
+                    reviewModal.show();
+                }
+            });
+        }
 
         const closeButton = document.createElement('button');
         closeButton.textContent = 'X';
@@ -482,14 +547,14 @@ function addCustomMarker() {
                 map.data.overrideStyle(feature, {
                     icon: {
                         url: iconURL,
-                        scaledSize: new google.maps.Size(32, 32),
+                        scaledSize: new google.maps.Size(45, 40),
                     }
                 });
             } else {
                 map.data.setStyle({
                     icon: {
                         url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Default marker icon
-                        scaledSize: new google.maps.Size(32, 32),
+                        scaledSize: new google.maps.Size(45, 40),
                     },
                 });
             }
@@ -497,7 +562,7 @@ function addCustomMarker() {
         return {
             icon: {
                 url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Default marker icon
-                scaledSize: new google.maps.Size(32, 32),
+                scaledSize: new google.maps.Size(45, 40),
             },
         };
     });
@@ -786,7 +851,7 @@ async function editComment(commentData, commentId) {
     const saveEditedCommentButton = document.getElementById('saveEditedComment');
     const saveEditedCommentHandler = async () => {
         const newMessage = editCommentInput.value.trim();
-        
+
         if (newMessage && newMessage !== commentData.message) {
             const listingRef = db.collection('listings').doc(currentDocumentId);
 
