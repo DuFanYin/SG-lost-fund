@@ -10,9 +10,9 @@ const otherProfile = Vue.createApp({
 
 
         return {
-            username: 'username',
-            profiledesc: 'No Description',
-            email: 'email',
+            username: '',
+            profiledesc: '',
+            email: '',
             uid: uid,  // Use the UID from the query parameter
             profileImageURL: defaultProfileURL, // Set default profile image
             selectedBorder: '',
