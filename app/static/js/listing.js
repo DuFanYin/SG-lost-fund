@@ -217,7 +217,7 @@ Vue.createApp({
                     this.formSubmitted = true;
                     this.resetForm();
                 } catch (error) {
-                    console.error("Error saving the listing:", error);
+                    console.log("Error saving the listing:", error);
                     alert('There was an error submitting the form.');
                 }
             } else {
@@ -239,7 +239,7 @@ Vue.createApp({
                         console.log(`Upload is ${progress}% done`);
                     },
                     (error) => {
-                        console.error("Error uploading image:", error);
+                        console.log("Error uploading image:", error);
                         reject(error);
                     },
                     async () => {

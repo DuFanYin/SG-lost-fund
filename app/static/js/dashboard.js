@@ -34,7 +34,7 @@ const dashboardApp = Vue.createApp({
                 this.totalUsers = snapshot.size;
                 console.log("Total number of users :", this.totalUsers);
             } catch (error) {
-                console.error("Error counting users:", error);
+                console.log("Error counting users:", error);
             }
         },
 
@@ -45,7 +45,7 @@ const dashboardApp = Vue.createApp({
                 this.lostItemReports = snapshot.size;
                 console.log("Total number of lost item reports :", this.lostItemReports);
             } catch (error) {
-                console.error("Error counting lost item reports:", error);
+                console.log("Error counting lost item reports:", error);
             }
         },
         async countRecoveredItems() {
@@ -55,7 +55,7 @@ const dashboardApp = Vue.createApp({
                 this.recoveredItems = snapshot.size;
                 console.log("Total number of recovered items:", this.recoveredItems);
             } catch (error) {
-                console.error("Error counting recovered items:", error);
+                console.log("Error counting recovered items:", error);
             }
         },
 
@@ -186,7 +186,7 @@ const dashboardApp = Vue.createApp({
                 }
         
             } catch (error) {
-                console.error("Error loading top lost items:", error);
+                console.log("Error loading top lost items:", error);
             }
         }
          
@@ -293,7 +293,7 @@ const dashboardApp = Vue.createApp({
 
 
             } catch (error) {
-                console.error("Error fetching and ranking users:", error);
+                console.log("Error fetching and ranking users:", error);
             }
         },
 
@@ -332,7 +332,7 @@ const dashboardApp = Vue.createApp({
                     totalCount: totalCount
                 };
             } catch (error) {
-                console.error("Error fetching data for pie chart:", error);
+                console.log("Error fetching data for pie chart:", error);
                 return null;
             }
         },
@@ -340,7 +340,7 @@ const dashboardApp = Vue.createApp({
         async renderPieChart() {
             const ctx = document.getElementById('pieChart')?.getContext('2d');
             if (!ctx) {
-                console.error("Canvas element not found or getContext failed.");
+                console.log("Canvas element not found or getContext failed.");
                 return;
             }
 
@@ -349,7 +349,7 @@ const dashboardApp = Vue.createApp({
             try {
                 const data = await this.fetchDataForPieChart(this.selectedReportType);
                 if (!data) {
-                    console.error("No data returned for the pie chart.");
+                    console.log("No data returned for the pie chart.");
                     return;
                 }
 
@@ -424,7 +424,7 @@ const dashboardApp = Vue.createApp({
 
                 console.log("Pie chart rendered successfully with data:", data);
             } catch (error) {
-                console.error("Error rendering pie chart:", error);
+                console.log("Error rendering pie chart:", error);
             }
         },
 
@@ -513,7 +513,7 @@ const dashboardApp = Vue.createApp({
 
                 const ctx = document.getElementById('lineChart')?.getContext('2d');
                 if (!ctx) {
-                    console.error("Canvas element not found for line chart.");
+                    console.log("Canvas element not found for line chart.");
                     return;
                 }
 
@@ -567,7 +567,7 @@ const dashboardApp = Vue.createApp({
                 });
 
             } catch (error) {
-                console.error("Error rendering line chart:", error);
+                console.log("Error rendering line chart:", error);
             }
         },
     },
@@ -599,7 +599,7 @@ const dashboardApp = Vue.createApp({
             await this.renderPieChart(); // General pie chart rendering
             await this.lineChart(); // General line chart rendering
         } catch (error) {
-            console.error("Error in mounted lifecycle:", error);
+            console.log("Error in mounted lifecycle:", error);
         }
     },
 

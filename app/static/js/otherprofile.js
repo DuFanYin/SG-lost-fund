@@ -134,7 +134,7 @@ const otherProfile = Vue.createApp({
                     console.log("User data updated.");
                 }
             }).catch((error) => {
-                console.error("Error fetching user data:", error);
+                console.log("Error fetching user data:", error);
             });
         },
         nextPage() {
@@ -202,7 +202,7 @@ const otherProfile = Vue.createApp({
                     this.loading = false; // Set loading to false once items are loaded
                 })
                 .catch((error) => {
-                    console.error("Error fetching items:", error);
+                    console.log("Error fetching items:", error);
                     this.loading = false; // Ensure loading is set to false even if there's an error
                 });
         },

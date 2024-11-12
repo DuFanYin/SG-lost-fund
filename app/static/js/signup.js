@@ -121,7 +121,7 @@ Vue.createApp({
                     this.passwordvalidation.push('Username already exists.');
                 }
             } catch (error) {
-                console.error('Error checking username uniqueness:', error);
+                console.log('Error checking username uniqueness:', error);
             }
         },
 
@@ -146,7 +146,7 @@ Vue.createApp({
                     this.passwordvalidation.push('Email already exists.');
                 }
             } catch (error) {
-                console.error('Error checking email uniqueness:', error);
+                console.log('Error checking email uniqueness:', error);
             }
         },
         
