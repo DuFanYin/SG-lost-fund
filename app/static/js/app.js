@@ -1155,3 +1155,4 @@ function applyFiltersToMap(data) {
         data.overrideStyle(feature, { visible: visible });
     });
 }
+
