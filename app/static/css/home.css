@@ -40,7 +40,6 @@ body {
   .animation {
     width: 100px;
     height: 100px;
-    background-image: url('lego-animation.gif'); /* Replace with the actual GIF URL */
     background-size: cover;
     margin-bottom: 20px; /* Adds space between animation and text */
   }
