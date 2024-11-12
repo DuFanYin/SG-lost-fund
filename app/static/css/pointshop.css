@@ -22,6 +22,11 @@
     /* Adjust as needed */
 }
 
+.card-text{
+    color:#d9534f;
+    font-weight: bold;
+}
+
 #pointShopModal .modal-content {
     background: #fef5f3;
 }
@@ -52,4 +57,22 @@
     color: #ffffff !important; 
     background-color: #d9534f; /* Background color for active tab */
     border-color: #d9534f;
+}
+
+.green-button{
+    background-color: #28a745 !important;
+    color: white !important;
+    font-weight: bold;
+}
+
+.red-button{
+    background-color: #B22222 !important;
+    color: white !important;
+    font-weight: bold;
+}
+
+.blue-button{
+    background-color: #0013a4d5 !important;
+    color: white !important;
+    font-weight: bold;
 }

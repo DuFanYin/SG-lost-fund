@@ -178,13 +178,13 @@
                                         <h5 class="card-title" v-text="item.name"></h5>
                                         <p class="card-text" v-text="item.points + ' Points'"></p>
                                         <!-- Conditionally render buttons based on purchase status -->
-                                        <button v-if="!item.purchased" class="btn btn-primary"
+                                        <button v-if="!item.purchased" class="btn red-button"
                                             @click="purchaseItem(item)">
                                             Buy Now
                                         </button>
                                         <button v-else class="btn"
-                                            :class="item.selected ? 'btn-warning' : 'btn-success'"
-                                            @click="selectItem(item)" v-text="item.selected ? 'Selected' : 'Select'">
+                                            :class="item.selected ? 'blue-button' : 'green-button'"
+                                            @click="selectItem(item)" v-text="item.selected ? 'Unselect' : 'Select'">
                                         </button>
                                     </div>
                                 </div>
@@ -202,13 +202,13 @@
                                         <h5 class="card-title" v-text="item.name"></h5>
                                         <p class="card-text" v-text="item.points + ' Points'"></p>
                                         <!-- Conditionally render buttons based on purchase status -->
-                                        <button v-if="!item.purchased" class="btn btn-primary"
+                                        <button v-if="!item.purchased" class="btn red-button"
                                             @click="purchaseItem(item)">
                                             Buy Now
                                         </button>
                                         <button v-else class="btn"
-                                            :class="item.selected ? 'btn-warning' : 'btn-success'"
-                                            @click="selectItem(item)" v-text="item.selected ? 'Selected' : 'Select'">
+                                            :class="item.selected ? 'blue-button' : 'green-button'"
+                                            @click="selectItem(item)" v-text="item.selected ? 'Unselect' : 'Select'">
                                         </button>
                                     </div>
                                 </div>

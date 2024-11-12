@@ -34,14 +34,14 @@ const app = Vue.createApp({
         async fetchNotifications() {
             const userId = sessionStorage.getItem('uid');
             if (!userId) return;
-    
+
             db.collection('users').doc(userId).onSnapshot(
                 (snapshot) => {
                     const userDoc = snapshot;
                     if (userDoc.exists) {
                         const userData = userDoc.data();
                         this.notifications = userData.notifications || [];
-            
+
                         // Count the number of unread notifications
                         this.unreadCount = (this.notifications || []).filter(n => !n.read).length;
                         console.log("Notifications loaded:", this.notifications);
@@ -56,13 +56,13 @@ const app = Vue.createApp({
                     this.notifications = []; // Ensure it's an empty array on error
                 }
             );
-            
+
             // try {
             //     const userDoc = await db.collection('users').doc(userId).get();
             //     if (userDoc.exists) {
             //         const userData = userDoc.data();
             //         this.notifications = userData.notifications || [];
-    
+
             //         // Count the number of unread notifications
             //         // this.unreadCount = this.notifications.filter(n => !n.read).length;
             //         this.unreadCount = (this.notifications || []).filter(n => !n.read).length;
@@ -76,15 +76,15 @@ const app = Vue.createApp({
             //     this.notifications = []; // Ensure it's an empty array on error
             // }
         },
-    
+
         async markNotificationAsRead(index) {
             const userId = sessionStorage.getItem('uid');
             if (!userId) return;
-    
+
             // Update the notification read status
             this.notifications[index].read = true;
             this.unreadCount = this.notifications.filter(n => !n.read).length;
-    
+
             try {
                 // Update Firestore with the updated notifications list
                 await db.collection('users').doc(userId).update({
@@ -285,25 +285,48 @@ const app = Vue.createApp({
             // Determine if it's a border or background selection
             const updateField = this.borderItems.includes(item) ? 'selectedborder' : 'selectedbackground';
 
+            // Check if the item is already selected to toggle selection
+            const isCurrentlySelected = item.selected;
+
             try {
-                // Update Firestore with the selected item image source
-                await db.collection('users').doc(userId).set({
-                    [updateField]: item.image
-                }, { merge: true });
-
-                console.log(`Selected ${item.name} as ${updateField} with image ${item.image}`);
-
-                // Update the selected status in Vue data
-                if (updateField === 'selectedborder') {
-                    // Set the selected state only for the chosen border
-                    this.borderItems.forEach(borderItem => {
-                        borderItem.selected = (borderItem === item);
+                if (isCurrentlySelected) {
+                    // Deselect the item if it's already selected
+                    await db.collection('users').doc(userId).update({
+                        [updateField]: firebase.firestore.FieldValue.delete()
                     });
-                } else if (updateField === 'selectedbackground') {
-                    // Set the selected state only for the chosen background
-                    this.backgroundItems.forEach(backgroundItem => {
-                        backgroundItem.selected = (backgroundItem === item);
-                    });
+        
+                    console.log(`Deselected ${item.name} as ${updateField}`);
+        
+                    // Deselect all items in the category
+                    if (updateField === 'selectedborder') {
+                        this.borderItems.forEach(borderItem => {
+                            borderItem.selected = false;
+                        });
+                    } else if (updateField === 'selectedbackground') {
+                        this.backgroundItems.forEach(backgroundItem => {
+                            backgroundItem.selected = false;
+                        });
+                    }
+                } else {
+                    // Select the item
+                    await db.collection('users').doc(userId).set({
+                        [updateField]: item.image
+                    }, { merge: true });
+        
+                    console.log(`Selected ${item.name} as ${updateField} with image ${item.image}`);
+        
+                    // Update the selected status in Vue data
+                    if (updateField === 'selectedborder') {
+                        // Set the selected state only for the chosen border
+                        this.borderItems.forEach(borderItem => {
+                            borderItem.selected = (borderItem === item);
+                        });
+                    } else if (updateField === 'selectedbackground') {
+                        // Set the selected state only for the chosen background
+                        this.backgroundItems.forEach(backgroundItem => {
+                            backgroundItem.selected = (backgroundItem === item);
+                        });
+                    }
                 }
 
             } catch (error) {
