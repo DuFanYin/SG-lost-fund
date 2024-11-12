@@ -44,7 +44,7 @@ body {
 }
 
 .login-button {
-    background-color: #B22222;
+    background-color: #B22222 !important;
     color: white;
     border: 1px solid black;
     display: inline-flex;
@@ -87,7 +87,7 @@ body {
 }
 
 .login-button:hover {
-    background-color: #CD5C5C;
+    background-color: #CD5C5C !important;
     color: white;
     cursor: pointer;
 }
