@@ -718,11 +718,11 @@ async function displayComment(commentData, commentId) {
 }
 
 async function fetchComments(documentId) {
-    const currentUserId = sessionStorage.getItem('uid');
-    if (!currentUserId) {
-        console.log('User is not authenticated.');
-        return;
-    }
+    // const currentUserId = sessionStorage.getItem('uid');
+    // if (!currentUserId) {
+    //     console.log('User is not authenticated.');
+    //     return;
+    // }
 
     try {
         const listingRef = db.collection('listings').doc(documentId);
