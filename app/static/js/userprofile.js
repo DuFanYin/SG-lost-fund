@@ -26,6 +26,7 @@ const profile = Vue.createApp({
             tempItem: {}, // Temporary object to hold item data for editing
             loading: true, // new loading state property
             requesterUsername: '', // Store the username entered for "Lost" 
+            usernameExists: false, // New property to track if username is taken
         };
     },
     created() {
@@ -43,6 +44,9 @@ const profile = Vue.createApp({
     watch: {
         selectedBackground() {
             this.updateBodyBackground();
+        },
+        tempUsername(newUsername) {
+            this.checkUsernameAvailability(newUsername);
         }
     },
 
@@ -106,6 +110,17 @@ const profile = Vue.createApp({
         },
     },
     methods: {
+        async checkUsernameAvailability() {
+            try {
+                const usersRef = db.collection('users');
+                const querySnapshot = await usersRef.where('username', '==', this.tempUsername).get();
+
+                // Check if the username is taken and it's not the current user's username
+                this.usernameExists = !querySnapshot.empty && this.tempUsername !== this.username;
+            } catch (error) {
+                console.error("Error checking username availability:", error);
+            }
+        },
         async archiveConfirmedItem() {
             try {
                 console.log("Report type of itemToConfirm:", this.itemToConfirm.report_type);
@@ -114,23 +129,23 @@ const profile = Vue.createApp({
                     alert("Please enter a username to confirm the request for Lost items.");
                     return;
                 }
-                
+
                 if (this.itemToConfirm.report_type === 'Lost') {
                     const usersRef = db.collection('users');
                     const querySnapshot = await usersRef.where('username', '==', this.requesterUsername).get();
-                    
+
                     if (querySnapshot.empty) {
                         alert("The entered username does not exist. Please enter a valid username.");
                         return;
                     }
-                    
+
                     const userDoc = querySnapshot.docs[0];
                     const userId = userDoc.id;
-                    
+
                     await usersRef.doc(userId).update({
                         points: firebase.firestore.FieldValue.increment(100)
                     });
-                    
+
                     console.log(`100 points added to user ${this.requesterUsername}`);
                     this.archiveItem(this.itemToConfirm);
                     this.incrementUserPoints(50); // For current user, if needed
@@ -143,7 +158,7 @@ const profile = Vue.createApp({
                 console.error("Error in archiving or updating points:", error);
             }
         },
-        
+
 
         openEditListingModal(item) {
             this.tempItem = { ...item }; // Create a shallow copy of the item for temporary edits
@@ -477,29 +492,52 @@ const profile = Vue.createApp({
             console.log("Temp Username in Modal:", this.tempUsername);
             console.log("Temp Profile Description in Modal:", this.tempProfiledesc);
         },
-        saveChanges() {
-            this.username = this.tempUsername;
-            this.profiledesc = this.tempProfiledesc;
+        async saveChanges() {
+            try {
+                const usersRef = db.collection('users');
+                const querySnapshot = await usersRef.where('username', '==', this.tempUsername).get();
 
-            // Save changes to profile image if a new one is uploaded
-            if (this.profileImageFile) {
-                this.uploadProfileImage();
-            }
+                // If a user with this username already exists and it is not the current user, alert the user
+                if (!querySnapshot.empty && this.tempUsername !== this.username) {
+                    console.log("Username already taken. Please choose a different username.");
+                    return; // Exit the function if username is not unique
+                }
 
-            // Update other user details in Firestore
-            const userRef = db.collection('users').doc(this.uid);
-            userRef.update({
-                username: this.username,
-                profiledesc: this.profiledesc,
-            }).then(() => {
+                // Proceed with saving changes if the username is unique or not changed
+                this.username = this.tempUsername;
+                this.profiledesc = this.tempProfiledesc;
+
+                // Save changes to profile image if a new one is uploaded
+                if (this.profileImageFile) {
+                    this.uploadProfileImage();
+                }
+
+                // Update other user details in Firestore
+                const userRef = db.collection('users').doc(this.uid);
+                await userRef.update({
+                    username: this.username,
+                    profiledesc: this.profiledesc,
+                });
                 console.log("Profile successfully updated!");
                 sessionStorage.setItem('username', this.username);
                 sessionStorage.setItem('profiledesc', this.profiledesc);
                 const successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
-            }).catch((error) => {
+            } catch (error) {
                 console.error("Error updating profile: ", error);
-            });
+            }
+            // userRef.update({
+            //     username: this.username,
+            //     profiledesc: this.profiledesc,
+            // }).then(() => {
+            //     console.log("Profile successfully updated!");
+            //     sessionStorage.setItem('username', this.username);
+            //     sessionStorage.setItem('profiledesc', this.profiledesc);
+            //     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            //     successModal.show();
+            // }).catch((error) => {
+            //     console.error("Error updating profile: ", error);
+            // });
         },
     },
 });

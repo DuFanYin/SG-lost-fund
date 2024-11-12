@@ -384,10 +384,14 @@
                                         @change="handleFileUpload">
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="mb-3 ">
                                     <label for="profileName" class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="profileName" v-model="tempUsername">
+                                    <input type="text" class="form-control" id="profileName" v-model="tempUsername" @input="checkUsernameAvailability">
                                 </div>
+                                <div v-if="usernameExists" class="text-danger mb-3">
+                                    Username is already taken. Please choose a different username.
+                                </div>
+                                
                                 <div class="mb-3">
                                     <label for="profileDescription" class="form-label">Description</label>
                                     <textarea class="form-control" id="profileDescription" rows="3"
@@ -398,7 +402,6 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary" @click="saveChanges"
                                 data-bs-dismiss="modal">Save
                                 changes</button>
