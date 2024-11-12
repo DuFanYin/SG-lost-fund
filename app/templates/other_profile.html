@@ -108,7 +108,7 @@
                         <div class="tab-pane fade show active" id="found-items" role="tabpanel"
                             aria-labelledby="found-items-tab">
                             <div class="row center-on-col-8">
-                                <div class="col-lg-4 col-md-6 col-8 mb-4 " v-for="item in paginatedItems"
+                                <div class="col-xl-4 col-md-6 col-10 mb-4 " v-for="item in paginatedItems"
                                     :key="item.id">
                                     <div class="hero" v-if="!item.expanded">
                                         <img class="hero-profile-img" :src="item.imageURL" alt="Listing Image">
@@ -169,7 +169,7 @@
                         <!-- Requested Items Content -->
                         <div class="tab-pane fade" id="lost-items" role="tabpanel" aria-labelledby="lost-items-tab">
                             <div class="row center-on-col-8">
-                                <div class="col-lg-4 col-md-6 col-8 mb-4 " v-for="item in paginatedLostItems"
+                                <div class="col-xl-4 col-md-6 col-10 mb-4 " v-for="item in paginatedLostItems"
                                     :key="item.id">
                                     <div class="hero" v-if="!item.expanded">
                                         <img class="hero-profile-img" :src="item.imageURL" alt="Listing Image">

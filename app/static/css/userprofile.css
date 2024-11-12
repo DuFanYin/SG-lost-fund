@@ -210,14 +210,14 @@
     }
 
     .hero {
-        display: inline-block;
+        display: block;
         position: relative;
         width: 100%; /* Make it responsive to parent container */
-        height: auto; /* Adjust height based on content */
-        aspect-ratio: 1; /* Maintain a square ratio */
         border-radius: 30px;
         overflow: hidden;
         box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
+        min-height: 300px; 
+        aspect-ratio: 1; 
     }
 
     .hero-profile-img {
@@ -281,7 +281,7 @@
         position: absolute;
         color: #000000;
         right: 15px;
-        bottom: 10%;
+        bottom: 5%;
         padding: 5px 10px;
         font-size: 14px;
         font-weight: bold;
@@ -296,7 +296,7 @@
         position: absolute;
         color: #000000;
         left: 15px;
-        bottom: 10%;
+        bottom: 5%;
         padding: 5px 15px;
         font-size: 14px;
         border: 2px solid #f9f9f9;
@@ -312,7 +312,7 @@
         position: absolute;
         color: #000000;
         right: 15px;
-        bottom: 10%;
+        bottom: 5%;
         padding: 5px 10px;
         font-size: 14px;
         font-weight: bold;
@@ -373,8 +373,8 @@
         top: 2%;
         padding: 5px 10px;
         font-size: 14px;
-        border: 1px solid #f9f9f9;
-        background-color:  #fef5f3;
+        border: 2px solid #f9f9f9;
+        background-color:  #B22222;
         border-radius: 15px;
         font-family: 'Poppins', sans-serif;
     }
@@ -423,31 +423,55 @@
         color: white !important ;
     }
 
-    /* Extra Small (XS): Phones in portrait */
-
-    /* Small (SM): Phones in landscape */
-    @media (max-width: 767px) { 
+    @media (max-width: 449px) { 
         /* Styles for screens between 576px and 767px */
         .list-text{
-            font-size: 16px
-        }
-        
-        .list-item-name{
-            font-size: 28px
-        }
-    }
-
-    /* Medium (MD): Tablets */
-    @media (min-width: 768px) and (max-width: 991px) { 
-        /* Styles for screens between 768px and 991px */
-        .list-text{
-            font-size: 11px
+            font-size: 12px
         }
         
         .list-item-name{
             font-size: 18px
         }
+        .return{
+        top: 0.5%; /* Reduced padding */
     }
+    }
+
+    /* Extra Small (XS): Phones in portrait */
+    @media (min-width: 425px) and (max-width: 479px) { 
+        /* Styles for screens between 576px and 767px */
+        .list-text{
+            font-size: 14px
+        }
+        
+        .list-item-name{
+            font-size: 24px
+        }
+        .return{
+            top: 0.5%; /* Reduced padding */
+    }
+
+/* Small (SM): Phones in landscape */
+@media (min-width: 480px) and (max-width: 767.99px) {
+    .list-text {
+        font-size: 12px;
+    }
+
+    .list-item-name {
+        font-size: 20px;
+    }
+}
+
+/* Medium (MD): Tablets */
+@media (min-width: 768px) and (max-width: 991px) {
+    .list-text {
+        font-size: 12px;
+    }
+
+    .list-item-name {
+        font-size: 18px;
+    }
+}
 
     /* Large (LG): Desktops and larger tablets */
     @media (min-width: 992px) and (max-width: 1199px) { 
