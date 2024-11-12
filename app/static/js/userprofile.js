@@ -189,8 +189,8 @@ const profile = Vue.createApp({
                             this.lostItems[index] = { ...this.tempItem };
                         }
                     }
-                    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                    successModal.show();
+                    const successListingModal = new bootstrap.Modal(document.getElementById('successListingModal'));
+                    successListingModal.show();
                 })
                 .catch(error => {
                     console.log("Error updating listing:", error);
