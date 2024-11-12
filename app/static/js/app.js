@@ -768,19 +768,39 @@ async function fetchComments(documentId) {
 
 // Edit Comment Function
 async function editComment(commentData, commentId) {
-    const newMessage = prompt('Edit your comment:', commentData.message);
-    if (newMessage && newMessage !== commentData.message) {
-        const listingRef = db.collection('listings').doc(currentDocumentId);
+    // Set the initial value in the modal input
+    const editCommentInput = document.getElementById('editCommentInput');
+    editCommentInput.value = commentData.message;
 
-        // Update the comment message in Firestore
-        await listingRef.update({
-            [`comments.${commentId}.message`]: newMessage
-        });
+    // Show the edit modal
+    const editModal = new bootstrap.Modal(document.getElementById('editCommentModal'));
+    editModal.show();
 
-        // Update the comment in the UI
-        const commentElement = document.querySelector(`[data-id="${commentId}"]`).closest('.comment');
-        commentElement.querySelector('.comment-message').textContent = sanitizeHTML`${newMessage}`;
-    }
+    // Define the save handler for the edit comment modal
+    const saveEditedCommentButton = document.getElementById('saveEditedComment');
+    const saveEditedCommentHandler = async () => {
+        const newMessage = editCommentInput.value.trim();
+        
+        if (newMessage && newMessage !== commentData.message) {
+            const listingRef = db.collection('listings').doc(currentDocumentId);
+
+            // Update the comment message in Firestore
+            await listingRef.update({
+                [`comments.${commentId}.message`]: newMessage
+            });
+
+            // Update the comment in the UI
+            const commentElement = document.querySelector(`[data-id="${commentId}"]`).closest('.comment');
+            commentElement.querySelector('.comment-message').textContent = sanitizeHTML`${newMessage}`;
+        }
+
+        // Hide the modal after saving
+        editModal.hide();
+    };
+
+    // Clean up any previous event listeners to prevent duplicates
+    saveEditedCommentButton.removeEventListener('click', saveEditedCommentHandler);
+    saveEditedCommentButton.addEventListener('click', saveEditedCommentHandler);
 }
 
 async function deleteComment(commentId) {
