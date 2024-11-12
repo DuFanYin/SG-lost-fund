@@ -357,6 +357,8 @@ async function renderMapWithFeatures(centerPosition) {
             document.body.appendChild(infoPanel);
         }
 
+        const userProfileLink = `./other_profile?uid=${user.uid}`;
+
         infoPanel.innerHTML = '';
         const content = `
             <div class="info-panel-content p-3 text-center">
@@ -366,12 +368,15 @@ async function renderMapWithFeatures(centerPosition) {
                     <p>${item_description}</p>
                     <div class="d-flex flex-column align-items-start">
                         <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${found_timestamp}</p>
-                        <p><i class="fas fa-envelope text-danger"></i> <b>Email:</b> <a href="mailto:${user.email}">${user.email}</a></p>
+                        <p><i class="fas fa-user text-danger"></i> <b>Username:</b> <a href="${userProfileLink}">${user.username}</a></p>
+                        <p><i class="fas fa-envelope text-danger"></i> <b>Username:</b> <a href="mailto:${user.email}">${user.email}</a></p>
                         <p><i class="fas fa-handshake text-danger"></i> <b>Handoff Method:</b> ${handoff_method}</p>
                         <p><i class="fas fa-map-marker-alt text-danger"></i> <b>Handoff Location:</b> ${handoff_location}</p>
                     </div>
                 </div>
-            </div>`;
+            </div>`
+            
+            ;
 
         infoPanel.innerHTML = content;
         infoPanel.style.display = 'block';
@@ -889,6 +894,7 @@ function addItemInfo(data, item) {
             document.body.appendChild(infoPanel);
         }
 
+        const userProfileLink = `./other_profile?uid=${user.uid}`;
 
         infoPanel.innerHTML = '';
         const content =
@@ -901,7 +907,8 @@ function addItemInfo(data, item) {
                 <div class="d-flex flex-column align-items-start">
                     <p><i class="fas fa-info-circle text-danger"></i> <b>Description:</b> ${item_description}</p>  
                     <p><i class="fas fa-calendar-alt text-danger"></i> <b>${report_type} On:</b> ${found_timestamp}</p>
-                    <p><i class="fas fa-envelope text-danger"></i> <b>Email:</b> <a href="mailto:${user.email}">${user.email}</a></p>
+                    <p><i class="fas fa-user text-danger"></i> <b>Username:</b> <a href="${userProfileLink}">${user.username}</a></p>
+                    <p><i class="fas fa-envelope text-danger"></i> <b>Email:</b> <a href="mailto:${user.username}">${user.email}</a></p>
                     <p><i class="fas fa-handshake text-danger"></i> <b>Handoff Method:</b> ${handoff_method}</p>
                     <p><i class="fas fa-map-marker-alt text-danger"></i> <b>Handoff Location:</b> ${handoff_location}</p>
                 </div>

@@ -369,7 +369,7 @@
     .return {
         position: absolute;
         color: #000000;
-        left: 15px;
+        left: 10px;
         top: 2%;
         padding: 5px 10px;
         font-size: 14px;
@@ -426,11 +426,11 @@
     @media (max-width: 449px) { 
         /* Styles for screens between 576px and 767px */
         .list-text{
-            font-size: 12px
+            font-size: 16px
         }
         
         .list-item-name{
-            font-size: 18px
+            font-size: 24px
         }
         .return{
         top: 0.5%; /* Reduced padding */
@@ -441,7 +441,7 @@
     @media (min-width: 425px) and (max-width: 479px) { 
         /* Styles for screens between 576px and 767px */
         .list-text{
-            font-size: 14px
+            font-size: 18px
         }
         
         .list-item-name{
