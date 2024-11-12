@@ -135,7 +135,9 @@ const profile = Vue.createApp({
                     const querySnapshot = await usersRef.where('username', '==', this.requesterUsername).get();
 
                     if (querySnapshot.empty) {
-                        alert("The entered username does not exist. Please enter a valid username.");
+                        // Show the error modal if the username does not exist
+                        const usernameErrorModal = new bootstrap.Modal(document.getElementById('usernameErrorModal'));
+                        usernameErrorModal.show();
                         return;
                     }
 
@@ -525,7 +527,7 @@ const profile = Vue.createApp({
                 });
 
                 const editProfileModal = document.getElementById('editProfileModal');
-                const modalInstance = bootstrap.Modal.getInstance(editProfileModal); 
+                const modalInstance = bootstrap.Modal.getInstance(editProfileModal);
                 if (modalInstance) {
                     modalInstance.hide();
                 }
