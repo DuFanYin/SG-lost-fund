@@ -951,6 +951,7 @@ function addItemInfo(data, item) {
     const item_description = currentItem.getProperty('item_description');
     const found_timestamp = currentItem.getProperty('found_timestamp');
     const handoff_method = currentItem.getProperty('handoff_method');
+    const handoff_location = currentItem.getProperty('handoff_location');
     const location = currentItem.getProperty('location');
     const report_type = currentItem.getProperty('report_type');
     const position = currentItem.getGeometry().get();
