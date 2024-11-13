@@ -61,10 +61,6 @@ By leveraging user-generated content, the platform will act as a bridge between 
 
 
 ## Installation Guide
-### Project Setup
-
-
-
 
 ### Google Firebase Setup
 ```
@@ -74,8 +70,15 @@ pip install firebase-admin
 
 ### Dependencies & Firebase Installation
 
+To install the dependencies, run
+```
+pip install -r requirements.txt
+```
 
 
+### Cloud deployment
+
+Upload the project to vercel, set backend to other and run the deployment.
 
 
 ## Step to Run Codes Locally
