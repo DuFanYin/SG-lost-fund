@@ -7,7 +7,7 @@
 
 
 * Access our website thorugh this link (https://wad-2-ap5y.vercel.app/)
-* Presentation Demo Link: (https://www.canva.com/design/DAGV_FSoNos/cFeEP2WG4CVXrEQi8mSByg/edit?utm_content=DAGV_FSoNos&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+* Presentation Demo Link: (https://www.youtube.com/watch?v=t9Sk4PU2Vv4)
 
 
 ## Table of Contents
