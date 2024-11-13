@@ -13,15 +13,18 @@
 ## Table of Contents
 - [Team Members](#team-members)
 - [Project Overview](#project-overview)
-  - [Features](#features)
+- [Features](#features)
 - [Installation Guide](#installation-guide)
-  - [Project Setup](#project-setup)
   - [Google Firebase Setup](#google-firebase-setup)
+    - [Prerequisites](#prerequisites)
+    - [Setting Up Firebase in Python (Backend)](#setting-up-firebase-in-python-backend)
+    - [Setting Up Firebase in JavaScript (Frontend)](#setting-up-firebase-in-javascript-frontend)
+    - [Firebase Configuration (firebaseConfig.js)](#firebase-configuration-firebaseconfigjs)
   - [Dependencies & Firebase Installation](#dependencies--firebase-installation)
+  - [Cloud Deployment](#cloud-deployment)
 - [Step to Run Codes Locally](#step-to-run-codes-locally)
-- [Deployment Link](#deployment-link)
 - [Test User Accounts to Use](#test-user-accounts-to-use)
-- [Project Demo & Slides](#project-demo--slides)
+- [Project Slides & Video](#project-slides--video)
 - [Tech Stack](#tech-stack)
   - [Frontend UI](#frontend-ui)
   - [Frontend Framework](#frontend-framework)
@@ -115,9 +118,9 @@ pip install -r requirements.txt
 ```
 
 
-### Cloud deployment
+### Cloud Deployment
 
-Upload the project to vercel, set backend to other and run the deployment.
+Upload the project to [Vercel](https://vercel.com/), set backend to other and run the deployment.
 
 
 ## Step to Run Codes Locally
@@ -126,15 +129,16 @@ python app.py
 ```
 
 ## Test User Accounts to Use
-| User   | Username           | Password  |
+| User   | Email           | Password  |
 |--------|---------------------|-----------|
-| User #1 | [xxx] | xxx |
-| User #2 | [xxx] | xxx |
+| User #1 | prof@gmail.com | Test123456 |
+| User #2 | instructor@gmail.com | Test123456 |
 
 
 
-## Project Demo & Slides
-
+## Project Slides & Video
+1. [Demo Slides](https://www.canva.com/design/DAGV_FSoNoscFeEP2WG4CVXrEQi8mSByg/edit)  
+2. [Demo Video](xxxxxx) 
 
 
 
@@ -162,11 +166,11 @@ python app.py
 - [![Google Maps API](https://img.shields.io/badge/Google%20Maps%20API-4285F4.svg?style=for-the-badge&logo=google-maps&logoColor=white)](https://developers.google.com/maps)
 - [![Google Distance Matrix API](https://img.shields.io/badge/Google%20Maps%20Distance%20Matrix%20API-4285F4.svg?style=for-the-badge&logo=google-maps&logoColor=white)](https://developers.google.com/maps/documentation/distance-matrix)
 
-
-
 #### Beyond the Lab
-- [![Chart.js](https://img.shields.io/badge/Chart.js-F5788D.svg?style=for-the-badge&logo=Chart.js&logoColor=white)](https://www.chartjs.org/)
+- [![Chart.js](https://img.shields.io/badge/Chart.js-F5788D.svg?style=for-the-badge&logo=Chart.js&logoColor=white)](https://www.chartjs.org/) <br><br><br>
 
+
+[![Built by Developers](https://img.shields.io/badge/Built%20by-Developers%20%3C%2F%3E-orange?style=for-the-badge)](https://your-link-here.com)
 
 
 
