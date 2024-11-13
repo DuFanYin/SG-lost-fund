@@ -67,10 +67,49 @@ By leveraging user-generated content, the platform will act as a bridge between 
 
 
 ### Google Firebase Setup
+#### Prerequisites
+Firebase Project: Ensure you have a Firebase project in the Firebase Console.
+Service Account Key: Download the service account JSON file from Project Settings > Service accounts in Firebase Console.
+
+#### Setting Up Firebase in Python (Backend)
 ```
 pip install firebase-admin
 ```
 
+#### Setting Up Firebase in JavaScript (Frontend)
+For frontend Firebase integration, load Firebase from the CDN and configure the Firebase instance using the firebaseConfig.js file.
+Dependencies & Firebase Installation
+
+```
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
+
+```
+
+#### FIrebase Configuration (firebaseConfig.js)
+````
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "<YOUR_API_KEY>",
+    authDomain: "your-project-id.firebaseapp.com",
+    databaseURL: "https://your-project-id.firebaseio.com",
+    projectId: "your-project-id",
+    storageBucket: "your-project-id.appspot.com",
+    messagingSenderId: "your-messaging-sender-id",
+    appId: "your-app-id",
+    measurementId: "G-your-measurement-id"
+};
+
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
+
+export { app, auth, db, storage };
+````
 
 ### Dependencies & Firebase Installation
 
