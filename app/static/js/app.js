@@ -176,7 +176,6 @@ async function exportUsers() {
 }
 
 const card = document.getElementById('card');
-let defaultZoomLevel = 11;
 let zoomedInLevel = 15;
 var map = null;
 var bounds = null;
@@ -269,8 +268,9 @@ async function renderMapWithFeatures(centerPosition) {
     const navElement = document.querySelector("nav");
     const navHeight = navElement ? navElement.offsetHeight : 0;
     document.getElementById("map").style.height = `calc(100vh - ${navHeight}px)`;
+    
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: defaultZoomLevel,
+        zoom: zoomedInLevel,
         center: centerPosition,
         styles: [],
         mapTypeId: 'roadmap',
