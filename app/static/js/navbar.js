@@ -31,6 +31,7 @@ const app = Vue.createApp({
         }
     },
     methods: {
+        
         async fetchNotifications() {
             const userId = sessionStorage.getItem('uid');
             if (!userId) return;
@@ -352,7 +353,10 @@ const app = Vue.createApp({
 
         this.fetchUserItems(); // Fetch purchase status when component is mounted
 
-
+        // Make sure uid, username, and points are set in session storage when component mounts
+        if (!this.uid) {
+            this.uid = sessionStorage.getItem('uid'); // Retrieve uid if missing
+        }
 
         if (this.isLoggedIn) {
             this.setupRealTimeListener(); // Automatically call it here when the component mounts

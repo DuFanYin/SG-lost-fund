@@ -20,7 +20,11 @@ def index():
 
 @main.route('/user_profile')
 def user_profile():
-    return render_template('user_profile.html')
+    uid = request.args.get('uid')  # Retrieve UID from query parameters
+    if uid:
+        return render_template('user_profile.html', uid=uid)
+    else:
+        return "UID not provided", 400  # Handle missing UID appropriately
 
 @main.route('/dash_board')
 def dash_board():

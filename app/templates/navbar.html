@@ -102,7 +102,7 @@
                             <i class="fas fa-user"></i> <span v-text="username"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/user_profile">My Profile</a></li>
+                            <li><a class="dropdown-item" :href="`/user_profile?uid=${uid}`">My Profile</a></li>
                             <li><a class="dropdown-item" href="#" @click="logout">Sign Out</a></li>
                         </ul>
                     </li>

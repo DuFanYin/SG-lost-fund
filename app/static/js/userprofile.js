@@ -4,11 +4,14 @@ const profile = Vue.createApp({
     data() {
         const defaultProfileURL = document.getElementById("profile").getAttribute("data-default-profile-url");
 
+        const urlParams = new URLSearchParams(window.location.search);
+        const uidFromQuery = urlParams.get('uid'); // Extract 'uid' from URL
+
         return {
-            username: sessionStorage.getItem('username') || 'username',
-            profiledesc: sessionStorage.getItem('profiledesc') || 'No Description',
-            email: sessionStorage.getItem('email') || 'email',
-            uid: sessionStorage.getItem('uid'),
+            username: '', // Initially empty, to be set by fetchUserData
+            profiledesc: '', // Initially empty, to be set by fetchUserData
+            email: '', // Initially empty, to be set by fetchUserData
+            uid: uidFromQuery,
             // Temporary properties for the modal form
             tempUsername: '',
             tempProfiledesc: '',
@@ -211,6 +214,9 @@ const profile = Vue.createApp({
                     this.username = data.username || 'username';
                     this.profiledesc = data.profiledesc || 'No Description';
                     this.profileImageURL = data.profileImageURL || this.profileImageURL; // Update profile image URL if it exists
+                    this.selectedBorder = data.selectedborder || '';
+                    this.selectedBackground = data.selectedbackground || '';
+                    
                     console.log("User data updated.");
                 }
             }).catch((error) => {
@@ -401,6 +407,7 @@ const profile = Vue.createApp({
             auth.onAuthStateChanged((user) => {
                 if (user) {
                     this.uid = user.uid;
+                    console.log("User ID in fetchUserData:", this.uid);
                     this.email = user.email;
                     sessionStorage.setItem('email', this.email);
                     this.startRealTimeListener();
@@ -430,9 +437,6 @@ const profile = Vue.createApp({
                     console.log(localStorage.getItem('selectedBorder')); // Logs the URL of selectedBorder
 
 
-                    // Cache updated data in sessionStorage
-                    sessionStorage.setItem('username', this.username);
-                    sessionStorage.setItem('profiledesc', this.profiledesc);
 
                     // Fetch found items after setting the user data
                     this.fetchItems();
