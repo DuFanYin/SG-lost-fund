@@ -139,7 +139,7 @@ python app.py
 
 
 ## Project Slides & Video
-1. [Demo Slides](https://www.canva.com/design/DAGV_FSoNoscFeEP2WG4CVXrEQi8mSByg/edit)  
+1. [Demo Slides](https://www.canva.com/design/DAGV_FSoNos/cFeEP2WG4CVXrEQi8mSByg/edit?utm_content=DAGV_FSoNos&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)  
 2. [Demo Video](xxxxxx) 
 
 
