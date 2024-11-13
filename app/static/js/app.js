@@ -496,6 +496,7 @@ async function renderMapWithFeatures(centerPosition) {
         closeButton.style.cursor = 'pointer';
         closeButton.addEventListener('click', () => {
             infoPanel.style.display = 'none';
+            if(document.getElementById('toggle-panel-button').cl)
             document.getElementById('toggle-panel-button').classList.remove('hidden');
         });
         infoPanel.appendChild(closeButton);
@@ -581,45 +582,20 @@ function formatSingaporeTime(timestamp, isFull) {
 
 }
 
-function imageExists(url, callback) {
-    const img = new Image();
-    img.onload = () => callback(true);
-    img.onerror = () => callback(false);
-    img.src = url;
-}
-
-
 function addCustomMarker() {
     map.data.setStyle((feature) => {
         const item_type = feature.getProperty("item_type");
-        const iconURL = `../static/img/icon_${item_type}.png`
+        const iconURL = `../static/img/icon_${item_type}.png`;
 
-        imageExists(iconURL, (exists) => {
-            if (exists) {
-                map.data.overrideStyle(feature, {
-                    icon: {
-                        url: iconURL,
-                        scaledSize: new google.maps.Size(45, 40),
-                    }
-                });
-            } else {
-                map.data.setStyle({
-                    icon: {
-                        url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Default marker icon
-                        scaledSize: new google.maps.Size(45, 40),
-                    },
-                });
-            }
-        });
+        // Use the iconURL directly; the browser will handle missing images
         return {
             icon: {
-                url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Default marker icon
+                url: iconURL,
                 scaledSize: new google.maps.Size(45, 40),
             },
         };
     });
 }
-
 
 async function calculateDistances(data, origin) {
 
@@ -1134,7 +1110,11 @@ function addItemInfo(data, item) {
         closeButton.style.cursor = 'pointer';
         closeButton.addEventListener('click', () => {
             infoPanel.style.display = 'none';
-            document.getElementById('toggle-panel-button').classList.remove('hidden');
+            const navElement = document.querySelector("nav");
+            const navHeight = navElement ? navElement.offsetHeight : 0;
+            if(navHeight < 60){
+                document.getElementById('toggle-panel-button').classList.remove('hidden');
+            }
         });
         infoPanel.appendChild(closeButton);
 
@@ -1202,7 +1182,8 @@ function adjustPanelsForScreenSize() {
 
     } else {
         infoPanel.style.left = 0;
-        if (!infoPanel.classList.contains("hidden")) {
+        if (infoPanel && infoPanel.style.display == 'block') {
+            console.log("HIHI");
             document.getElementById('toggle-panel-button').classList.add('hidden');
         }
     }
