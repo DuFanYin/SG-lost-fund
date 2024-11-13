@@ -331,7 +331,8 @@ async function renderMapWithFeatures(centerPosition) {
 
     // Show the information for a store when its marker is clicked.
     map.data.addListener('click', async (event) => {
-
+        const toHide = document.getElementById('toggle-panel-button');
+        toHide.classList.add('hidden');
         const item_name = event.feature.getProperty('item_name');
         const item_description = event.feature.getProperty('item_description');
         const found_timestamp = event.feature.getProperty('found_timestamp');
@@ -496,8 +497,11 @@ async function renderMapWithFeatures(centerPosition) {
         closeButton.style.cursor = 'pointer';
         closeButton.addEventListener('click', () => {
             infoPanel.style.display = 'none';
-            if(document.getElementById('toggle-panel-button').cl)
-            document.getElementById('toggle-panel-button').classList.remove('hidden');
+            const navElement = document.querySelector("nav");
+            const navHeight = navElement ? navElement.offsetHeight : 0;
+            if(navHeight < 150){
+                document.getElementById('toggle-panel-button').classList.remove('hidden');
+            }
         });
         infoPanel.appendChild(closeButton);
 
@@ -1112,7 +1116,7 @@ function addItemInfo(data, item) {
             infoPanel.style.display = 'none';
             const navElement = document.querySelector("nav");
             const navHeight = navElement ? navElement.offsetHeight : 0;
-            if(navHeight < 60){
+            if(navHeight < 150){
                 document.getElementById('toggle-panel-button').classList.remove('hidden');
             }
         });
@@ -1182,10 +1186,19 @@ function adjustPanelsForScreenSize() {
 
     } else {
         infoPanel.style.left = 0;
+        const navElement = document.querySelector("nav");
+        const navHeight = navElement ? navElement.offsetHeight : 0;
         if (infoPanel && infoPanel.style.display == 'block') {
-            console.log("HIHI");
             document.getElementById('toggle-panel-button').classList.add('hidden');
         }
+        if (navHeight >= 150) {
+            document.getElementById('toggle-panel-button').classList.add('hidden');
+        }
+
+        if (infoPanel && infoPanel.style.display == 'none' && navHeight < 150) {
+            document.getElementById('toggle-panel-button').classList.remove('hidden');
+        }
+
     }
 }
 window.addEventListener('resize', adjustPanelsForScreenSize);
