@@ -451,7 +451,38 @@ async function renderMapWithFeatures(centerPosition) {
                 }
             });
         }
+        
+        const submitReviewButton = document.getElementById('submitReview');
+        if (submitReviewButton) {
+            submitReviewButton.removeEventListener('click', saveCommentToFirebase);
+            submitReviewButton.addEventListener('click', async () => {
+                const description = document.getElementById('reviewDescription').value.trim();
+                await saveCommentToFirebase(description);
 
+                const reviewModalInstance = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
+                if (reviewModalInstance) {
+                    reviewModalInstance.hide();
+                }
+
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                successModal.show();
+
+                setTimeout(() => {
+                    successModal.hide();
+                }, 2000);
+            });
+        }
+        
+        const writeReviewButton = document.getElementById("write-review-btn");
+        if (writeReviewButton) {
+            writeReviewButton.removeEventListener("click", async () => {
+                const description = document.getElementById('reviewDescription').value.trim();
+                await saveCommentToFirebase(description);
+            });
+        }
         const closeButton = document.createElement('button');
         closeButton.innerHTML = '<i class="fas fa-times"></i>'; // Using Font Awesome's "times" icon
         closeButton.classList.add('icon-close-button');
