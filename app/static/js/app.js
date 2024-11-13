@@ -148,6 +148,7 @@ async function exportListings() {
                     report_type: data.report_type,
                     uid: data.uid,
                     imageURL: data.imageURL,
+                    location: data.location
                 }
             };
             listings.push(geoJsonFeature);
@@ -950,7 +951,7 @@ function addItemInfo(data, item) {
     const item_description = currentItem.getProperty('item_description');
     const found_timestamp = currentItem.getProperty('found_timestamp');
     const handoff_method = currentItem.getProperty('handoff_method');
-    const handoff_location = currentItem.getProperty('handoff_location');
+    const location = currentItem.getProperty('location');
     const report_type = currentItem.getProperty('report_type');
     const position = currentItem.getGeometry().get();
     const targetUid = currentItem.getProperty('uid');
@@ -971,7 +972,7 @@ function addItemInfo(data, item) {
     tempBody.innerHTML += `
         <img src="${imageURL}" alt="Item Image" style="width: 100%; height: auto;">
         <p>${item_description}</br>
-        Location: ${handoff_location}</br>
+        Location: ${location}</br>
         ${report_type} on: ${formatSingaporeTime(found_timestamp, true)}</br>
     `;
     temp.appendChild(tempBody);
