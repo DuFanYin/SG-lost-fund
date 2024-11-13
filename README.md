@@ -115,6 +115,7 @@ pip install -r requirements.txt
 ```
 
 
+
 ### Cloud deployment
 
 Upload the project to vercel, set backend to other and run the deployment.
