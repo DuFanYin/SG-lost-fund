@@ -2,9 +2,9 @@
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAUZYEkqQSsEVM7rMCLqaEKoibGPiP_YJI",
+    apiKey: "KEY",
     authDomain: "wad2project-db69b.firebaseapp.com",
-    databaseURL: "https://wad2project-db69b-default-rtdb.asia-southeast1.firebasedatabase.app",
+    databaseURL: "[YOUT URL]",
     projectId: "wad2project-db69b",
     storageBucket: "wad2project-db69b.appspot.com",
     messagingSenderId: "262163048895",

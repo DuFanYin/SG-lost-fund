@@ -6,7 +6,6 @@
 </p>
 
 
-* Access our website thorugh this link (https://wad-2-ap5y.vercel.app/)
 * Presentation Demo Link: (https://www.youtube.com/watch?v=t9Sk4PU2Vv4)
 
 
